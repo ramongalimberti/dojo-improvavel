@@ -498,6 +498,12 @@
       if (ramonMsg?.evalSlot) ramonMsg.evalSlot.innerHTML = `<div class="mini-eval low"><span class="mini-eval-summary">erro</span></div>`;
     }
 
+    // Transição pra 'lead pensando' (se em modo chamada)
+    if (state.call.active && !state.call.paused) {
+      state.call.phase = 'processing_lead';
+      updateCallUI();
+    }
+
     // Resposta do lead
     pushTypingPlaceholder();
     try {
@@ -743,7 +749,8 @@
       idle: '🟢 Pronto (modo texto)',
       lead_speaking: '<span class="ping"></span> 🔊 Lead falando...',
       listening: '<span class="ping"></span> 🎤 Ouvindo você... <span class="muted" style="font-weight:400;font-size:0.85em">(7s de silêncio = envia)</span>',
-      processing: '🤔 Processando resposta...',
+      processing: '🤔 Avaliando sua resposta...',
+      processing_lead: '💬 Lead pensando na resposta...',
       paused: '⏸️ Em pausa'
     };
     status.innerHTML = phaseMap[state.call.phase] || phaseMap.idle;
@@ -857,16 +864,40 @@
 
   async function autoSubmitFromCall(text) {
     $('#userInput').value = text;
-    await handleSend();    // handleSend já roda a avaliação e busca a resposta do lead
-    // Depois que handleSend retorna, a mensagem do lead já foi adicionada.
-    // Em call mode, vamos falar a nova mensagem do lead e voltar a ouvir.
-    if (!state.call.active || state.call.paused) { return; }
+    // Conta de mensagens do lead ANTES — usa pra saber se handleSend produziu uma nova
+    const leadMsgsBefore = state.conversation.filter(m => m.role === 'assistant').length;
+
+    try {
+      await handleSend();
+    } catch (err) {
+      console.error('[autoSubmit] handleSend falhou:', err);
+    }
+
+    // Verifica o estado da chamada depois do processamento
+    if (!state.call.active) { return; }
+    if (state.call.paused) {
+      state.call.phase = 'paused';
+      updateCallUI();
+      return;
+    }
     if (state.sessionClosed) { endCall(); return; }
-    const last = [...state.conversation].reverse().find(m => m.role === 'assistant');
-    if (last) {
-      speakLeadThenListen(last.content);
+
+    // Pega a ÚLTIMA mensagem do lead que foi adicionada durante handleSend
+    const allLeadMsgs = state.conversation.filter(m => m.role === 'assistant');
+    const produzidaNova = allLeadMsgs.length > leadMsgsBefore;
+    const ultimaLeadMsg = allLeadMsgs[allLeadMsgs.length - 1];
+
+    if (produzidaNova && ultimaLeadMsg?.content) {
+      // Fluxo normal — lead respondeu, TTS fala
+      speakLeadThenListen(ultimaLeadMsg.content);
     } else {
-      beginListening();
+      // Nenhuma resposta nova do lead (API falhou ou algo travou) — volta a ouvir sem travar
+      console.warn('[autoSubmit] sem resposta nova do lead; reabrindo mic');
+      const statusEl = $('#callStatus');
+      if (statusEl) statusEl.innerHTML = '<span class="ping"></span> ⚠️ Sem resposta — tente falar de novo';
+      setTimeout(() => {
+        if (state.call.active && !state.call.paused) beginListening();
+      }, 1500);
     }
   }
 

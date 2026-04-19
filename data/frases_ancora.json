@@ -1,0 +1,154 @@
+{
+  "descricao": "Banco de frases-âncora prontas do Ramon. Usar literalmente quando o momento pedir — são propriedade do vocabulário da Aliança, não invenções.",
+  "fonte": "Apostila_Vendas_Arsenal_Nucleo — seção 7",
+  "categorias": {
+    "abertura": [
+      {
+        "frase": "Você só recebe a Permissão que você pediu.",
+        "conceito": "Permissão",
+        "quando_usar": "Abertura / posicionamento — quando o lead está indeciso sobre 'isso é pra mim?'"
+      },
+      {
+        "frase": "O jogo não é só formado por Capacidade e Disposição.",
+        "conceito": "CDP",
+        "quando_usar": "Abertura — introduzir a premissa antes do diagnóstico"
+      },
+      {
+        "frase": "Toda demora nos resultados esconde uma espera nas relações.",
+        "conceito": "Dependência Emocional",
+        "quando_usar": "Diagnóstico — lead travado em ganhar mais"
+      },
+      {
+        "frase": "A sua postura determina o seu avanço, e o avanço determina o resultado, que é só uma consequência inevitável.",
+        "conceito": "Escada da Postura",
+        "quando_usar": "Abertura / posicionamento mental"
+      },
+      {
+        "frase": "Ter um observador externo muda a qualidade das decisões.",
+        "conceito": "Ponto Cego",
+        "quando_usar": "Autoridade — quando o lead diz 'acho que consigo sozinho'"
+      }
+    ],
+    "quebra_de_objecao": [
+      {
+        "frase": "A justificativa explica tudo, mas não resolve nada.",
+        "conceito": "Escada da Postura",
+        "quando_usar": "Quando o lead justifica ao invés de propor"
+      },
+      {
+        "frase": "Entender o padrão não rompe o padrão.",
+        "conceito": "Padrões",
+        "quando_usar": "Contra 'já fiz terapia / já entendi isso'"
+      },
+      {
+        "frase": "Por trás de algumas ajudas, havia coleiras invisíveis.",
+        "conceito": "Coleiras Invisíveis",
+        "quando_usar": "Contra 'meu marido não vai deixar' / 'preciso falar em casa'"
+      },
+      {
+        "frase": "A desculpa sofisticada justifica tudo, mas não explica nada.",
+        "conceito": "Desculpa Sofisticada",
+        "quando_usar": "Contra 'já tentei de tudo' / 'isso não funciona comigo'"
+      },
+      {
+        "frase": "Você não é menos capaz — o ambiente em que você foi forjado não criou a fundação.",
+        "conceito": "Permissão",
+        "quando_usar": "Quando o lead se desqualifica ('não sou inteligente o bastante')"
+      },
+      {
+        "frase": "Você não tem dinheiro pra VOCÊ. Mas tem pra pagar a conta do seu irmão, o médico do seu pai, o remédio da sua mãe.",
+        "conceito": "Culpa da Sobrevivência",
+        "quando_usar": "Contra 'tá caro' / 'não tenho dinheiro'"
+      },
+      {
+        "frase": "Plano Perfeito é forma chique de dizer nunca.",
+        "conceito": "Plano Perfeito",
+        "quando_usar": "Contra 'não é a hora' / 'depois eu entro'"
+      }
+    ],
+    "criacao_de_urgencia": [
+      {
+        "frase": "A vontade tem prazo de validade.",
+        "conceito": "Bateria da Vontade",
+        "quando_usar": "Fechamento — lead quer adiar decisão"
+      },
+      {
+        "frase": "Tudo muda quando alguma coisa muda.",
+        "conceito": "Efeito Paralelo",
+        "quando_usar": "Superação de objeção / onboarding"
+      },
+      {
+        "frase": "A vida não te sabota, te treina.",
+        "conceito": "Pré-Queda",
+        "quando_usar": "Contra 'não é a hora' / reenquadrar a Pré-Queda"
+      },
+      {
+        "frase": "Abre a porteira. Não economize energia no seu limite.",
+        "conceito": "Porteira da Vida",
+        "quando_usar": "Criar urgência — lead em plateau"
+      },
+      {
+        "frase": "Um PDA sem data é um sonho disfarçado de plano.",
+        "conceito": "PDA",
+        "quando_usar": "Onboarding / acompanhamento — exigir compromisso concreto"
+      },
+      {
+        "frase": "Entre a vontade, a dúvida, a decisão e a desistência, você não precisa de mais que 24h para viver uma Pré-Queda.",
+        "conceito": "Pré-Queda",
+        "quando_usar": "Fechamento — criar urgência sem pressão barata"
+      }
+    ],
+    "fechamento": [
+      {
+        "frase": "Qual é a sua decisão?",
+        "conceito": "PDA",
+        "quando_usar": "Fechamento direto, depois dos 3 Dez, com silêncio"
+      },
+      {
+        "frase": "Qual versão sua está dirigindo agora — e qual decisão separa você da próxima versão?",
+        "conceito": "Os Dois Carros",
+        "quando_usar": "Fechamento — separar postura de recursos"
+      },
+      {
+        "frase": "Aqui, na Aliança Divergente, você pode mais.",
+        "conceito": "Missão",
+        "quando_usar": "Selo final antes do Assumptive Close"
+      },
+      {
+        "frase": "Não é sobre concordar comigo. É sobre dar carta branca pra eu ver o que você não consegue enxergar de si mesmo.",
+        "conceito": "Carta Branca",
+        "quando_usar": "Fechamento — redirecionar objeção de ego"
+      }
+    ],
+    "pos_venda": [
+      {
+        "frase": "Você vai me ver errando, mas não vai me ver parando.",
+        "conceito": "Postura",
+        "quando_usar": "Expectativa / acompanhamento inicial"
+      },
+      {
+        "frase": "Foque no progresso, porque o resultado é só uma consequência inevitável.",
+        "conceito": "Escada da Postura",
+        "quando_usar": "Retenção — lead ansioso por resultado imediato"
+      },
+      {
+        "frase": "Nós somos a favor do PDA. Perceber, Decidir, Agir. Porque é a decisão que muda sua vida.",
+        "conceito": "PDA",
+        "quando_usar": "Onboarding / cultura"
+      },
+      {
+        "frase": "Fulano, você não me deve mais nada. Pode seguir.",
+        "conceito": "Conversa Difícil",
+        "quando_usar": "Fechamento de Conversa Difícil — libera o outro"
+      }
+    ],
+    "diagnostico_rapido_3_perguntas": {
+      "descricao": "Em 3 perguntas você identifica se é persona do Improvável. 2 de 3 = SIM → é persona.",
+      "perguntas": [
+        "Você tem capacidade técnica e trabalha muito, mas os resultados não batem? (qualifica CDP)",
+        "Toda vez que a vida começa a melhorar, alguma coisa acontece e te puxa pra trás? (qualifica Pré-Queda / Ciclo do Quase)",
+        "As pessoas da sua família/casa opinam demais nas suas decisões? (qualifica Festa no Banheiro)"
+      ]
+    }
+  }
+}

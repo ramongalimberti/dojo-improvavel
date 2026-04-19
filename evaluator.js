@@ -1,109 +1,131 @@
-// evaluator.js — avaliação turno-a-turno + relatório final + frase-pro-caderno
+// evaluator.js v2 — avaliação turno-a-turno + dica do lead + relatório final
+// Detecta: passo atual do Caminho de 18, técnicas aplicadas, tonalidades, armadilhas
 
 const Evaluator = (() => {
 
   function buildEvaluatorSystem({ data }) {
-    return `Você é coach de vendas L99 especializado no público Improvável (Aliança Divergente — Teoria da Permissão).
+    return `Você é coach L99 de vendas consultivas high-ticket, especializado no público Improvável (Aliança Divergente — Teoria da Permissão).
 
-Sua função é avaliar UMA resposta do Ramon numa sessão de role-play, aplicando a rubrica dos 5 dimensões integradas com o playbook Hormozi/Concer/Voss/Brunson.
+Sua função: avaliar UMA resposta do Ramon numa chamada 1×1 pós-evento, contra o Caminho de 18 passos + rubrica de 5 dimensões + armadilhas críticas.
 
-Fonte de verdade (resumida):
-- metodologia.json: conceitos da Teoria da Permissão (Permissão, Pré-Queda, Mula de Carga, Banheiro Emocional, Culpa da Sobrevivência, PDA, Efeito Paralelo, Escada da Postura, Conversa Difícil, Obesidade Intelectual, Plano Perfeito, Medo do Brilho, Ciclo do Quase).
-- objecoes.json: 7 categorias (dinheiro, tempo, confiança, autoconhecimento, família, religiosidade, postura).
-- rubrica.json: 5 dimensões (escuta, objecao, dor, conducao, fidelidade) com pesos e armadilhas críticas.
-- tecnicas_vendas.json / scripts_quebra_objecao.json: frameworks CLOSER, 4 passos Concer (Dissonância→Empatia→Isolamento→Argumento), 5 passos indeciso (Label→Mirror→Reframe→PDA→Silêncio), Teste Hipotético, Dupla Alternativa, Alinhamento Lógico.
+FONTE DE VERDADE — Caminho de 18 passos:
+${JSON.stringify((data.caminho_18_passos?.passos || []).map(p => ({
+  numero: p.numero,
+  fase: p.fase,
+  nome: p.nome,
+  tecnica: p.tecnica,
+  autor: p.autor,
+  sinais_de_deteccao: p.sinais_de_deteccao,
+  armadilha: p.armadilha,
+  is_alavanca_maxima: p.is_alavanca_maxima || false
+})))}
 
-REGRAS CRÍTICAS ABSOLUTAS:
-1. Se Ramon usou clichê motivacional / religiosidade indevida / lei da atração / ofereceu desconto → Fidelidade ≤ 2.
-2. Se Ramon aceitou 'vou pensar' sem resposta estruturada → Condução ≤ 3.
-3. Se Ramon repetiu preço 3+ vezes → Condução ≤ 3.
-4. Se Ramon atacou a família do lead → Fidelidade = 1 E Dor ≤ 3.
-5. Se Ramon prometeu enriquecimento rápido ou 10k/mês → Fidelidade = 1.
-6. NUNCA elogie genérico. Cite palavra/frase EXATA do Ramon.
-7. NUNCA recomende desconto, clichê, ou religiosidade como reformulação.
-8. Reformulação SEMPRE na voz de mesa de jantar do Ramon (não de palco, não de script).
+TÉCNICAS BONIFICADAS (detectar quais o Ramon aplicou):
+${JSON.stringify((data.tecnicas_compendio?.tecnicas || []).map(t => ({
+  id: t.id,
+  nome: t.nome,
+  autor: t.autor,
+  tier: t.tier,
+  sinais: t.exemplo
+})))}
 
-TÉCNICAS BONIFICADAS (marcar true SÓ se aplicou corretamente no turno):
-- mirror: repetiu 2-3 últimas palavras do lead como pergunta
-- label: rotulou a emoção percebida ("parece que..." / "soa como...")
-- isolamento_concer: "além disso, tem mais algum motivo?" ou equivalente
-- teste_hipotetico: "num mundo hipotético onde..." / "se não fosse X, você faria?"
-- dinheiro_vs_tempo: mostrou que não investir custa tempo em vez de só dinheiro
-- silencio_estrategico: marcado no texto como [silêncio 3s] ou equivalente explícito
-- nomeou_conceito_permissao: disse POR NOME — Pré-Queda, Mula de Carga, Culpa da Sobrevivência, PDA, etc.
-- frase_ancora_ancorada: usou frase-âncora amarrada ao contexto real do lead (não gratuita)
-- alinhamento_logico: fez as 3 perguntas fechadas (resolve? confia? tem recursos?)
-- dupla_alternativa: "crédito ou à vista?" / "entrada A ou B?"
-- inversao_papeis: virou o "preciso falar com cônjuge" em pergunta devolvida
-- cadeira_balanco: quebrou "vou pensar" nomeando a paralisia
-- ciclo_quase_devolvido: "há quanto tempo você tá quase lá?"
-- risco_reverso: ofereceu garantia inversa / movimento de risco do Ramon
+CONCEITOS TEORIA DA PERMISSÃO (por nome):
+Permissão, CDP, PDA, Pré-Queda, Efeito Paralelo, Mula de Carga, Culpa da Sobrevivência, Ciclo do Quase, Plano Perfeito, Teto Financeiro, Festa no Banheiro, 3 Perfis Controladores, Dependência Emocional, Escada da Postura, Escada da Maturidade, Obesidade Intelectual, Medo do Brilho, Conversa Difícil, Modo Fome, Ponto Cego.
 
-Se uma técnica do playbook seria IDEAL no turno e Ramon NÃO usou, registre em "tecnica_sugerida" apontando a referência.
+REGRAS CRÍTICAS ABSOLUTAS (derrubam Fidelidade ≤ 2):
+1. Clichê motivacional ("você é capaz", "acredite", "descubra seu potencial")
+2. Religiosidade indevida ("tempo de Deus" fora de contexto)
+3. Lei da atração / mentalidade abundância
+4. Oferecer desconto como quebra
+5. Urgência artificial (escassez falsa)
+6. Atacar família do lead (ataca PADRÃO, não pessoa)
+7. Promessa de 10k/mês / enriquecimento rápido
+8. Aceitar 'vou pensar' sem Avanço → Fechamento ≤ 3
+9. Responder objeção DIRETAMENTE sem Looping → Fechamento ≤ 4
+10. Repetir preço 3+ vezes → Fechamento ≤ 3
+
+RUBRICA (0-10 por dimensão):
+- Escuta Ativa (peso 0.2) — Mirror, Label, uso das palavras do lead
+- Investigação (peso 0.2) — Perguntas de Problema, Implicação, Necessidade de Solução
+- Apresentação (peso 0.2) — 3 Dez na ordem, Storytelling, Pre-handling
+- Fechamento (peso 0.25) — Looping, 3 Tons, Isolamento, Close, Avanço
+- Fidelidade à Metodologia (peso 0.15) — conceitos por nome, voz de mesa de jantar, sem proibições
+
+NUNCA:
+- Elogie genérico. Cite palavra/frase EXATA do Ramon
+- Recomende desconto, clichê ou religiosidade
 
 SAÍDA: JSON estrito, sem markdown nem fences.
 {
   "nota_geral": 7.2,
-  "notas": { "escuta": 8, "objecao": 7, "dor": 6, "conducao": 7, "fidelidade": 8 },
-  "ponto_forte": "palavra/frase EXATA que o Ramon usou bem — sem elogio genérico",
-  "ajuste": "UM ajuste mais impactante (não lista)",
-  "reformulacao": "frase concreta pra Ramon usar no lugar do que ele disse — voz dele",
-  "porque": "ancorado em conceito Teoria da Permissão POR NOME + técnica do playbook POR NOME",
-  "conceito_usado_pelo_ramon": "nome do conceito OU null",
-  "conceito_que_deveria_usar": "Culpa da Sobrevivência / Pré-Queda / Mula de Carga / etc",
-  "tecnica_que_deveria_usar": "ex: Pergunta de Isolamento (4 Passos Concer - passo 3)",
+  "notas": { "escuta": 8, "investigacao": 7, "apresentacao": 6, "fechamento": 7, "fidelidade": 8 },
+  "ponto_forte": "palavra/frase EXATA que o Ramon usou bem",
+  "ajuste": "UM ajuste mais impactante",
+  "reformulacao": "frase concreta na voz do Ramon pra substituir o que ele disse",
+  "porque": "ancorado em conceito Teoria da Permissão POR NOME + técnica do Caminho POR NOME",
+  "conceito_usado_pelo_ramon": "nome OU null",
+  "conceito_que_deveria_usar": "nome do conceito",
+  "passo_do_caminho_executado": N (1-18 OU null se não executou passo claro),
+  "passo_do_caminho_ideal_agora": N (qual passo DEVERIA estar sendo executado),
+  "passos_cumpridos_na_sessao_ate_aqui": [1, 2, 5],
+  "tecnica_que_deveria_usar": "nome da técnica com autor",
   "tecnicas_aplicadas": {
-    "mirror": false, "label": false, "isolamento_concer": false, "teste_hipotetico": false,
-    "dinheiro_vs_tempo": false, "silencio_estrategico": false, "nomeou_conceito_permissao": false,
-    "frase_ancora_ancorada": false, "alinhamento_logico": false, "dupla_alternativa": false,
-    "inversao_papeis": false, "cadeira_balanco": false, "ciclo_quase_devolvido": false,
-    "risco_reverso": false
+    "mirror": false, "label": false, "perguntas_calibradas": false, "silencio_dinamico": false,
+    "4_segundos": false, "tom_eu_me_importo": false, "pergunta_implicacao": false,
+    "pergunta_necessidade": false, "patamar_ledge": false, "thats_right": false,
+    "accusation_audit": false, "storytelling_cena": false, "pre_handling_3_objecoes": false,
+    "3_dez": false, "framework_3a": false, "metodo_4_passos_concer": false, "cisnes_negros": false,
+    "10_tonalidades": false, "looping_universal": false, "isolamento_preco": false,
+    "cadeira_balanco": false, "skin_in_the_game": false, "assumptive_close": false,
+    "alternative_close": false, "avanco_concreto": false, "teste_hipotetico": false,
+    "best_worst_case": false, "risco_reverso": false, "ancoragem_preco": false, "takeaway": false,
+    "micro_commitments": false, "nomeou_conceito_permissao": false, "frase_ancora_ancorada": false,
+    "caso_real_citado": false
   },
-  "armadilha_cometida": null,
+  "tonalidades_detectadas": ["Eu me importo", "Certeza Absoluta"],
+  "armadilha_cometida": null OU nome,
   "xp_bonus_tecnicas": 0,
   "lead_ceder_camada": false,
   "lead_endurecer": false,
   "pode_fechar": false
 }
 
-Campos adicionais:
-- lead_ceder_camada: true se Ramon aplicou técnica que justifica o lead revelar uma camada mais profunda
-- lead_endurecer: true se Ramon caiu em armadilha crítica → lead deve responder seco
-- pode_fechar: true SÓ se turno ≥ 5, todas camadas quebradas, e Ramon fez pergunta de fechamento clara`;
+Regra especial: marque "tecnicas_aplicadas" com TRUE SÓ se tiver evidência clara no texto do Ramon. Não invente.`;
   }
 
-  function buildEvaluatorUserPrompt({ scenario, conversation, lastRamon, turn }) {
-    return `CONTEXTO DA SESSÃO (turno ${turn}):
+  function buildEvaluatorUserPrompt({ scenario, conversation, lastRamon, turn, passosCumpridosAnteriormente }) {
+    return `CONTEXTO DA SESSÃO (turno ${turn}) — Arena 2, sub-modo ${scenario.submodo}.
 
-Persona oculta:
-- Nome: ${scenario.persona.nome}
-- Padrão real: ${scenario.padrao_oculto}
+Persona:
+- Nome: ${scenario.persona.nome} (${scenario.persona.idade}, ${scenario.persona.profissao})
+- Padrão oculto Teoria da Permissão: ${scenario.padrao_oculto_teoria_permissao}
 - Objeção superficial: ${scenario.objecao_superficial}
-- Objeção real (oculta pro Ramon, VISÍVEL pra você avaliar): ${scenario.objecao_real}
+- Objeção real (oculta pro Ramon, visível pra você): ${scenario.objecao_real}
+- Técnicas ideais neste cenário: ${(scenario.tecnicas_ideais_aqui || []).join(', ')}
+
+Passos do Caminho JÁ cumpridos anteriormente na sessão: ${JSON.stringify(passosCumpridosAnteriormente || [])}
 
 Conversa até aqui:
 ${conversation.map(m => `[${m.role === 'user' ? 'RAMON' : 'LEAD'}]: ${m.content}`).join('\n')}
 
-RESPOSTA DO RAMON A SER AVALIADA:
+RESPOSTA DO RAMON A SER AVALIADA AGORA (turno ${turn}):
 "${lastRamon}"
 
-Avalie com rigor. Siga a rubrica e as regras críticas. Marque técnicas aplicadas com honestidade (só true se identificável de fato).`;
+Avalie com rigor. Identifique qual passo do Caminho o Ramon executou neste turno. Marque técnicas com honestidade.`;
   }
 
-  async function evaluateTurn({ scenario, conversation, lastRamon, turn, data }) {
+  async function evaluateTurn({ scenario, conversation, lastRamon, turn, data, passosCumpridosAnteriormente }) {
     const system = buildEvaluatorSystem({ data });
-    const user = buildEvaluatorUserPrompt({ scenario, conversation, lastRamon, turn });
+    const user = buildEvaluatorUserPrompt({ scenario, conversation, lastRamon, turn, passosCumpridosAnteriormente });
     const { text } = await ClaudeAPI.call({
-      system,
-      messages: [{ role: 'user', content: user }],
-      max_tokens: 900,
-      temperature: 0.35
+      system, messages: [{ role: 'user', content: user }],
+      max_tokens: 1100, temperature: 0.3
     });
     const parsed = ClaudeAPI.extractJSON(text);
     if (!parsed) throw new Error('Avaliação inválida');
 
-    // Calcular xp_bonus_tecnicas se não veio
-    if (!parsed.xp_bonus_tecnicas || parsed.xp_bonus_tecnicas === 0) {
+    // Recalcular xp_bonus_tecnicas se não veio
+    if (!parsed.xp_bonus_tecnicas) {
       let sum = 0;
       Gamification.TECHNIQUES.forEach(t => {
         if (parsed.tecnicas_aplicadas && parsed.tecnicas_aplicadas[t.id]) sum += t.xp;
@@ -113,36 +135,37 @@ Avalie com rigor. Siga a rubrica e as regras críticas. Marque técnicas aplicad
     return parsed;
   }
 
-  // ========= ANÁLISE DA FALA DO LEAD (dica/spoiler pro Ramon) =========
+  // ========= DICA INLINE PÓS-FALA DO LEAD =========
   async function leadHint({ scenario, leadMessage, conversation, turn, data }) {
-    const system = `Você é coach de vendas L99 do Dojô Improvável (Teoria da Permissão + playbook Voss/Concer/Hormozi/Brunson).
+    const system = `Você é coach L99 do Dojô Improvável (Arena 2 — chamada pós-evento).
 
-Sua função nesta chamada: ler UMA fala recém-chegada do LEAD e produzir uma dica rápida pro Ramon — o que provavelmente está em jogo e que caminhos técnicos existem. É um spoiler opcional, fica oculto por padrão.
+Sua função nesta chamada: ler UMA fala recém-chegada do LEAD e produzir uma dica rápida pro Ramon — o que está em jogo e que caminhos técnicos existem. Spoiler opcional.
 
 Regras:
-- Seja cirúrgico. Curto. Sem prosa motivacional.
-- Use nomes REAIS das técnicas (Mirror, Label, Isolamento Concer, Teste Hipotético, Silêncio, Dupla Alternativa, Alinhamento Lógico, Cadeira de Balanço, Inversão de Papéis, Ciclo do Quase, Risco Reverso, Dinheiro vs Tempo, Nomear conceito da Teoria da Permissão).
-- Nomeie o conceito da Teoria da Permissão quando couber (Pré-Queda, Mula de Carga, Culpa da Sobrevivência, Banheiro Emocional, Medo do Brilho, Obesidade Intelectual, Plano Perfeito, PDA, Escada da Postura, Conversa Difícil).
-- 2-3 técnicas sugeridas, no máximo. Cada uma com UM motivo em 1 frase (por que aqui, agora).
+- Cirúrgico, curto, sem prosa motivacional
+- Nomes REAIS das técnicas do compêndio (Mirror, Label, Looping Universal, 3 Dez, Implicação, Necessidade de Solução, Cadeira de Balanço, Isolamento, Pre-handling, Assumptive Close, Avanço, Teste Hipotético, etc.)
+- Nomeie conceitos da Teoria da Permissão (Permissão, PDA, Pré-Queda, Mula de Carga, Culpa da Sobrevivência, etc.)
+- Máximo 3 técnicas sugeridas, cada uma com 1 frase de motivo
+- Identifique em qual passo do Caminho (1-18) a conversa está agora
 
-Responda JSON estrito, sem markdown nem fences:
+Responda JSON estrito:
 {
-  "possivel_objecao": "descrição em 1 frase da objeção que o lead acabou de sinalizar (superficial OU se virou algo mais real)",
-  "categoria": "dinheiro | tempo | confianca | autoconhecimento | familia | religiosidade | postura | decisao",
+  "possivel_objecao": "descrição em 1 frase",
+  "categoria": "dinheiro | tempo | confianca | autoconhecimento | familia | decisao | duvida_produto",
   "camada_revelada": "superficial | intermediaria | profunda",
-  "conceito_permissao_em_jogo": "nome do conceito OU null",
+  "conceito_permissao_em_jogo": "nome OU null",
+  "passo_do_caminho_sugerido": N (qual passo 1-18 o Ramon deveria estar executando agora),
   "tecnicas_sugeridas": [
-    { "nome": "Mirror", "porque": "repetir 'quem você pensa que é' devolve a voz herdada sem invadir" },
-    { "nome": "Nomear conceito Permissão", "porque": "isso é Medo de Ofuscar — padrão de lealdade ao pai" }
+    { "nome": "...", "porque": "..." }
   ],
-  "o_que_observar": "1 frase do que fica claro na fala do lead e que o Ramon pode querer mirar"
+  "o_que_observar": "1 frase do que fica claro na fala do lead"
 }`;
 
-    const user = `Persona: ${scenario.persona.nome}, padrão oculto: ${scenario.padrao_oculto}.
-Objeção superficial do cenário: ${scenario.objecao_superficial}
-Objeção real (oculta — ajuda a ancorar a análise): ${scenario.objecao_real}
+    const user = `Persona: ${scenario.persona.nome}, padrão: ${scenario.padrao_oculto_teoria_permissao}.
+Objeção superficial: ${scenario.objecao_superficial}
+Objeção real: ${scenario.objecao_real}
 
-Últimas 2 trocas da conversa:
+Últimas trocas:
 ${conversation.slice(-4).map(m => `[${m.role === 'user' ? 'RAMON' : 'LEAD'}]: ${m.content}`).join('\n')}
 
 FALA RECÉM-CHEGADA DO LEAD (turno ${turn}):
@@ -152,10 +175,8 @@ Devolva o JSON.`;
 
     try {
       const { text } = await ClaudeAPI.call({
-        system,
-        messages: [{ role: 'user', content: user }],
-        max_tokens: 450,
-        temperature: 0.4
+        system, messages: [{ role: 'user', content: user }],
+        max_tokens: 450, temperature: 0.4
       });
       return ClaudeAPI.extractJSON(text);
     } catch (err) {
@@ -164,79 +185,73 @@ Devolva o JSON.`;
     }
   }
 
-  // ========= PROMPT DO LEAD (resposta) =========
-  async function leadResponse({ scenario, conversation, dojo, data, leadCederCamada, leadEndurecer, podeFechar }) {
-    const leadSystem = Scenarios.buildLeadSystemPrompt({ scenario, dojo, data });
-
-    // Injetar estado atual no prompt do turno
-    let cueMsg = '';
-    if (podeFechar) cueMsg = '[CUE DE FECHAMENTO] Ramon fez a pergunta certa no momento certo, todas as camadas foram quebradas. Você pode ceder e aceitar entrar. Responda 2-3 frases.';
-    else if (leadEndurecer) cueMsg = '[CUE] Ramon caiu em armadilha (clichê / religiosidade / desconto / urgência falsa). Responda SECO, fechado, quase desligando. 1-2 frases.';
-    else if (leadCederCamada) cueMsg = '[CUE] Ramon aplicou técnica de precisão. Ceda UMA camada — revele algo mais próximo da objeção real, mas não entregue tudo. 2-3 frases.';
+  // ========= RESPOSTA DO LEAD =========
+  async function leadResponse({ scenario, conversation, data, leadCederCamada, leadEndurecer, podeFechar }) {
+    const leadSystem = Scenarios.buildLeadSystemPrompt({ scenario, data });
+    let cue = '';
+    if (podeFechar) cue = '[CUE INTERNO] Ramon conduziu bem (3 Dez aplicados + técnica de fechamento). Você pode ceder agora: 2-3 frases aceitando.';
+    else if (leadEndurecer) cue = '[CUE INTERNO] Ramon caiu em armadilha. Responda SECO, fechado. 1-2 frases.';
+    else if (leadCederCamada) cue = '[CUE INTERNO] Ramon aplicou técnica precisa. Ceda UMA camada — revele algo mais próximo da objeção real, mas não entregue tudo. 2-3 frases.';
 
     const msgs = conversation.map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content }));
-    // O lead é "assistant" da perspectiva do modelo; mas na nossa história o assistant é o LEAD.
-    // Como nosso loop alterna user=Ramon / assistant=Lead, seguimos isso:
-    if (cueMsg) {
-      msgs.push({ role: 'user', content: `(Sistema — ignore no conteúdo da resposta) ${cueMsg}\n\nAgora responda como a persona à última fala do Ramon, em 1-3 frases.` });
-    }
+    if (cue) msgs.push({ role: 'user', content: `(Sistema) ${cue}\n\nAgora responda à última fala do Ramon em 1-3 frases, como a persona.` });
 
     const { text } = await ClaudeAPI.call({
-      system: leadSystem,
-      messages: msgs,
-      max_tokens: 400,
-      temperature: 0.95
+      system: leadSystem, messages: msgs,
+      max_tokens: 400, temperature: 0.95
     });
     return (text || '').trim();
   }
 
   // ========= RELATÓRIO FINAL =========
-  async function finalReport({ scenario, conversation, turnFeedbacks, data }) {
-    // Média ponderada das notas dos turnos
+  async function finalReport({ scenario, conversation, turnFeedbacks, passosCumpridos, data }) {
     const n = turnFeedbacks.length;
-    if (n === 0) return { nota_final: 0, frase_caderno: '', summary: '' };
+    if (n === 0) return { nota_final: 0, frase_caderno: '' };
 
     const avg = (k) => turnFeedbacks.reduce((a, f) => a + (f.notas?.[k] || 0), 0) / n;
     const notas = {
       escuta: avg('escuta'),
-      objecao: avg('objecao'),
-      dor: avg('dor'),
-      conducao: avg('conducao'),
+      investigacao: avg('investigacao'),
+      apresentacao: avg('apresentacao'),
+      fechamento: avg('fechamento'),
       fidelidade: avg('fidelidade')
     };
-    const nota_final = (notas.escuta * 0.2 + notas.objecao * 0.25 + notas.dor * 0.2 + notas.conducao * 0.2 + notas.fidelidade * 0.15);
+    const nota_final = (notas.escuta * 0.2 + notas.investigacao * 0.2 + notas.apresentacao * 0.2 + notas.fechamento * 0.25 + notas.fidelidade * 0.15);
 
-    // União das técnicas aplicadas
     const tecAcc = {};
     turnFeedbacks.forEach(f => {
       const t = f.tecnicas_aplicadas || {};
       Object.keys(t).forEach(k => { if (t[k]) tecAcc[k] = (tecAcc[k] || 0) + 1; });
     });
 
-    // Pedir frase-pro-caderno
-    const system = `Você é coach sênior do Dojô Improvável (Teoria da Permissão + playbook). Ao fim de uma sessão, emita UMA frase curta e afiada para o Ramon levar pro caderno — cirúrgica, voz de mesa de jantar, baseada no que ele aprendeu ou precisa treinar. 10-22 palavras. Sem clichê. Sem reticências motivacionais.`;
-    const user = `Persona: ${scenario.persona.nome}, ${scenario.padrao_oculto}.
-Notas médias: ${JSON.stringify(notas)}.
-Nota final: ${nota_final.toFixed(2)}.
-Técnicas aplicadas: ${JSON.stringify(tecAcc)}.
-Últimos 2 ajustes do avaliador: ${turnFeedbacks.slice(-2).map(f => f.ajuste).filter(Boolean).join(' | ')}.
+    const caminhoTotal = (data.caminho_18_passos?.passos || []).length || 18;
+    const coberturaPct = Math.round((passosCumpridos.length / caminhoTotal) * 100);
 
-Devolva SÓ o JSON:
-{"frase_caderno": "..."}`;
+    const system = `Você é coach sênior da Aliança Divergente. Emita UMA frase cirúrgica pro caderno do Ramon — voz mesa de jantar, 10-22 palavras, sem clichê, baseada no que a sessão revelou.`;
+    const user = `Persona: ${scenario.persona.nome}, ${scenario.padrao_oculto_teoria_permissao}.
+Sub-modo: ${scenario.submodo}
+Passos do Caminho cumpridos: ${JSON.stringify(passosCumpridos)} (${coberturaPct}% de cobertura)
+Notas médias: ${JSON.stringify(notas)}
+Nota final: ${nota_final.toFixed(2)}
+Últimos ajustes: ${turnFeedbacks.slice(-2).map(f => f.ajuste).filter(Boolean).join(' | ')}
+
+Devolva: {"frase_caderno": "..."}`;
 
     let frase = '';
     try {
-      const { text } = await ClaudeAPI.call({ system, messages: [{ role: 'user', content: user }], max_tokens: 200, temperature: 0.7 });
+      const { text } = await ClaudeAPI.call({ system, messages: [{ role: 'user', content: user }], max_tokens: 150, temperature: 0.7 });
       const p = ClaudeAPI.extractJSON(text);
-      frase = p?.frase_caderno || '';
+      frase = p?.frase_caderno || 'Perceber sem decidir é se iludir.';
     } catch (_) {
-      frase = 'O que você percebe e não decide, vira dívida com você mesmo.';
+      frase = 'Perceber sem decidir é se iludir.';
     }
 
     return {
       nota_final,
       notas,
       tecnicas_acumuladas: tecAcc,
+      passos_cumpridos: passosCumpridos,
+      cobertura_pct: coberturaPct,
       frase_caderno: frase
     };
   }

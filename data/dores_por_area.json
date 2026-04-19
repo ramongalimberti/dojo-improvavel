@@ -1,0 +1,107 @@
+{
+  "descricao": "As dores do cliente Improvável, organizadas por área da vida, com FRASES LITERAIS em 1ª pessoa. Use como espelho da dor: cite a frase ANTES de nomear o problema. O prospect sente que você enxerga o que ele vive.",
+  "fonte": "Apostila_Vendas_Arsenal_Nucleo — seção 0.3",
+  "tecnica_aplicacao": "Em vez de perguntar 'qual é sua dor?', diga a frase da dor PRIMEIRO, depois nomeie o padrão. Ex: 'Você já se pegou falando: trabalho feito louco, ganho bem, mas o dinheiro some? Se sim, isso tem nome: Ganhar e Não Levar. E tem protocolo pra quebrar.'",
+  "areas": [
+    {
+      "nome": "Relacionamentos / Limites e Dependência",
+      "dores_literais": [
+        "Tá todo mundo dentro do meu banheiro dizendo como eu tenho que viver e eu me encolho pra caber na vida deles.",
+        "Eu carrego o problema de todo mundo nas costas; sou o salvador da família, mas a minha vida está um caos.",
+        "Não consigo dizer 'não' por medo de decepcionar e perder o amor das pessoas."
+      ],
+      "municoes": ["Festa no Banheiro", "3 Perfis Controladores", "Mula de Carga"]
+    },
+    {
+      "nome": "Finanças",
+      "dores_literais": [
+        "Trabalho como um condenado, ganho bem, mas o dinheiro some da minha conta e termino o ano falido.",
+        "Toda vez que vou fechar o contrato da minha vida, alguma coisa dá errado: o cliente some ou o carro quebra.",
+        "Chego no supermercado com medo do cartão não passar e passo vergonha contando o dinheiro."
+      ],
+      "municoes": ["CDP", "Pré-Queda", "Ganhar e Não Levar", "Teto Financeiro", "Culpa da Sobrevivência"]
+    },
+    {
+      "nome": "Autoestima",
+      "dores_literais": [
+        "Faço piada com meu próprio peso e com a minha desgraça pra disfarçar a dor que sinto de mim mesma.",
+        "Eu me sinto uma fraude; acelero, me esforço o dobro dos outros, mas não saio do lugar.",
+        "Vivo a vida do 'pelo menos': pelo menos não estou tão ruim quanto o vizinho, mas desisti dos meus sonhos."
+      ],
+      "municoes": ["CDP", "Escada da Postura", "Escada da Maturidade"]
+    },
+    {
+      "nome": "Família de Origem / Pais e Irmãos",
+      "dores_literais": [
+        "Se eu ficar rico, não terei permissão para pertencer à família; todo mundo vai me pedir dinheiro e me afastar.",
+        "Trabalho há 15 anos na empresa do meu pai, vivendo o sonho dele, abrindo mão da minha própria vida.",
+        "Se eu prosperar, serei a única justificativa para o fracasso dos meus irmãos."
+      ],
+      "municoes": ["Medo do Brilho", "Culpa da Sobrevivência", "Dependência Emocional"]
+    },
+    {
+      "nome": "Filhos",
+      "dores_literais": [
+        "No dia que eu decidi me mudar e focar em mim, minha filha adoeceu gravemente para me prender.",
+        "Digo pro meu filho que não tenho dinheiro pro brinquedo dele porque tive que ajudar a vovó que está sempre no perrengue.",
+        "Justifico o meu medo de crescer dizendo que sacrifico tudo pelos meus filhos, usando-os como desculpa."
+      ],
+      "municoes": ["Síndrome do Vilão", "Escada da Maturidade", "Filho como Escudo"]
+    },
+    {
+      "nome": "Cônjuge",
+      "dores_literais": [
+        "Estou em um casamento que é um inferno, mas não tenho coragem de me separar por dependência emocional.",
+        "Se eu ganhar mais dinheiro que o meu marido, ele vai se sentir inferior e nosso casamento vai acabar.",
+        "Meu marido/esposa me põe pra baixo todo dia dizendo: 'Quem você pensa que é pra querer ser rico?'"
+      ],
+      "municoes": ["Dependência Emocional", "Coleiras Invisíveis", "3 Perfis Controladores", "Medo do Brilho"]
+    },
+    {
+      "nome": "Trabalho e Carreira",
+      "dores_literais": [
+        "Tenho três pós-graduações, trabalho feito louca, mas o meu teto não passa de R$ 4.500 a R$ 8.000.",
+        "Tenho pavor de cobrar pelo meu trabalho e acabo atendendo de graça por dó das pessoas.",
+        "É revoltante ver o 'burrão' que sentava no fundo da sala ganhando milhões enquanto eu conto moedas."
+      ],
+      "municoes": ["Teto Financeiro", "CDP", "Medo de Cobrar", "Escada da Maturidade"]
+    },
+    {
+      "nome": "Saúde Física e Mental",
+      "dores_literais": [
+        "Estou tão esgotada tentando salvar a vida de todo mundo que tive um burnout.",
+        "Eu vivo à base de ansiolíticos e durmo na cama com pensamentos suicidas porque não vejo saída.",
+        "Perco 20kg, mas quando alguém me elogia ou a vida melhora, me saboto e engordo o dobro pra me proteger (efeito sanfona)."
+      ],
+      "municoes": ["Mula de Carga", "Dependência Emocional", "Utilidade Inconsciente do Peso/Doença"]
+    },
+    {
+      "nome": "Vida Espiritual",
+      "dores_literais": [
+        "Eu não avanço porque estou esperando o relógio e o tempo de Deus, que parece nunca chegar.",
+        "Acho que Deus está me punindo pelas coisas que fiz; Ele é só vingança e eu mereço essa desgraça.",
+        "Me escondo atrás de um cargo na igreja dizendo que estou salvando o mundo, mas não tenho o dinheiro do leite do meu filho."
+      ],
+      "municoes": ["Plano Perfeito", "Religiosidade como Fuga", "Escada da Postura"]
+    }
+  ],
+  "mapa_de_combate": {
+    "descricao": "Cruzamento rápido: dor citada pelo cliente → munição primária → passo do Caminho recomendado",
+    "mapa": [
+      {"dor": "Ganho bem mas o dinheiro some", "municao": "CDP + Pré-Queda + Ganhar e Não Levar", "passo_caminho": [6, 7, 14]},
+      {"dor": "Meu marido não vai deixar", "municao": "Coleiras Invisíveis + Combinado Não Me Aperta", "passo_caminho": [12, 13]},
+      {"dor": "Carrego todo mundo nas costas", "municao": "Mula de Carga + 3 Perfis Controladores", "passo_caminho": [6, 7]},
+      {"dor": "Se eu ficar rico a família se afasta", "municao": "Escada da Maturidade + Dependência Emocional", "passo_caminho": [6, 7, 14]},
+      {"dor": "Tenho 3 pós e ganho pouco", "municao": "CDP (falta Permissão, não Capacidade)", "passo_caminho": [5, 6, 10]},
+      {"dor": "Já tentei de tudo", "municao": "Desculpa Sofisticada + Obesidade Intelectual", "passo_caminho": [5, 6, 10]},
+      {"dor": "Não é a hora", "municao": "Pré-Queda como Treino + Bateria da Vontade", "passo_caminho": [12, 14]},
+      {"dor": "Vou pensar", "municao": "4 Gatilhos da Pré-Queda (24h) + Avanço Concreto", "passo_caminho": [12, 18]},
+      {"dor": "Meu filho depende de mim", "municao": "Síndrome do Vilão + Escada da Maturidade", "passo_caminho": [6, 7]},
+      {"dor": "Estou no limite", "municao": "A Porteira da Vida", "passo_caminho": [7]},
+      {"dor": "Emagreço e engordo de novo", "municao": "Padrões + Utilidade do problema + Modo Fome", "passo_caminho": [5, 6]},
+      {"dor": "Espero o tempo de Deus", "municao": "Escada da Postura (separar fé de paralisia)", "passo_caminho": [6]},
+      {"dor": "Casamento é um inferno", "municao": "Conversa Difícil + 3 Perfis Controladores", "passo_caminho": [6, 7]},
+      {"dor": "Trabalho feito louca mas não saio do lugar", "municao": "CDP + Teto Financeiro + Dois Carros", "passo_caminho": [5, 6, 10]}
+    ]
+  }
+}

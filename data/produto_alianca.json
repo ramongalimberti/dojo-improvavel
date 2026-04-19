@@ -1,0 +1,90 @@
+{
+  "nome": "Aliança Divergente",
+  "liderada_por": "Ramon Galimberti (co-liderança com Elton Euler)",
+  "alunos_formados": "150.000+",
+  "fonte": "Apostila_Vendas_Arsenal_Nucleo — seção 0.1",
+  "definicao_oficial": "A Aliança Divergente é um ambiente de evolução pessoal que une uma plataforma tecnológica e uma comunidade, focado em identificar e quebrar padrões invisíveis (pontos cegos) que travam o progresso — para aumentar a Permissão do aluno e eliminar a Dependência Emocional nas relações.",
+  "posicionamento_por_negacao": {
+    "nao_e_curso_online": "Não é curso online com dezenas de videoaulas genéricas",
+    "nao_e_conteudo": "Não é conteúdo para estufar a cabeça (obesidade intelectual)",
+    "nao_e_terapia": "Não é terapia tradicional",
+    "nao_e_mentoria_tecnica": "Não é mentoria de negócios de técnica pura",
+    "nao_e_coaching": "Não é coaching motivacional"
+  },
+  "o_que_e": "Uma jornada 100% personalizada e prática, guiada por Inteligência Artificial, com 5 pilares estruturantes.",
+  "pilares": [
+    {
+      "numero": 1,
+      "nome": "Aplicativo Marca Passos (o núcleo)",
+      "descricao": "Terapeuta de bolso com IA que tem memória do aluno. Entende contexto de vida, sonhos, padrões limitantes. Quando o aluno sofre uma Pré-Queda (bate o carro, perde dinheiro, adoece), relata ao app. O app analisa, identifica a utilidade inconsciente do problema e indica o próximo passo exato.",
+      "entrega": "A cabeça do Ramon no bolso, 24/7."
+    },
+    {
+      "numero": 2,
+      "nome": "Ferramentas Práticas de Desbloqueio",
+      "descricao": "Protocolos + Plano Perfeito + Pense Comigo + PDA diário.",
+      "detalhes": {
+        "protocolos": "Receitas passo-a-passo para Medo, Culpa, Dependência Emocional, Proteção Emocional. Rodados dentro do app com perguntas investigativas.",
+        "plano_perfeito": "5 objetivos nas 3 áreas — Saúde, Dinheiro, Relacionamentos.",
+        "pense_comigo": "Ferramenta pra separar razão da emoção em decisões difíceis (terminar relação, pedir demissão).",
+        "pda": "Perceber → Decidir → Agir — exercício diário estimulado pela plataforma."
+      }
+    },
+    {
+      "numero": 3,
+      "nome": "Áudios Diários",
+      "descricao": "5-10 min/dia com provocações, reflexões, desafios. Focados em gerar pequenos ganhos de clareza."
+    },
+    {
+      "numero": 4,
+      "nome": "Encontros Semanais Ao Vivo",
+      "descricao": "Dois tracks: Encontros de Impulso + Encontros de Reforço.",
+      "detalhes": {
+        "encontros_impulso": "Quem já resolveu travas graves e está em 'proteger e garantir'. Convidados/especialistas: comunicação, vendas, carreira, investimentos, negócios.",
+        "encontros_reforco": "Quem está na fase de identificar e resolver Pré-Quedas e Dependência Emocional."
+      }
+    },
+    {
+      "numero": 5,
+      "nome": "Comunidade e Networking",
+      "descricao": "Mapa de Aliados + Fóruns + Grupos Regionais.",
+      "detalhes": {
+        "mapa_de_aliados": "Visualiza aliados por cidade/mundo com níveis de engajamento.",
+        "foruns": "Por área — financeiro, vida saudável, negócios.",
+        "grupos_regionais": "Grupos de 30, divididos por região e por gênero (homens/mulheres), com anfitriões."
+      }
+    }
+  ],
+  "oferta_comercial": {
+    "duracao": "Anuidade (1 ano)",
+    "investimento_vista": "R$ 2.480",
+    "investimento_parcelado": "12× R$ 249",
+    "meios_pagamento": ["cartão", "boleto", "PIX"],
+    "garantia": "30 dias incondicional",
+    "ingresso": "Não automático. Candidato preenche Ficha de Interesse em Aumentar sua Permissão, IA analisa, chega aprovação/reprovação/correção via WhatsApp antes do pagamento."
+  },
+  "bonus_de_entrada": {
+    "descricao": "Bônus para quem inscreveu no lançamento",
+    "itens": [
+      "Intensivão de Permissão (1 semana extra de tira-dúvidas e desafios iniciais)",
+      "Aula 'Como superar o Medo, a Culpa e a Insegurança'",
+      "Aula 'Dinheiro, Abundância e Escassez' (padrões que prendem à pobreza)",
+      "Bônus de Ação Rápida: Mentoria Rompendo Ciclos ao vivo via Zoom (pra quem entrou no 1º dia)"
+    ]
+  },
+  "frase_mestra": "A Aliança Divergente não é curso. É ambiente. Você não entra pra aprender mais — você entra pra PARAR de se sabotar. A tecnologia (Marca Passos) age como terapeuta de bolso 24/7. A comunidade te sustenta quando os padrões vêm te atacar. E os protocolos te dão o passo exato no momento exato. Você não vai aprender mais nada — você vai VIVER diferente.",
+  "diferencial_vs_concorrencia": {
+    "vs_cursos": "Aliança é ambiente personalizado por IA, não conteúdo massificado.",
+    "vs_terapia": "A terapia trabalha o 'por que'. Aqui trabalhamos o 'o que fazer agora' + rompe padrão.",
+    "vs_mentoria_tecnica": "Mentoria técnica resolve Capacidade. Aliança resolve Permissão — o que falta pra quem já tem Capacidade e Disposição.",
+    "vs_coaching": "Coaching motivacional vende estado. Aqui trabalhamos estágio — progresso real, estrutural."
+  },
+  "missao": "Homens são desafiados, mulheres são valorizadas, crianças são protegidas.",
+  "premissas_sustentadoras": [
+    "Você não foi mais longe porque não pôde — ainda. Permissão é desenvolvível.",
+    "O que merece ser feito, merece ser bem feito.",
+    "Aqui, você pode mais.",
+    "Nós não prometemos resultado — mostramos o caminho.",
+    "Perceber sem decidir é se iludir. Decidir sem agir é se enganar."
+  ]
+}

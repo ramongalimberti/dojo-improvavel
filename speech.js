@@ -1,8 +1,8 @@
-// speech.js — Web Speech API pt-BR (reconhecimento + síntese de voz)
+// speech.js v2 — Web Speech pt-BR + comandos de voz + Modo Chamada (TTS auto + silence timer)
 
 const Speech = (() => {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const MAX_LISTEN_MS = 30000; // 30s máximo
+  const MAX_LISTEN_MS = 30000;
 
   let recognition = null;
   let listening = false;
@@ -10,21 +10,21 @@ const Speech = (() => {
   let manualStop = false;
   let callbacks = null;
 
+  // Silence timer (Modo Chamada)
+  let silenceTimerStart = null;  // timestamp quando o lead terminou de falar
+  let lastSilenceDuration = 0;
+
   function isSupported() { return !!SR; }
 
   // ========= COMANDOS DE VOZ → PONTUAÇÃO & PAUSAS =========
-  // Aplica transformações no texto reconhecido pela Web Speech API pra
-  // converter palavras faladas em pontuação real e marcar pausas.
   function processVoiceCommands(text) {
     if (!text) return text;
-    let t = ' ' + text + ' '; // espaçamento pras regex de \b funcionarem no extremo
+    let t = ' ' + text + ' ';
 
-    // PAUSA (antes das outras regras — antes de "ponto")
     t = t.replace(/\bpausa(?:\s+de)?\s+(\d+)\s*(?:segundos?|s)\b/gi, (_, n) => ` [silêncio ${n}s] `);
     t = t.replace(/\bsil[êe]ncio(?:\s+de)?\s+(\d+)\s*(?:segundos?|s)\b/gi, (_, n) => ` [silêncio ${n}s] `);
     t = t.replace(/\bpausa\b/gi, ' [silêncio 3s] ');
 
-    // PONTUAÇÃO — composições específicas antes das genéricas
     const rules = [
       [/\bponto\s+de\s+interroga[cç][aã]o\b/gi, '?'],
       [/\bponto\s+de\s+exclama[cç][aã]o\b/gi, '!'],
@@ -49,38 +49,32 @@ const Speech = (() => {
     ];
     rules.forEach(([re, rep]) => { t = t.replace(re, rep); });
 
-    // Normalização de espaços ao redor da pontuação
-    t = t.replace(/\s+([,.;:!?])/g, '$1');          // tira espaço antes
-    t = t.replace(/([,.;:!?])(\S)/g, '$1 $2');       // coloca espaço depois
-    t = t.replace(/[ \t]{2,}/g, ' ');                // colapsa espaços
-    t = t.replace(/\s*\n\s*/g, '\n');                // limpa em volta de newline
-    t = t.replace(/\s+\[silêncio/g, ' [silêncio');   // pausa com espaço único
-    t = t.replace(/\]\s*([^\s\n])/g, '] $1');        // espaço depois de ]
+    t = t.replace(/\s+([,.;:!?])/g, '$1');
+    t = t.replace(/([,.;:!?])(\S)/g, '$1 $2');
+    t = t.replace(/[ \t]{2,}/g, ' ');
+    t = t.replace(/\s*\n\s*/g, '\n');
+    t = t.replace(/\s+\[silêncio/g, ' [silêncio');
+    t = t.replace(/\]\s*([^\s\n])/g, '] $1');
 
-    // Capitalização: início da string, depois de . ! ? ou newline
-    t = t.replace(/^([ \t]*)([a-záàâãéêíóôõúç])/,
-      (_, w, c) => w + c.toUpperCase());
-    t = t.replace(/([.!?]\s+)([a-záàâãéêíóôõúç])/g,
-      (_, p, c) => p + c.toUpperCase());
-    t = t.replace(/(\n[ \t]*)([a-záàâãéêíóôõúç])/g,
-      (_, p, c) => p + c.toUpperCase());
+    t = t.replace(/^([ \t]*)([a-záàâãéêíóôõúç])/, (_, w, c) => w + c.toUpperCase());
+    t = t.replace(/([.!?]\s+)([a-záàâãéêíóôõúç])/g, (_, p, c) => p + c.toUpperCase());
+    t = t.replace(/(\n[ \t]*)([a-záàâãéêíóôõúç])/g, (_, p, c) => p + c.toUpperCase());
 
     return t.trim();
   }
 
+  // ========= RECOGNITION =========
   function createRecognition() {
     if (!SR) return null;
     const r = new SR();
     r.lang = 'pt-BR';
-    r.continuous = true;       // escuta contínua
+    r.continuous = true;
     r.interimResults = true;
     r.maxAlternatives = 1;
     return r;
   }
 
-  function clearAutoStop() {
-    if (autoStopTimer) { clearTimeout(autoStopTimer); autoStopTimer = null; }
-  }
+  function clearAutoStop() { if (autoStopTimer) { clearTimeout(autoStopTimer); autoStopTimer = null; } }
 
   function startListening(cb) {
     if (!SR) { cb?.onError?.('Reconhecimento de voz não suportado. Use Chrome ou Edge.'); return; }
@@ -90,6 +84,12 @@ const Speech = (() => {
     recognition = createRecognition();
     manualStop = false;
     let finalText = '';
+
+    // Captura o tempo de silêncio DESDE que o lead falou pela última vez
+    if (silenceTimerStart) {
+      lastSilenceDuration = (Date.now() - silenceTimerStart) / 1000;
+      silenceTimerStart = null;
+    }
 
     recognition.onresult = (e) => {
       let interim = '';
@@ -106,39 +106,35 @@ const Speech = (() => {
     };
 
     recognition.onerror = (e) => {
-      // 'no-speech' e 'aborted' são esperados durante escuta contínua — não derrubar
       if (e.error === 'no-speech' || e.error === 'aborted') return;
       callbacks?.onError?.(e.error || 'Erro no reconhecimento');
     };
 
     recognition.onend = () => {
-      // Se paramos manualmente ou o timer expirou, encerra de verdade
       if (manualStop) {
         listening = false;
         clearAutoStop();
-        callbacks?.onEnd?.(finalText.trim());
+        callbacks?.onEnd?.(processVoiceCommands(finalText.trim()));
         return;
       }
-      // Caso contrário (fim natural antes do tempo), reinicia pra manter contínuo
       if (listening) {
-        try { recognition.start(); } catch (_) {
+        try { recognition.start(); }
+        catch (_) {
           listening = false;
           clearAutoStop();
-          callbacks?.onEnd?.(finalText.trim());
+          callbacks?.onEnd?.(processVoiceCommands(finalText.trim()));
         }
       }
     };
 
     listening = true;
-    try {
-      recognition.start();
-    } catch (err) {
+    try { recognition.start(); }
+    catch (err) {
       listening = false;
       callbacks?.onError?.(err.message);
       return;
     }
 
-    // Auto-stop depois de 30s
     autoStopTimer = setTimeout(() => {
       if (listening) {
         manualStop = true;
@@ -159,21 +155,37 @@ const Speech = (() => {
 
   function isListening() { return listening; }
 
-  // TTS — leitura da resposta do lead (opcional)
-  function speak(text, { rate = 1.0, voice = null } = {}) {
-    if (!('speechSynthesis' in window) || !text) return;
-    try { window.speechSynthesis.cancel(); } catch (_) {}
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'pt-BR';
-    u.rate = rate;
-    // Tentar voz pt-BR feminina
+  // ========= TTS =========
+  function getPreferredPtBrFemaleVoice() {
     const voices = window.speechSynthesis.getVoices();
     const ptVoices = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith('pt'));
-    const femaleHints = ['female', 'feminina', 'Luciana', 'Maria', 'Helena', 'Camila', 'Francisca'];
-    const preferred = voice
-      || ptVoices.find(v => femaleHints.some(h => v.name.toLowerCase().includes(h.toLowerCase())))
-      || ptVoices[0];
-    if (preferred) u.voice = preferred;
+    const femaleHints = ['luciana', 'maria', 'helena', 'camila', 'francisca', 'female', 'feminina', 'google', 'microsoft'];
+    return ptVoices.find(v => femaleHints.some(h => v.name.toLowerCase().includes(h))) || ptVoices[0];
+  }
+
+  function cleanTextForTTS(text) {
+    // Remove marcações como [silêncio 3s], [pausa], etc, mas FAZ a pausa de verdade
+    return (text || '').replace(/\[sil[êe]ncio\s+(\d+)s?\]/gi, '... ')  // TTS vai pausar naturalmente
+                       .replace(/\[pausa[^\]]*\]/gi, '... ')
+                       .replace(/\s+/g, ' ')
+                       .trim();
+  }
+
+  function speak(text, { rate = 1.0, onEnd, onStart } = {}) {
+    if (!('speechSynthesis' in window) || !text) return;
+    try { window.speechSynthesis.cancel(); } catch (_) {}
+    const clean = cleanTextForTTS(text);
+    const u = new SpeechSynthesisUtterance(clean);
+    u.lang = 'pt-BR';
+    u.rate = rate;
+    const voice = getPreferredPtBrFemaleVoice();
+    if (voice) u.voice = voice;
+    u.onstart = () => { onStart?.(); };
+    u.onend = () => {
+      // Começar a contar silêncio agora que o lead parou de falar
+      silenceTimerStart = Date.now();
+      onEnd?.();
+    };
     window.speechSynthesis.speak(u);
   }
 
@@ -181,5 +193,37 @@ const Speech = (() => {
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   }
 
-  return { isSupported, startListening, stopListening, isListening, speak, stopSpeaking, processVoiceCommands };
+  // ========= SILENCE TIMER (Modo Chamada) =========
+  function resetSilenceTimer() {
+    silenceTimerStart = null;
+    lastSilenceDuration = 0;
+  }
+
+  function getSilenceStartTime() {
+    return silenceTimerStart;
+  }
+
+  function getCurrentSilenceSeconds() {
+    if (!silenceTimerStart) return 0;
+    return (Date.now() - silenceTimerStart) / 1000;
+  }
+
+  function getLastSilenceDuration() {
+    return lastSilenceDuration;
+  }
+
+  function captureAndResetSilence() {
+    if (silenceTimerStart) {
+      lastSilenceDuration = (Date.now() - silenceTimerStart) / 1000;
+      silenceTimerStart = null;
+    }
+    return lastSilenceDuration;
+  }
+
+  return {
+    isSupported, startListening, stopListening, isListening,
+    speak, stopSpeaking, processVoiceCommands,
+    resetSilenceTimer, getSilenceStartTime, getCurrentSilenceSeconds,
+    getLastSilenceDuration, captureAndResetSilence
+  };
 })();

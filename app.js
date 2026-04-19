@@ -1,29 +1,36 @@
-// app.js — estado global, navegação e wiring das sessões
+// app.js v2 — orquestração Arena 2 (Chamada 1×1 Pós-Evento)
 
 (() => {
 
   // ========= STATE =========
   const state = {
-    data: {},               // JSONs carregados
+    data: {},
     dataLoaded: false,
-    currentDojo: null,      // DM_1_1 / AO_VIVO / LIVE
+    submodo: null,
     currentScenario: null,
-    conversation: [],       // [{role: 'user'|'assistant', content: string}]
+    conversation: [],
     turn: 0,
-    turnFeedbacks: [],      // avaliações por turno
-    sessionTechniques: {},  // técnicas aplicadas nesta sessão (contador)
+    turnFeedbacks: [],
+    sessionTechniques: {},      // contador por técnica
+    passosCumpridos: [],         // lista única ordenada de passos feitos
+    stepsByTurn: [],             // { turn, stepExecuted, stepIdeal }
+    silences: [],                // segundos de silêncio antes de cada turno do Ramon
     sessionClosed: false,
     sessionClosedDifficult: false,
     leadCederCamada: false,
     leadEndurecer: false,
-    podeFechar: false
+    podeFechar: false,
+    modoChamada: false,          // TTS auto + cronômetro ativos
+    silenceTickTimer: null
   };
 
-  const MAX_TURNS = 8;
+  const MAX_TURNS = 18;
 
-  // ========= HELPERS =========
-  function $(sel) { return document.querySelector(sel); }
-  function $$(sel) { return [...document.querySelectorAll(sel)]; }
+  function $(s) { return document.querySelector(s); }
+  function $$(s) { return [...document.querySelectorAll(s)]; }
+  function esc(s) {
+    return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
 
   function showScreen(id) {
     $$('.screen').forEach(s => s.classList.remove('active'));
@@ -31,28 +38,18 @@
     window.scrollTo(0, 0);
   }
 
-  function escapeHtml(s) {
-    return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  }
-
-  function toast(msg, type = 'info') {
-    // versão simples — pode substituir por algo mais elaborado
-    console.log(`[${type}] ${msg}`);
-  }
-
   // ========= DATA LOADING =========
   async function loadData() {
-    const files = ['metodologia', 'objecoes', 'personas', 'rubrica', 'tecnicas_vendas', 'scripts_quebra_objecao', 'playbook_live'];
+    const files = [
+      'caminho_18_passos', 'produto_alianca', 'conceitos_permissao',
+      'frases_ancora', 'persona_improvavel', 'dores_por_area',
+      'casos_provas', 'tecnicas_compendio', 'objecoes_scripts'
+    ];
     const data = {};
     for (const f of files) {
-      try {
-        const r = await fetch(`data/${f}.json`);
-        if (!r.ok) throw new Error(`${f}.json ${r.status}`);
-        data[f] = await r.json();
-      } catch (err) {
-        console.error('Falha ao carregar', f, err);
-        throw err;
-      }
+      const r = await fetch(`data/${f}.json`);
+      if (!r.ok) throw new Error(`${f}.json ${r.status}`);
+      data[f] = await r.json();
     }
     state.data = data;
     state.dataLoaded = true;
@@ -64,7 +61,6 @@
     const existingKey = ClaudeAPI.getKey();
     const profile = Gamification.getProfile();
     if (existingKey && profile.name && profile.name !== 'Ramon') {
-      // usuário já configurado — ir pro dashboard
       $('#nameInput').value = profile.name;
       $('#apiKeyInput').value = existingKey;
       renderDashboard();
@@ -77,7 +73,7 @@
     $('#btnStart').addEventListener('click', () => {
       const key = $('#apiKeyInput').value.trim();
       const name = $('#nameInput').value.trim() || 'Ramon';
-      if (!key) { alert('Cole a API key da Anthropic pra começar.'); return; }
+      if (!key) { alert('Cole a Anthropic API key pra começar.'); return; }
       ClaudeAPI.setKey(key);
       const p = Gamification.getProfile();
       p.name = name;
@@ -90,19 +86,19 @@
   // ========= DASHBOARD =========
   function renderDashboard() {
     const p = Gamification.getProfile();
-    const skills = Gamification.getSkills();
-    const achievements = Gamification.getAchievements();
+    const tiers = Gamification.getTierLevels();
     const techs = Gamification.getTechniques();
+    const achievements = Gamification.getAchievements();
     const daily = Gamification.getDailyChallenge();
 
     $('#userName').textContent = p.name;
-    $('#userLevel').textContent = p.level;
-    $('#streakCount').textContent = p.streak;
+    $('#streakCount').textContent = p.streak || 0;
+    $('#semanaAtual').textContent = p.semana_atual || 1;
 
-    const need = Gamification.xpToLevel(p.level);
-    const pct = Math.min(100, Math.round((p.xp / need) * 100));
-    $('#xpFill').style.width = pct + '%';
-    $('#xpText').textContent = `${p.xp} / ${need} XP — Nível ${p.level}`;
+    // Missão da semana
+    const semanaIdx = Math.min(7, (p.semana_atual || 1) - 1);
+    const missao = Gamification.MISSAO_8_SEMANAS[semanaIdx];
+    $('#missaoText').textContent = missao ? missao.foco : '—';
 
     // Daily
     $('#challengeText').textContent = daily.text;
@@ -110,124 +106,122 @@
     if (daily.completed) { badge.textContent = '✓ Cumprido'; badge.classList.add('done'); }
     else { badge.textContent = '+25 XP'; badge.classList.remove('done'); }
 
-    // Skills
-    const skillLabels = [
-      { id: 'escuta', name: 'Escuta Ativa' },
-      { id: 'objecao', name: 'Quebra de Objeção' },
-      { id: 'dor', name: 'Ativação de Dor' },
-      { id: 'conducao', name: 'Condução ao Fechamento' },
-      { id: 'fidelidade', name: 'Fidelidade à Metodologia' }
-    ];
-    $('#skillsGrid').innerHTML = skillLabels.map(s => `
-      <div class="skill">
-        <div class="skill-name">${s.name}</div>
-        <div class="skill-bar"><div class="skill-fill" style="width:${skills[s.id]}%"></div></div>
-        <div class="skill-value">${skills[s.id]}/100</div>
-      </div>
-    `).join('');
+    // Tiers
+    $('#tiersGrid').innerHTML = Gamification.TIERS.map(t => {
+      const tl = tiers[t.id] || { level: 1, xp: 0 };
+      const need = Gamification.xpToLevel(tl.level);
+      const pct = Math.min(100, Math.round((tl.xp / need) * 100));
+      return `<div class="tier-card ${t.id}">
+        <div class="tier-head">
+          <span class="tier-name">${esc(t.nome)}</span>
+          <span class="tier-level">L${tl.level}</span>
+        </div>
+        <div class="tier-desc">${esc(t.descricao)}</div>
+        <div class="tier-bar"><div class="tier-fill" style="width:${pct}%"></div></div>
+        <div class="tier-xp">${tl.xp} / ${need} XP</div>
+      </div>`;
+    }).join('');
 
-    // Dojôs
-    ['DM_1_1', 'AO_VIVO', 'LIVE'].forEach(dojo => {
-      const unlocked = Gamification.isDojoUnlocked(dojo);
-      const btn = document.querySelector(`.btn-enter-dojo[data-dojo="${dojo}"]`);
-      const statusEl = document.getElementById(`status-${dojo}`);
-      if (unlocked) {
-        btn.disabled = false;
-        btn.textContent = 'Entrar';
-        if (statusEl) {
-          const sessionsInDojo = Gamification.getSessions().filter(s => s.dojo === dojo).length;
-          statusEl.textContent = sessionsInDojo > 0 ? `${sessionsInDojo} sessão${sessionsInDojo > 1 ? 'ões' : ''}` : 'Aberto';
-        }
-      } else {
-        btn.disabled = true;
-        btn.textContent = '🔒';
-      }
+    // Sub-modos
+    $('#submodosGrid').innerHTML = Object.keys(Scenarios.SUB_MODOS).map(key => {
+      const m = Scenarios.SUB_MODOS[key];
+      return `<div class="submodo-card" data-submodo="${key}">
+        <div class="submodo-icon">${m.icone}</div>
+        <div class="submodo-name">${esc(m.nome)}</div>
+        <div class="submodo-desc">${esc(m.descricao)}</div>
+        <div class="submodo-meta">
+          <span>${m.passos_alvo.length} passos</span>
+          <span>~${m.tempo_estimado_min} min</span>
+        </div>
+      </div>`;
+    }).join('');
+    $$('.submodo-card').forEach(c => {
+      c.addEventListener('click', () => startSession(c.dataset.submodo));
     });
 
-    // Techniques
+    // Técnicas
     $('#techniquesGrid').innerHTML = Gamification.TECHNIQUES.map(t => {
       const count = techs[t.id] || 0;
       const mastered = count >= 5;
       const unused = count === 0;
-      return `<div class="technique ${mastered ? 'mastered' : ''} ${unused ? 'unused' : ''}">
-        <div class="technique-name">${t.name}</div>
+      return `<div class="technique tier-${t.tier} ${mastered ? 'mastered' : ''} ${unused ? 'unused' : ''}">
+        <div class="technique-name">${esc(t.name)}</div>
         <div class="technique-count">${count}×</div>
       </div>`;
     }).join('');
 
-    // Achievements
+    // Conquistas
     $('#achievementsGrid').innerHTML = Gamification.ACHIEVEMENTS.map(a => `
-      <div class="achievement ${achievements[a.id] ? '' : 'locked'}" title="${escapeHtml(a.desc)}">
+      <div class="achievement ${achievements[a.id] ? '' : 'locked'}" title="${esc(a.desc)}">
         <div class="achievement-icon">${a.icon}</div>
         <div>
-          <div style="font-weight:600">${a.name}</div>
-          <div style="font-size:0.75em;color:var(--ink-muted)">${a.desc}</div>
+          <div style="font-weight:600">${esc(a.name)}</div>
+          <div style="font-size:0.75em;color:var(--ink-muted)">${esc(a.desc)}</div>
         </div>
       </div>
     `).join('');
   }
 
   function initDashboard() {
-    $$('.btn-enter-dojo').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const dojo = btn.dataset.dojo;
-        if (!Gamification.isDojoUnlocked(dojo)) return;
-        startSession(dojo);
-      });
-    });
-
     $('#btnChangeKey').addEventListener('click', () => {
       const k = prompt('Nova API key:', ClaudeAPI.getKey());
-      if (k && k.trim()) { ClaudeAPI.setKey(k.trim()); toast('API key atualizada'); }
+      if (k && k.trim()) { ClaudeAPI.setKey(k.trim()); }
     });
-
     $('#btnResetProfile').addEventListener('click', () => {
-      if (confirm('Apagar todo o progresso local? (XP, habilidades, conquistas, sessões) — isso não pode ser desfeito.')) {
+      if (confirm('Apagar todo o progresso local? (XP, tiers, conquistas, sessões) — não pode ser desfeito.')) {
         Gamification.resetAll();
-        localStorage.removeItem('dojo:ramon:scenario_hashes');
         location.reload();
       }
     });
   }
 
   // ========= SESSION =========
-  async function startSession(dojo) {
-    state.currentDojo = dojo;
+  async function startSession(submodo) {
+    state.submodo = submodo;
     state.conversation = [];
     state.turn = 0;
     state.turnFeedbacks = [];
     state.sessionTechniques = {};
+    state.passosCumpridos = [];
+    state.stepsByTurn = [];
+    state.silences = [];
     state.sessionClosed = false;
     state.sessionClosedDifficult = false;
     state.leadCederCamada = false;
     state.leadEndurecer = false;
     state.podeFechar = false;
 
-    const dojoNames = { 'DM_1_1': 'Dojô I — DM 1:1 Pós-Evento', 'AO_VIVO': 'Dojô II — Q&A Ao Vivo', 'LIVE': 'Dojô III — Live em Massa' };
-    $('#sessionDojoName').textContent = dojoNames[dojo] || dojo;
+    const m = Scenarios.SUB_MODOS[submodo];
+    $('#sessionModoName').textContent = `${m.icone} ${m.nome}`;
     $('#chat').innerHTML = '';
     $('#feedbackPanel').classList.remove('active');
     $('#feedbackPanel').innerHTML = '';
     $('#userInput').value = '';
     $('#turnCounter').textContent = '1';
+
+    renderCaminhoMap([]);
+    updateSilenceMeter();
+
     showScreen('session');
 
-    // Mostrar loader enquanto gera cenário
     $('#personaTitle').textContent = 'Gerando cenário...';
     $('#personaMeta').textContent = '';
     $('#personaTrigger').textContent = '';
-    $('#personaHint').textContent = '';
+    $('#personaHint').innerHTML = '';
     $('#sessionPersonaName').textContent = '...';
 
     try {
-      const profile = Gamification.getProfile();
-      const scenario = await Scenarios.generate({ level: profile.level, dojo, data: state.data });
+      const tierLevels = Gamification.getTierLevels();
+      const scenario = await Scenarios.generate({ submodo, data: state.data, tierLevels });
       state.currentScenario = scenario;
       renderPersona(scenario);
-      const { hintSlot } = pushLeadMessage(scenario.primeira_mensagem);
-      // Dica da primeira fala (async, não bloqueia)
+
+      // Se modo chamada ligado, auto-speaks primeira fala do lead
+      const { hintSlot } = pushLeadMessage(scenario.primeira_mensagem_lead, {
+        autoSpeak: state.modoChamada
+      });
       Evaluator.leadHint({
-        scenario, leadMessage: scenario.primeira_mensagem,
+        scenario, leadMessage: scenario.primeira_mensagem_lead,
         conversation: state.conversation, turn: 0, data: state.data
       }).then(h => attachLeadHint(hintSlot, h));
     } catch (err) {
@@ -237,50 +231,80 @@
     }
   }
 
+  function renderPersona(sc) {
+    $('#sessionPersonaName').textContent = sc.persona.nome;
+    $('#personaTitle').textContent = `${sc.persona.nome}, ${sc.persona.idade}`;
+    $('#personaMeta').textContent = `${sc.persona.profissao} — ${sc.persona.cidade}. ${sc.persona.situacao_atual}`;
+    $('#personaTrigger').textContent = `Evento: ${sc.evento_origem} · Gatilho: ${sc.gatilho_contato}`;
+    const techs = sc.tecnicas_ideais_aqui || [];
+    $('#personaHint').innerHTML = `
+      <div class="tec-line"><b>Objeção superficial:</b> ${esc(sc.objecao_superficial)}</div>
+      <div class="tec-line"><b>Objeção real (oculta):</b> ${esc(sc.objecao_real)}</div>
+      <div class="tec-line"><b>Padrão Teoria da Permissão:</b> ${esc(sc.padrao_oculto_teoria_permissao)}</div>
+      <div class="tec-line"><b>Dificuldade:</b> ${esc(sc.dificuldade)}</div>
+      <div class="tec-line" style="margin-top:0.8em"><b>Técnicas ideais aqui:</b></div>
+      <div class="tec-cards">${renderTechniqueCards(techs)}</div>
+      <div class="tec-line" style="margin-top:0.5em"><b>Conceitos em jogo:</b> ${esc((sc.conceitos_ideais_aqui || []).join(', '))}</div>
+    `;
+  }
+
   function renderTechniqueCards(names) {
     if (!names || !names.length) return '<span class="muted">—</span>';
     return names.map(raw => {
-      const guide = Gamification.findTechniqueGuide(raw);
+      const guide = findTechniqueGuide(raw);
       if (!guide) {
-        return `<div class="tec-card">
-          <div class="tec-card-head">
-            <span class="tec-card-name">${escapeHtml(raw)}</span>
-            <span class="tec-card-unknown">técnica não catalogada</span>
-          </div>
-        </div>`;
+        return `<div class="tec-card"><div class="tec-card-head">
+          <span class="tec-card-name">${esc(raw)}</span>
+          <span class="muted">técnica não catalogada</span>
+        </div></div>`;
       }
       return `<details class="tec-card">
         <summary class="tec-card-head">
-          <span class="tec-card-name">${escapeHtml(guide.name)}</span>
+          <span class="tec-card-name">${esc(guide.nome)}</span>
           <span class="tec-card-more">saber mais ▾</span>
         </summary>
         <div class="tec-card-body">
-          <div class="tec-line"><b>O quê:</b> ${escapeHtml(guide.resumo)}</div>
-          <div class="tec-line"><b>Quando usar:</b> ${escapeHtml(guide.quando)}</div>
-          <div class="tec-line"><b>Exemplo:</b><br><span class="tec-example">${escapeHtml(guide.exemplo).replace(/\n/g, '<br>')}</span></div>
-          <div class="tec-line tec-origem">Origem: ${escapeHtml(guide.origem)}</div>
+          <div class="tec-line"><b>O quê:</b> ${esc(guide.resumo)}</div>
+          <div class="tec-line"><b>Quando usar:</b> ${esc(guide.quando_usar)}</div>
+          <div class="tec-line"><b>Exemplo:</b><br><span class="tec-example">${esc(guide.exemplo)}</span></div>
+          <div class="tec-line tec-origem">Origem: ${esc(guide.autor)}</div>
         </div>
       </details>`;
     }).join('');
   }
 
-  function renderPersona(sc) {
-    $('#sessionPersonaName').textContent = sc.persona.nome;
-    $('#personaTitle').textContent = `${sc.persona.nome}, ${sc.persona.idade}`;
-    $('#personaMeta').textContent = `${sc.persona.profissao} — ${sc.persona.cidade}. ${sc.persona.situacao_financeira}`;
-    $('#personaTrigger').textContent = `Gatilho: ${sc.gatilho_contato}`;
-    const techs = sc.tecnicas_do_playbook_ideais_aqui || [];
-    $('#personaHint').innerHTML = `
-      <div class="tec-line"><b>Objeção superficial:</b> ${escapeHtml(sc.objecao_superficial)}</div>
-      <div class="tec-line"><b>Objeção real (oculta):</b> ${escapeHtml(sc.objecao_real)}</div>
-      <div class="tec-line"><b>Padrão oculto:</b> ${escapeHtml(sc.padrao_oculto)}</div>
-      <div class="tec-line"><b>Dificuldade:</b> ${escapeHtml(sc.nivel_dificuldade)}</div>
-      <div class="tec-line" style="margin-top:0.8em"><b>Técnicas ideais aqui:</b></div>
-      <div class="tec-cards">${renderTechniqueCards(techs)}</div>
-    `;
+  function findTechniqueGuide(rawName) {
+    const techs = state.data.tecnicas_compendio?.tecnicas || [];
+    const norm = (rawName || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+    if (!norm) return null;
+    for (const t of techs) {
+      if ((t.nome || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(norm)) return t;
+      if ((t.aliases || []).some(a => norm.includes(a) || a.includes(norm))) return t;
+    }
+    return null;
   }
 
-  function pushLeadMessage(text, { speak = false } = {}) {
+  // ========= MAPA 18 PASSOS =========
+  function renderCaminhoMap(passosCumpridos, passoAtual = null) {
+    const passos = state.data.caminho_18_passos?.passos || [];
+    const stripHtml = passos.map(p => {
+      const done = passosCumpridos.includes(p.numero);
+      const current = passoAtual === p.numero;
+      const alavanca = p.is_alavanca_maxima;
+      let cls = 'caminho-step';
+      if (done) cls += ' done';
+      if (current) cls += ' current';
+      if (alavanca) cls += ' alavanca';
+      return `<div class="${cls}" data-step="${p.numero}">
+        ${p.numero}
+        <span class="caminho-tooltip">${p.numero}. ${esc(p.nome)} <br><small>${esc(p.tecnica)} · ${esc(p.autor)}</small></span>
+      </div>`;
+    }).join('');
+    $('#caminhoStrip').innerHTML = stripHtml;
+  }
+
+  // ========= MESSAGES =========
+  function pushLeadMessage(text, { autoSpeak = false } = {}) {
     state.conversation.push({ role: 'assistant', content: text });
     const wrap = document.createElement('div');
     wrap.className = 'msg-wrap lead-wrap';
@@ -291,21 +315,44 @@
     el.textContent = text;
     wrap.appendChild(el);
 
+    const speakingBadge = document.createElement('div');
+    speakingBadge.className = 'lead-speaking';
+    speakingBadge.style.display = 'none';
+    speakingBadge.textContent = '🔊 falando...';
+    wrap.appendChild(speakingBadge);
+
     const hintSlot = document.createElement('div');
     hintSlot.className = 'hint-slot';
     hintSlot.innerHTML = `<details class="lead-hint-box">
       <summary><span class="hint-chip">🤫 dica do turno</span> <span class="hint-status">analisando...</span></summary>
-      <div class="lead-hint-body"><em class="muted">Carregando análise da fala do lead...</em></div>
+      <div class="lead-hint-body"><em class="muted">Carregando análise...</em></div>
     </details>`;
     wrap.appendChild(hintSlot);
 
     $('#chat').appendChild(wrap);
     wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
-    if (speak && state.currentDojo !== 'LIVE') Speech.speak(text);
-    return { wrap, bubble: el, hintSlot };
+
+    if (autoSpeak) {
+      speakingBadge.style.display = 'block';
+      Speech.resetSilenceTimer();
+      Speech.speak(text, {
+        onStart: () => { speakingBadge.style.display = 'block'; },
+        onEnd: () => {
+          speakingBadge.style.display = 'none';
+          startSilenceTick();
+        }
+      });
+    } else {
+      // Modo texto: começa cronômetro quando mensagem aparece
+      Speech.resetSilenceTimer();
+      // O silence timer só começa no cenário onde o TTS termina; em modo texto, inicia manualmente
+      // através do getter
+    }
+
+    return { wrap, bubble: el, hintSlot, speakingBadge };
   }
 
-  function pushRamonMessage(text) {
+  function pushRamonMessage(text, silenceSec) {
     state.conversation.push({ role: 'user', content: text });
     const wrap = document.createElement('div');
     wrap.className = 'msg-wrap ramon-wrap';
@@ -317,7 +364,7 @@
 
     const evalSlot = document.createElement('div');
     evalSlot.className = 'eval-slot';
-    evalSlot.innerHTML = `<div class="mini-eval pending"><span class="mini-eval-dot">•</span> <span class="muted">avaliando...</span></div>`;
+    evalSlot.innerHTML = `<div class="mini-eval pending"><span class="muted">avaliando...</span></div>`;
     wrap.appendChild(evalSlot);
 
     $('#chat').appendChild(wrap);
@@ -333,21 +380,24 @@
     const ajuste = feedback.ajuste || '';
     const appliedCount = Object.values(feedback.tecnicas_aplicadas || {}).filter(Boolean).length;
     const trap = feedback.armadilha_cometida;
+    const stepExec = feedback.passo_do_caminho_executado;
 
     evalSlot.innerHTML = `<details class="mini-eval ${gradeClass}">
       <summary class="mini-eval-head">
         <span class="mini-eval-grade">${nota}</span>
-        <span class="mini-eval-summary">${escapeHtml(ajuste || ponto || 'resposta avaliada')}</span>
+        <span class="mini-eval-summary">${esc(ajuste || ponto || 'avaliado')}</span>
+        ${stepExec ? `<span class="mini-eval-tag step">Passo ${stepExec}</span>` : ''}
         ${appliedCount ? `<span class="mini-eval-tag">+${feedback.xp_bonus_tecnicas || 0} XP · ${appliedCount} téc</span>` : ''}
         ${trap ? `<span class="mini-eval-tag warn">⚡ armadilha</span>` : ''}
       </summary>
       <div class="mini-eval-body">
-        ${ponto ? `<div class="mini-line"><b>✅</b> ${escapeHtml(ponto)}</div>` : ''}
-        ${ajuste ? `<div class="mini-line"><b>⚠️</b> ${escapeHtml(ajuste)}</div>` : ''}
-        ${feedback.reformulacao ? `<div class="mini-line mini-reform"><b>💡 Tente:</b> ${escapeHtml(feedback.reformulacao)}</div>` : ''}
-        ${feedback.tecnica_que_deveria_usar ? `<div class="mini-line"><b>🧠</b> ${escapeHtml(feedback.tecnica_que_deveria_usar)}</div>` : ''}
-        ${feedback.conceito_que_deveria_usar ? `<div class="mini-line"><b>🎯</b> ${escapeHtml(feedback.conceito_que_deveria_usar)}</div>` : ''}
-        ${trap ? `<div class="mini-line warn"><b>⚡ Armadilha:</b> ${escapeHtml(trap)}</div>` : ''}
+        ${ponto ? `<div class="mini-line"><b>✅</b> ${esc(ponto)}</div>` : ''}
+        ${ajuste ? `<div class="mini-line"><b>⚠️</b> ${esc(ajuste)}</div>` : ''}
+        ${feedback.reformulacao ? `<div class="mini-line mini-reform"><b>💡 Tente:</b> ${esc(feedback.reformulacao)}</div>` : ''}
+        ${feedback.tecnica_que_deveria_usar ? `<div class="mini-line"><b>🧠</b> ${esc(feedback.tecnica_que_deveria_usar)}</div>` : ''}
+        ${feedback.conceito_que_deveria_usar ? `<div class="mini-line"><b>🎯</b> ${esc(feedback.conceito_que_deveria_usar)}</div>` : ''}
+        ${feedback.tonalidades_detectadas?.length ? `<div class="mini-line"><b>🎵 Tonalidades:</b> ${esc(feedback.tonalidades_detectadas.join(', '))}</div>` : ''}
+        ${trap ? `<div class="mini-line warn"><b>⚡ Armadilha:</b> ${esc(trap)}</div>` : ''}
       </div>
     </details>`;
   }
@@ -356,29 +406,29 @@
     if (!hintSlot) return;
     if (!hint) {
       hintSlot.innerHTML = `<details class="lead-hint-box">
-        <summary><span class="hint-chip">🤫 dica do turno</span> <span class="hint-status muted">análise indisponível</span></summary>
-        <div class="lead-hint-body muted">Não foi possível gerar a dica deste turno.</div>
+        <summary><span class="hint-chip">🤫 dica do turno</span> <span class="muted">análise indisponível</span></summary>
       </details>`;
       return;
     }
     const techs = (hint.tecnicas_sugeridas || []).map(t => {
-      const guide = Gamification.findTechniqueGuide(t.nome);
-      const refName = guide ? guide.name : t.nome;
+      const guide = findTechniqueGuide(t.nome);
+      const ref = guide ? guide.nome : t.nome;
       return `<div class="hint-tec">
-        <div class="hint-tec-head"><b>▸ ${escapeHtml(refName)}</b></div>
-        <div class="hint-tec-why">${escapeHtml(t.porque || '')}</div>
+        <div class="hint-tec-head"><b>▸ ${esc(ref)}</b></div>
+        <div class="hint-tec-why">${esc(t.porque || '')}</div>
       </div>`;
     }).join('');
 
+    const sugPasso = hint.passo_do_caminho_sugerido;
     hintSlot.innerHTML = `<details class="lead-hint-box">
       <summary>
         <span class="hint-chip">🤫 dica do turno</span>
-        <span class="hint-status">${escapeHtml(hint.categoria || '—')}${hint.camada_revelada ? ' · ' + escapeHtml(hint.camada_revelada) : ''}</span>
+        <span class="hint-status">${esc(hint.categoria || '—')}${hint.camada_revelada ? ' · ' + esc(hint.camada_revelada) : ''}${sugPasso ? ' · passo ' + sugPasso : ''}</span>
       </summary>
       <div class="lead-hint-body">
-        <div class="hint-line"><b>Provável objeção agora:</b> ${escapeHtml(hint.possivel_objecao || '—')}</div>
-        ${hint.conceito_permissao_em_jogo ? `<div class="hint-line"><b>Conceito em jogo:</b> ${escapeHtml(hint.conceito_permissao_em_jogo)}</div>` : ''}
-        ${hint.o_que_observar ? `<div class="hint-line"><b>O que observar:</b> ${escapeHtml(hint.o_que_observar)}</div>` : ''}
+        <div class="hint-line"><b>Provável objeção agora:</b> ${esc(hint.possivel_objecao || '—')}</div>
+        ${hint.conceito_permissao_em_jogo ? `<div class="hint-line"><b>Conceito em jogo:</b> ${esc(hint.conceito_permissao_em_jogo)}</div>` : ''}
+        ${hint.o_que_observar ? `<div class="hint-line"><b>O que observar:</b> ${esc(hint.o_que_observar)}</div>` : ''}
         ${techs ? `<div class="hint-line"><b>Caminhos possíveis:</b></div>${techs}` : ''}
       </div>
     </details>`;
@@ -388,29 +438,48 @@
     const el = document.createElement('div');
     el.className = 'msg lead typing';
     el.dataset.persona = state.currentScenario?.persona?.nome || 'Lead';
-    el.textContent = 'digitando...';
+    el.textContent = 'pensando...';
     el.id = 'typingMsg';
     $('#chat').appendChild(el);
     el.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }
+  function removeTyping() { const t = document.getElementById('typingMsg'); if (t) t.remove(); }
 
-  function removeTyping() {
-    const t = document.getElementById('typingMsg');
-    if (t) t.remove();
+  // ========= SILENCE METER =========
+  function startSilenceTick() {
+    stopSilenceTick();
+    if (!state.modoChamada) return;
+    state.silenceTickTimer = setInterval(updateSilenceMeter, 250);
+    $('#silenceMeter').classList.add('active');
+  }
+  function stopSilenceTick() {
+    if (state.silenceTickTimer) { clearInterval(state.silenceTickTimer); state.silenceTickTimer = null; }
+  }
+  function updateSilenceMeter() {
+    const s = Speech.getCurrentSilenceSeconds();
+    const el = $('#silenceValue');
+    el.textContent = s > 0 ? s.toFixed(1) + 's' : '—';
+    el.classList.toggle('good', s >= 3);
+    if (!state.modoChamada) $('#silenceMeter').classList.remove('active');
   }
 
+  // ========= SEND =========
   async function handleSend() {
     const input = $('#userInput');
     const text = input.value.trim();
-    if (!text) return;
-    if (!state.currentScenario) return;
+    if (!text || !state.currentScenario) return;
+
+    // Captura o silêncio ANTES de enviar (tempo que o Ramon ficou quieto antes de falar)
+    const silenceSec = Speech.captureAndResetSilence();
+    state.silences.push({ turn: state.turn + 1, seconds: silenceSec });
+    stopSilenceTick();
+    updateSilenceMeter();
 
     input.value = '';
     state.turn += 1;
     $('#turnCounter').textContent = String(state.turn);
-    const ramonMsg = pushRamonMessage(text);
+    const ramonMsg = pushRamonMessage(text, silenceSec);
 
-    // Avaliar turno
     $('#btnSend').disabled = true;
     $('#feedbackPanel').innerHTML = '<div style="padding:0.5em;color:var(--ink-muted)">Avaliando...</div>';
     $('#feedbackPanel').classList.add('active');
@@ -419,13 +488,14 @@
     try {
       feedback = await Evaluator.evaluateTurn({
         scenario: state.currentScenario,
-        conversation: state.conversation.slice(0, -1), // sem a última fala do Ramon duplicada
+        conversation: state.conversation.slice(0, -1),
         lastRamon: text,
         turn: state.turn,
-        data: state.data
+        data: state.data,
+        passosCumpridosAnteriormente: state.passosCumpridos
       });
       state.turnFeedbacks.push(feedback);
-      // acumular técnicas
+
       const ta = feedback.tecnicas_aplicadas || {};
       Object.keys(ta).forEach(k => {
         if (ta[k]) state.sessionTechniques[k] = (state.sessionTechniques[k] || 0) + 1;
@@ -433,29 +503,46 @@
       state.leadCederCamada = !!feedback.lead_ceder_camada;
       state.leadEndurecer = !!feedback.lead_endurecer;
       state.podeFechar = !!feedback.pode_fechar;
+
+      // Bônus: silêncio ≥ 3s + técnica de silêncio
+      if (silenceSec >= 3) {
+        state.sessionTechniques['silencio_dinamico'] = (state.sessionTechniques['silencio_dinamico'] || 0) + 1;
+      }
+
+      // Acumula passos cumpridos
+      const stepDone = feedback.passo_do_caminho_executado;
+      if (stepDone && !state.passosCumpridos.includes(stepDone)) {
+        state.passosCumpridos.push(stepDone);
+        state.passosCumpridos.sort((a, b) => a - b);
+      }
+      state.stepsByTurn.push({
+        turn: state.turn,
+        stepExecuted: stepDone,
+        stepIdeal: feedback.passo_do_caminho_ideal_agora
+      });
+
+      renderCaminhoMap(state.passosCumpridos, feedback.passo_do_caminho_ideal_agora);
       renderFeedback(feedback);
       attachMiniEval(ramonMsg.evalSlot, feedback);
     } catch (err) {
       console.error(err);
-      $('#feedbackPanel').innerHTML = `<div style="color:var(--danger)">Erro na avaliação: ${escapeHtml(err.message)}</div>`;
-      if (ramonMsg?.evalSlot) ramonMsg.evalSlot.innerHTML = `<div class="mini-eval low"><span class="mini-eval-summary">erro na avaliação</span></div>`;
+      $('#feedbackPanel').innerHTML = `<div style="color:var(--danger)">Erro na avaliação: ${esc(err.message)}</div>`;
+      if (ramonMsg?.evalSlot) ramonMsg.evalSlot.innerHTML = `<div class="mini-eval low"><span class="mini-eval-summary">erro</span></div>`;
     }
 
-    // Se já podemos fechar ou passamos do limite → gerar resposta final do lead e encerrar
+    // Resposta do lead
     pushTypingPlaceholder();
     try {
       const leadReply = await Evaluator.leadResponse({
         scenario: state.currentScenario,
         conversation: state.conversation,
-        dojo: state.currentDojo,
         data: state.data,
         leadCederCamada: state.leadCederCamada,
         leadEndurecer: state.leadEndurecer,
         podeFechar: state.podeFechar
       });
       removeTyping();
-      const leadMsg = pushLeadMessage(leadReply, { speak: state.currentDojo === 'AO_VIVO' });
-      // Dica do turno — async, não bloqueia
+      const leadMsg = pushLeadMessage(leadReply, { autoSpeak: state.modoChamada });
       Evaluator.leadHint({
         scenario: state.currentScenario, leadMessage: leadReply,
         conversation: state.conversation, turn: state.turn, data: state.data
@@ -463,50 +550,53 @@
     } catch (err) {
       removeTyping();
       console.error(err);
-      pushLeadMessage('(erro gerando resposta do lead — ' + err.message + ')');
+      pushLeadMessage('(erro: ' + err.message + ')');
     }
 
     $('#btnSend').disabled = false;
 
-    // Critério de encerramento
+    // Check close
     const reachedMax = state.turn >= MAX_TURNS;
-    // Detecta "fechou" por texto do lead (frases de aceite) + pode_fechar
     const lastLead = state.conversation[state.conversation.length - 1]?.content || '';
-    const signalsClose = /como faço pra entrar|quero entrar|bora|vamos|tô dentro|como que faz|me manda o link|manda o link|pode mandar|fecho/i.test(lastLead);
+    const signalsClose = /como fa[çc]o|quero entrar|bora|vamos|t[oô] dentro|me manda|pode mandar|fecho|pode come[çc]ar|vamos l[aá]/i.test(lastLead);
     if (state.podeFechar && signalsClose) {
       state.sessionClosed = true;
-      state.sessionClosedDifficult = state.currentScenario?.nivel_dificuldade === 'dificil' || state.currentScenario?.nivel_dificuldade === 'hostil';
+      state.sessionClosedDifficult = ['dificil', 'hostil'].includes(state.currentScenario?.dificuldade);
     }
-
     if (state.sessionClosed || reachedMax) {
       setTimeout(() => endSession(), 1500);
     }
   }
 
   function renderFeedback(f) {
-    const appliedList = Object.keys(f.tecnicas_aplicadas || {}).filter(k => f.tecnicas_aplicadas[k]);
-    const appliedNames = appliedList.map(id => {
+    const applied = Object.keys(f.tecnicas_aplicadas || {}).filter(k => f.tecnicas_aplicadas[k]);
+    const names = applied.map(id => {
       const t = Gamification.TECHNIQUES.find(x => x.id === id);
       return t ? t.name : id;
     });
-
     $('#feedbackPanel').innerHTML = `
       <div class="feedback-grade">${(f.nota_geral || 0).toFixed(1)} <small>/ 10</small></div>
-      <div class="feedback-line"><b>✅ Ponto forte:</b> ${escapeHtml(f.ponto_forte || '—')}</div>
-      <div class="feedback-line"><b>⚠️ Ajuste:</b> ${escapeHtml(f.ajuste || '—')}</div>
+      <div class="feedback-line"><b>✅ Ponto forte:</b> ${esc(f.ponto_forte || '—')}</div>
+      <div class="feedback-line"><b>⚠️ Ajuste:</b> ${esc(f.ajuste || '—')}</div>
       <div class="feedback-line"><b>💡 Tente:</b>
-        <div class="feedback-reformulacao">${escapeHtml(f.reformulacao || '')}</div>
+        <div class="feedback-reformulacao">${esc(f.reformulacao || '')}</div>
       </div>
-      <div class="feedback-line"><b>🧠 Técnica que caberia aqui:</b> ${escapeHtml(f.tecnica_que_deveria_usar || '—')}</div>
-      <div class="feedback-line"><b>🎯 Conceito (Teoria da Permissão):</b> ${escapeHtml(f.conceito_que_deveria_usar || '—')}</div>
-      <div class="feedback-line"><b>📚 Por quê:</b> ${escapeHtml(f.porque || '')}</div>
-      ${appliedNames.length ? `<div class="feedback-line"><b>Técnicas aplicadas:</b> ${appliedNames.map(escapeHtml).join(', ')} <span class="feedback-xp-bonus">+${f.xp_bonus_tecnicas} XP</span></div>` : ''}
-      ${f.armadilha_cometida ? `<div class="feedback-line" style="color:var(--danger)"><b>⚡ Armadilha:</b> ${escapeHtml(f.armadilha_cometida)}</div>` : ''}
+      ${f.passo_do_caminho_executado ? `<div class="feedback-line"><b>🗺️ Passo do Caminho executado:</b> ${f.passo_do_caminho_executado} / 18</div>` : ''}
+      ${f.passo_do_caminho_ideal_agora ? `<div class="feedback-line"><b>🧭 Passo ideal agora:</b> ${f.passo_do_caminho_ideal_agora} / 18</div>` : ''}
+      <div class="feedback-line"><b>🧠 Técnica que caberia:</b> ${esc(f.tecnica_que_deveria_usar || '—')}</div>
+      <div class="feedback-line"><b>🎯 Conceito (Teoria da Permissão):</b> ${esc(f.conceito_que_deveria_usar || '—')}</div>
+      <div class="feedback-line"><b>📚 Por quê:</b> ${esc(f.porque || '')}</div>
+      ${names.length ? `<div class="feedback-line"><b>Técnicas aplicadas:</b> ${names.map(esc).join(', ')} <span class="feedback-xp-bonus">+${f.xp_bonus_tecnicas} XP</span></div>` : ''}
+      ${f.armadilha_cometida ? `<div class="feedback-line" style="color:var(--danger)"><b>⚡ Armadilha:</b> ${esc(f.armadilha_cometida)}</div>` : ''}
     `;
   }
 
+  // ========= END SESSION / REPORT =========
   async function endSession() {
     $('#btnSend').disabled = true;
+    stopSilenceTick();
+    Speech.stopSpeaking();
+
     const panel = $('#feedbackPanel');
     panel.innerHTML += '<div style="margin-top:1em;color:var(--ink-muted)">Gerando relatório...</div>';
 
@@ -516,102 +606,155 @@
         scenario: state.currentScenario,
         conversation: state.conversation,
         turnFeedbacks: state.turnFeedbacks,
+        passosCumpridos: state.passosCumpridos,
         data: state.data
       });
     } catch (err) {
       console.error(err);
-      report = { nota_final: 0, frase_caderno: 'Erro no relatório — ' + err.message, notas: {}, tecnicas_acumuladas: {} };
+      report = { nota_final: 0, frase_caderno: 'Erro: ' + err.message, notas: {}, tecnicas_acumuladas: {}, passos_cumpridos: [], cobertura_pct: 0 };
     }
 
-    // Atualizar streak + skills
     Gamification.updateStreak();
     Gamification.updateSkillsFromScores(report.notas || {});
+    Gamification.recordStepHits(state.passosCumpridos);
 
-    // Gravar técnicas aplicadas (contador global)
     const appliedOnce = {};
     Object.keys(state.sessionTechniques).forEach(k => appliedOnce[k] = true);
+    if (state.sessionClosed) appliedOnce.fechou_venda = true;
     if (state.sessionClosedDifficult) appliedOnce.fechou_dificil = true;
     Gamification.recordTechniques(appliedOnce);
 
-    // Conquistas heurísticas simples
-    if (Object.values(state.sessionTechniques).reduce((a, b) => a + b, 0) > 0
-        && !(state.turnFeedbacks.some(f => (f.armadilha_cometida || '').toLowerCase().includes('desconto')))) {
-      Gamification.unlockAchievement('primeira_quebra');
-    }
-    const semClicheReligiaoLA = !state.turnFeedbacks.some(f => /clich|religi|lei da atra/i.test(f.armadilha_cometida || ''));
-    if (semClicheReligiaoLA) {
-      const flagKey = 'dojo:ramon:semClicheSessions';
-      const cur = parseInt(localStorage.getItem(flagKey) || '0', 10) + 1;
-      localStorage.setItem(flagKey, String(cur));
-      if (cur >= 10) Gamification.unlockAchievement('fiel_mesa');
-    }
-    if (state.sessionTechniques.isolamento_concer && state.sessionTechniques.label && state.sessionTechniques.mirror) {
-      Gamification.unlockAchievement('playbook_vivo');
-    }
-
-    // XP
     const profile = Gamification.getProfile();
-    const daily = Gamification.getDailyChallenge();
-    const dailyResult = Gamification.checkDailyCompletion(appliedOnce);
-    const desafioCumprido = dailyResult.completed && !dailyResult.already;
+    const dailyRes = Gamification.checkDailyCompletion(appliedOnce);
+    const desafioCumprido = dailyRes.completed && !dailyRes.already;
+
+    // Bônus ordem: conta se 3+ passos sequenciais
+    let ordemBonus = 0;
+    const passos = state.passosCumpridos;
+    let seq = 1;
+    for (let i = 1; i < passos.length; i++) {
+      if (passos[i] === passos[i-1] + 1) { seq++; if (seq >= 3) ordemBonus += 10; }
+      else seq = 1;
+    }
 
     const xpInfo = Gamification.computeSessionXp({
       nota_geral: report.nota_final,
       streak: profile.streak,
       tecnicas_aplicadas: appliedOnce,
+      stepsCompleted: state.passosCumpridos,
       fechou: state.sessionClosed,
       leadDificil: state.sessionClosedDifficult,
-      desafioCumprido
+      desafioCumprido,
+      ordemBonus
     });
-    Gamification.addXp(xpInfo.total);
+    const leveledUp = Gamification.applySessionXp(xpInfo);
 
-    // Salvar sessão
+    // Check achievements
+    if (state.turnFeedbacks.length > 0) Gamification.unlockAchievement('primeiro_caminho');
+    const semArmadilhaCritica = !state.turnFeedbacks.some(f => /clich|religi|lei da atra|desconto/i.test(f.armadilha_cometida || ''));
+    if (semArmadilhaCritica) {
+      const k = 'dojo:ramon:semClicheSessions';
+      const cur = parseInt(localStorage.getItem(k) || '0', 10) + 1;
+      localStorage.setItem(k, String(cur));
+      if (cur >= 10) Gamification.unlockAchievement('fiel_mesa');
+    }
+    if (state.sessionTechniques.metodo_4_passos_concer) Gamification.unlockAchievement('playbook_concer');
+
     Gamification.saveSession({
       date: new Date().toISOString(),
-      dojo: state.currentDojo,
+      submodo: state.submodo,
       persona: state.currentScenario?.persona?.nome,
-      padrao: state.currentScenario?.padrao_oculto,
+      padrao: state.currentScenario?.padrao_oculto_teoria_permissao,
       nota_final: report.nota_final,
       notas: report.notas,
+      passos_cumpridos: state.passosCumpridos,
       tecnicas: state.sessionTechniques,
+      silences: state.silences,
       fechou: state.sessionClosed,
-      dificuldade: state.currentScenario?.nivel_dificuldade,
+      dificuldade: state.currentScenario?.dificuldade,
       xp_ganho: xpInfo.total,
       frase_caderno: report.frase_caderno,
       turnos: state.turn
     });
 
-    renderReport(report, xpInfo);
+    renderReport(report, xpInfo, leveledUp);
     showScreen('report');
   }
 
-  function renderReport(report, xpInfo) {
+  function renderReport(report, xpInfo, leveledUp) {
     $('#reportGrade').textContent = (report.nota_final || 0).toFixed(1);
     $('#reportXp').textContent = `+${xpInfo.total} XP`;
     $('#reportXpBreakdown').innerHTML = xpInfo.breakdown.map(b =>
-      `<div>• ${escapeHtml(b.label)}: <b>+${b.value}</b></div>` +
-      (b.details ? `<div style="padding-left:1em;font-size:0.85em;color:var(--ink-muted)">${b.details.map(escapeHtml).join(' · ')}</div>` : '')
+      `<div>• ${esc(b.label)}: <b>+${b.value}</b></div>` +
+      (b.details ? `<div style="padding-left:1em;font-size:0.85em;color:var(--ink-muted)">${b.details.map(esc).join(' · ')}</div>` : '')
     ).join('');
 
-    const skillLabels = {
-      escuta: 'Escuta Ativa', objecao: 'Quebra de Objeção', dor: 'Ativação de Dor',
-      conducao: 'Condução', fidelidade: 'Fidelidade à Metodologia'
+    if (leveledUp.length) {
+      $('#reportLevelUps').innerHTML = leveledUp.map(l => {
+        const tier = Gamification.TIERS.find(t => t.id === l.tier);
+        return `<span class="level-up-badge">🎉 ${tier ? tier.nome : l.tier} → L${l.newLevel}</span>`;
+      }).join('');
+    } else {
+      $('#reportLevelUps').innerHTML = '';
+    }
+
+    // Caminho percorrido
+    const passos = state.data.caminho_18_passos?.passos || [];
+    const passosDone = report.passos_cumpridos || [];
+    const stripHtml = passos.map(p => {
+      const done = passosDone.includes(p.numero);
+      let cls = 'caminho-step';
+      if (done) cls += ' done';
+      if (p.is_alavanca_maxima) cls += ' alavanca';
+      return `<div class="${cls}">${p.numero}</div>`;
+    }).join('');
+    const alavancasDone = passos.filter(p => p.is_alavanca_maxima && passosDone.includes(p.numero)).length;
+    const alavancasTotal = passos.filter(p => p.is_alavanca_maxima).length;
+    $('#reportCaminho').innerHTML = `
+      <div class="report-caminho-viz">${stripHtml}</div>
+      <div class="report-caminho-summary">
+        <b>${passosDone.length}</b> de 18 passos cumpridos (${report.cobertura_pct || 0}%) ·
+        <b>${alavancasDone}</b>/${alavancasTotal} alavancas máximas
+      </div>
+    `;
+
+    // Skills
+    const labels = {
+      escuta: 'Escuta Ativa', investigacao: 'Investigação',
+      apresentacao: 'Apresentação', fechamento: 'Condução ao Fechamento',
+      fidelidade: 'Fidelidade à Metodologia'
     };
-    $('#reportSkills').innerHTML = Object.keys(skillLabels).map(k => {
+    $('#reportSkills').innerHTML = Object.keys(labels).map(k => {
       const v = (report.notas?.[k] || 0).toFixed(1);
-      return `<div class="feedback-line"><b>${skillLabels[k]}:</b> ${v}/10</div>`;
+      return `<div class="feedback-line"><b>${labels[k]}:</b> ${v}/10</div>`;
     }).join('');
 
+    // Técnicas
     const tecs = report.tecnicas_acumuladas || {};
     const tecList = Object.keys(tecs).map(id => {
       const t = Gamification.TECHNIQUES.find(x => x.id === id);
       return `<div class="feedback-line">• ${t ? t.name : id} <b>×${tecs[id]}</b></div>`;
     }).join('');
-    $('#reportTechniques').innerHTML = tecList || '<div class="muted">(nenhuma técnica bonificada foi aplicada nesta sessão)</div>';
+    $('#reportTechniques').innerHTML = tecList || '<div class="muted">(nenhuma técnica bonificada nesta sessão)</div>';
+
+    // Silêncios
+    const sil = state.silences.filter(s => s.seconds > 0);
+    if (sil.length) {
+      const chips = sil.map(s => {
+        const cls = s.seconds >= 3 ? 'good' : s.seconds >= 1 ? '' : 'low';
+        return `<span class="silence-chip ${cls}">Turno ${s.turn}: ${s.seconds.toFixed(1)}s</span>`;
+      }).join('');
+      const med = (sil.reduce((a, b) => a + b.seconds, 0) / sil.length).toFixed(1);
+      $('#reportSilences').innerHTML = `<div class="silence-list">${chips}</div>
+        <div style="margin-top:0.5em;font-size:0.9em;color:var(--ink-soft)">Média: <b>${med}s</b> · ${sil.filter(s => s.seconds >= 3).length} silêncios ≥ 3s</div>`;
+    } else {
+      $('#reportSilences').innerHTML = '<div class="muted">(modo chamada desligado ou sem dados)</div>';
+    }
 
     $('#reportPhrase').textContent = report.frase_caderno || '';
   }
 
+  // ========= INIT SESSION HANDLERS =========
   function initSession() {
     $('#btnSend').addEventListener('click', handleSend);
     $('#userInput').addEventListener('keydown', (e) => {
@@ -622,31 +765,50 @@
     });
 
     $('#btnExitSession').addEventListener('click', () => {
-      if (state.turn > 0 && !state.sessionClosed && !confirm('Sair sem concluir a sessão? O progresso desta sessão será perdido.')) return;
+      if (state.turn > 0 && !state.sessionClosed && !confirm('Sair sem concluir? O progresso será perdido.')) return;
       Speech.stopSpeaking();
+      stopSilenceTick();
       renderDashboard();
       showScreen('dashboard');
     });
 
     $('#btnNewSession').addEventListener('click', () => {
-      startSession(state.currentDojo || 'DM_1_1');
+      startSession(state.submodo || 'caminho_completo');
     });
-
     $('#btnBackDashboard').addEventListener('click', () => {
       renderDashboard();
       showScreen('dashboard');
     });
 
-    // Mic
-    let micCountdownTimer = null;
-    function stopMicCountdown() {
-      if (micCountdownTimer) { clearInterval(micCountdownTimer); micCountdownTimer = null; }
-    }
-    function toggleMic() {
-      if (!Speech.isSupported()) {
-        alert('Reconhecimento de voz não suportado. Use Chrome ou Edge.');
-        return;
+    // Call badge toggle
+    $('#callBadge').addEventListener('click', () => {
+      state.modoChamada = !state.modoChamada;
+      const b = $('#callBadge');
+      const t = $('#callBadgeText');
+      if (state.modoChamada) {
+        b.classList.add('active');
+        t.textContent = 'Em Chamada';
+        $('#silenceMeter').classList.add('active');
+        Speech.resetSilenceTimer();
+        // Se já há mensagem do lead, fala agora
+        const last = state.conversation[state.conversation.length - 1];
+        if (last && last.role === 'assistant') Speech.speak(last.content, {
+          onEnd: () => startSilenceTick()
+        });
+      } else {
+        b.classList.remove('active');
+        t.textContent = 'Chamada';
+        $('#silenceMeter').classList.remove('active');
+        Speech.stopSpeaking();
+        stopSilenceTick();
       }
+    });
+
+    // Mic with countdown
+    let micCountdownTimer = null;
+    function stopMicCountdown() { if (micCountdownTimer) { clearInterval(micCountdownTimer); micCountdownTimer = null; } }
+    function toggleMic() {
+      if (!Speech.isSupported()) { alert('Reconhecimento de voz não suportado. Use Chrome/Edge.'); return; }
       if (Speech.isListening()) {
         Speech.stopListening();
         $('#btnMic').textContent = '🎤';
@@ -657,18 +819,13 @@
       $('#btnMic').textContent = '⏹️';
       const input = $('#userInput');
       const starting = input.value ? input.value + ' ' : '';
-
-      // Contagem regressiva visual (30s)
       let remaining = 30;
-      $('#micStatus').textContent = `🔴 Ouvindo... (${remaining}s — espaço ou clique pra parar)`;
+      $('#micStatus').textContent = `🔴 Ouvindo... (${remaining}s — espaço/clique pra parar)`;
       stopMicCountdown();
       micCountdownTimer = setInterval(() => {
         remaining -= 1;
-        if (remaining <= 0 || !Speech.isListening()) {
-          stopMicCountdown();
-          return;
-        }
-        $('#micStatus').textContent = `🔴 Ouvindo... (${remaining}s — espaço ou clique pra parar)`;
+        if (remaining <= 0 || !Speech.isListening()) { stopMicCountdown(); return; }
+        $('#micStatus').textContent = `🔴 Ouvindo... (${remaining}s — espaço/clique pra parar)`;
       }, 1000);
 
       Speech.startListening({
@@ -688,8 +845,7 @@
     }
     $('#btnMic').addEventListener('click', toggleMic);
 
-    // Espaço toggla o mic quando a tela de sessão está ativa
-    // e o foco NÃO está num input/textarea (pra não atrapalhar digitação).
+    // Spacebar toggle mic
     document.addEventListener('keydown', (e) => {
       if (e.code !== 'Space' && e.key !== ' ') return;
       const sessionActive = $('#screen-session').classList.contains('active');
@@ -710,7 +866,7 @@
     try {
       await loadData();
     } catch (err) {
-      alert('Erro ao carregar data/*.json: ' + err.message + '\n\nVocê está servindo via http://? (abra com python3 -m http.server 8080)');
+      alert('Erro carregando data/*.json: ' + err.message + '\n\nSirva via http:// (python3 -m http.server 8080)');
     }
   }
 

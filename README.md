@@ -1,123 +1,200 @@
-# 🥋 Dojô Improvável
+# 🥋 Dojô Aliança Divergente — v2
 
-App web local de treino cirúrgico de condução de vendas para a **Aliança Divergente** (Ramon).
+App web local de treino cirúrgico de **conversão em chamadas 1×1 pós-evento** para a **Aliança Divergente** (Ramon Galimberti).
 
-Moldura: **Teoria da Permissão** + playbook validado (Hormozi / Concer / Voss / Brunson) traduzido pra voz de mesa de jantar.
+Moldura: **Teoria da Permissão** + **Caminho de 18 passos** compilado de Belfort / Voss / Blount / Rackham / Concer / Hormozi / Cardone.
+
+---
+
+## O que mudou da v1
+
+| v1 | v2 |
+|---|---|
+| 3 dojôs genéricos | **Arena 2 focada em chamada 1×1** pós-evento |
+| 1 nível L1-99 geral | **4 Tiers** (Fundação / Condução / Fechamento / Palco), cada um com L1-99 |
+| Rubrica genérica | **Caminho de 18 passos** como espinha dorsal + mapa visual em tempo real |
+| Dados genéricos (Teoria da Permissão) | **9 JSONs** derivados da Apostila + Compêndio curados do Ramon |
+| 15 técnicas | **36 técnicas** indexadas (CLOSER, 3 Dez, 10 Tonalidades, 4 Passos Concer, Implicação, Necessidade de Solução, Looping Universal, etc.) |
+| Sem voz automatizada | **Modo Chamada**: TTS do lead + cronômetro de silêncio |
+| 1 modo de treino | **4 sub-modos**: Caminho Completo / Dúvidas / Quebra / Fechamento |
+| Casos genéricos | **12 casos reais** (Daniela, Regiane, Vanilton, Ícaro, Berenice...) |
 
 ---
 
 ## Como abrir
-
-Precisa servir por HTTP (os JSONs não carregam via `file://`).
 
 ```bash
 cd "Treinamento de Vendas"
 python3 -m http.server 8080
 ```
 
-Abre http://localhost:8080 no Chrome ou Edge (pro microfone funcionar).
+http://localhost:8080 em Chrome ou Edge.
+
+Primeira vez: cole sua Anthropic API key. Salva apenas no localStorage.
 
 ---
 
-## Primeira vez
+## Os 4 sub-modos
 
-1. Pega sua API key em https://console.anthropic.com/settings/keys
-2. Cola na tela de boas-vindas (fica salva só no navegador, `localStorage`)
-3. Escolhe um nome
-4. Entra no **Dojô I — DM 1:1**
-5. Lê o cenário gerado. Espera a primeira mensagem do lead. Responde (áudio 🎤 ou texto)
-6. O avaliador volta com:
-   - nota geral
-   - 1 ponto forte (palavra/frase sua)
-   - 1 ajuste
-   - reformulação pronta
-   - técnica do playbook que caberia
-   - conceito da Teoria da Permissão que se encaixa
-   - técnicas que você aplicou corretamente (com XP bônus)
+| Sub-modo | Quando treinar | Passos foco |
+|---|---|---|
+| **🎯 Caminho Completo** | Sessão longa e realista, do "oi" ao fechamento | 1-18 |
+| **❓ Modo Dúvidas** | Lead curioso perguntando sobre pilares/preço/método | 4-10 |
+| **🛡️ Modo Quebra** | Lead chega JÁ com objeção declarada | 12-16 |
+| **🔒 Modo Fechamento** | Lead travado só no último passo | 11-18 |
 
 ---
 
-## Os 7 JSONs da pasta `data/`
+## Modo Chamada
 
-| Arquivo | O quê |
-|---|---|
-| `metodologia.json` | Conceitos Teoria da Permissão |
-| `objecoes.json` | 7 categorias + mentiras funcionais |
-| `personas.json` | 8 arquétipos do Improvável |
-| `rubrica.json` | 5 dimensões + técnicas bonificadas + armadilhas críticas |
-| `tecnicas_vendas.json` | Frameworks (CLOSER, 4 passos Concer, 5 passos indeciso) |
-| `scripts_quebra_objecao.json` | Scripts linha-a-linha das 7 objeções mais comuns |
-| `playbook_live.json` | Estrutura de 6 blocos da live final |
+Clique no badge 🔴 **Chamada** no topo da sessão pra ativar:
 
-Você pode substituir qualquer um pelos seus arquivos curados — o app recarrega sozinho.
+- 🎙️ **TTS fala automaticamente** a resposta do lead (voz pt-BR feminina)
+- ⏱️ **Cronômetro de silêncio** entre fim da fala do lead e início da sua — 3s+ depois do preço = XP Silêncio Dinâmico automático
+- 🎤 Seu áudio vai direto pro textarea (já com pontuação por voz funcionando: "vírgula", "ponto", "pausa 3 segundos")
+- 📊 Relatório final lista todos os silêncios da sessão
+
+Desliga-se clicando no badge de novo. Funciona como texto puro também.
 
 ---
 
-## Dojôs
+## Mapa de 18 passos (visível durante a sessão)
 
-- **Dojô I — DM 1:1 Pós-Evento** (sempre aberto)
-- **Dojô II — Q&A Ao Vivo** (libera com média ≥ 7.0 em 10+ sessões do Dojô I)
-- **Dojô III — Live/Webinar em Massa** (libera com média ≥ 7.5 em 10+ sessões do Dojô II)
+No topo do chat, 18 quadrados. Cada um representa um passo do Caminho cirúrgico:
 
----
+- ⚪ cinza = pendente
+- 🟡 amarelo = tentou, faltou
+- 🟢 verde = cumpriu
+- 🔴 borda laranja = passo atual sugerido
+- ⭐ = alavanca máxima (não pode pular)
 
-## Gamificação
-
-- **XP** por nota + bônus streak + bônus por técnica aplicada + bônus fechamento
-- **Níveis** L1 → L99
-- **Streak** diário
-- **13 conquistas** (Mestre do Mirror, Playbook Vivo, Fechador Improvável, L99, etc.)
-- **Painel de 15 técnicas dominadas** com contador de aplicações corretas
-- **Desafio diário** que força prática de uma técnica específica (ex: "hoje use Mirror em toda sessão")
+Hover em qualquer quadrado mostra o nome do passo, técnica e autor.
 
 ---
 
-## Proibições (derrubam Fidelidade pra ≤ 2 automático)
+## 4 Tiers com L1-99 cada
 
-- Clichê motivacional ("você é capaz", "acredite")
-- Religiosidade indevida ("tempo de Deus" fora de contexto)
-- Lei da atração / mentalidade abundância
-- Oferecer desconto como quebra de objeção
+| Tier | Cobre | Passos |
+|---|---|---|
+| 🟢 **Fundação** | Abertura + Investigação | 1-7 |
+| 🟡 **Condução** | Apresentação | 8-10 |
+| 🟠 **Fechamento** | Looping + Closes + Avanço | 11-18 |
+| 🔴 **Palco** | (Arena 3 — futuro) | — |
+
+Técnicas específicas dão XP no Tier correspondente. Você sente evolução separada em cada fase.
+
+---
+
+## Missão das 8 semanas (plano Rackham)
+
+O app guia você pela progressão:
+- **Semana 1-2:** Abertura (passos 1-3)
+- **Semana 3-4:** Investigação (passos 5-7)
+- **Semana 5-6:** Apresentação em 3 Dez (passo 10)
+- **Semana 7-8:** Fechamento (passos 11-18)
+
+Dashboard mostra em qual semana você está e o foco daquela semana.
+
+---
+
+## Feedback em 3 camadas por turno
+
+Abaixo de cada resposta sua aparece:
+
+1. **Tática** — palavra/frase exata que usou bem (ponto forte) e a que não (ajuste)
+2. **Estratégica** — técnica do compêndio que caberia (Mirror, Looping, Isolamento...) + conceito da Teoria da Permissão (Culpa da Sobrevivência, Mula de Carga, PDA...)
+3. **Estrutural** — em qual passo do Caminho você está vs. onde deveria estar
+
+---
+
+## Dica do turno (abaixo de cada fala do lead)
+
+Spoiler opcional (fica fechado por padrão). Mostra:
+- Provável objeção agora + categoria + camada
+- Conceito em jogo
+- 2-3 caminhos técnicos com motivo em 1 frase
+- Passo do Caminho sugerido
+
+---
+
+## Proibições absolutas (derrubam Fidelidade ≤ 2)
+
+- Clichê motivacional
+- Religiosidade indevida
+- Lei da atração
+- **Desconto** como quebra de objeção
 - Urgência artificial
 - Ataque à família do lead
-- Promessa de 10k/mês / enriquecimento rápido
+- Promessa de 10k/mês
+- Aceitar "vou pensar" sem Avanço → Fechamento ≤ 3
+- Responder objeção **diretamente** (sem Looping) → Fechamento ≤ 4
+- Repetir preço 3+ vezes → Fechamento ≤ 3
+
+---
+
+## Os 9 JSONs (editáveis em `data/`)
+
+| Arquivo | Conteúdo |
+|---|---|
+| `caminho_18_passos.json` | Espinha dorsal — passos, técnicas, autores, sinais de detecção |
+| `produto_alianca.json` | Pilares 1-5, oferta (12× R$249), bônus, frase mestra |
+| `conceitos_permissao.json` | 18 conceitos do Núcleo com frase-âncora + armadilha |
+| `frases_ancora.json` | Banco de saque rápido por categoria |
+| `persona_improvavel.json` | 8 arquétipos recombináveis |
+| `dores_por_area.json` | 10 áreas + frases literais em 1ª pessoa |
+| `casos_provas.json` | 12 casos reais (Daniela, Regiane, Vanilton, Ícaro, Berenice...) |
+| `tecnicas_compendio.json` | 30 técnicas operacionais indexadas com aliases |
+| `objecoes_scripts.json` | Scripts literais pras 5 objeções críticas |
 
 ---
 
 ## Atalhos
 
-- `Ctrl+Enter` / `Cmd+Enter` no textarea envia a resposta
-- 🎤 liga/desliga o microfone (pt-BR)
+- `Ctrl+Enter` / `Cmd+Enter` no textarea envia
+- `Espaço` toggla o mic (só quando foco não está em input/textarea)
+- `🎤 comandos de voz` expande lista de comandos de pontuação
 
 ---
 
-## Persistência
+## Persistência (localStorage)
 
-Tudo em `localStorage`:
-- `dojo:ramon:api_key`
-- `dojo:ramon:profile` (nome, nível, xp, streak)
-- `dojo:ramon:skills` (5 habilidades 0-100)
-- `dojo:ramon:sessions` (últimas 100 sessões)
-- `dojo:ramon:achievements`
+- `dojo:ramon:profile` (nome, streak, semana)
+- `dojo:ramon:tier_levels` (L por Tier)
+- `dojo:ramon:skills` (5 dimensões 0-100)
+- `dojo:ramon:sessions_v2` (últimas 100)
+- `dojo:ramon:achievements_v2` (25 conquistas)
+- `dojo:ramon:tecnicas_dominadas_v2` (contador por técnica)
+- `dojo:ramon:step_hits` (contador por passo 1-18)
 - `dojo:ramon:daily_challenge`
-- `dojo:ramon:tecnicas_dominadas`
-- `dojo:ramon:scenario_hashes` (últimas 50 personas geradas — evita repetição)
+- `dojo:ramon:scenario_hashes_v2` (evita repetição de personas)
+- `dojo:ramon:api_key`
 
-**"Resetar progresso"** (dashboard) limpa tudo.
-
----
-
-## Calibração
-
-As primeiras 2-3 sessões são calibração. Se o avaliador estiver duro/frouxo demais:
-
-- Ajuste o prompt em `evaluator.js` → `buildEvaluatorSystem()`
-- Ou peça em conversa nova: *"calibra o avaliador: o Ramon traduz pra mesa de jantar, avalia pelo espírito da técnica não pela frase literal"*
-
-Se o lead soar artificial, ajuste em `scenarios.js` → `buildLeadSystemPrompt()`.
+"Resetar progresso" (dashboard) limpa tudo.
 
 ---
 
-## Sem backend, sem login, sem banco
+## Calibração do avaliador
 
-Tudo roda no navegador. A única chamada externa é pra API da Anthropic (direto do fetch do browser, com `anthropic-dangerous-direct-browser-access: true`).
+As primeiras 2-3 sessões são calibração. Se estiver duro/frouxo demais, ajuste o prompt em `evaluator.js` → `buildEvaluatorSystem()`.
+
+Se o lead soar artificial, ajuste `scenarios.js` → `buildLeadSystemPrompt()`.
+
+---
+
+## Stack
+
+- **Vanilla JS** — sem framework, sem build
+- **Web Speech API** (STT + TTS pt-BR)
+- **Anthropic SDK** via `fetch` direto (flag `anthropic-dangerous-direct-browser-access`)
+- **Modelo:** `claude-sonnet-4-20250514`
+- **100% local** — zero backend, zero banco, zero login
+
+---
+
+## Próximos passos (v3?)
+
+- Arena 3 — Live/Palco (monólogo pitch + chat ao vivo simulado)
+- Arena 4 — WhatsApp de reengajamento (lead não atendeu a chamada)
+- Análise de áudio real (prosódia, velocidade, tonalidade)
+- Modo "Cena Real" — cola conversa de verdade e recebe análise
+- Export semanal em markdown pro Obsidian

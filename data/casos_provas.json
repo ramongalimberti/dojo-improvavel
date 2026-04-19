@@ -1,0 +1,116 @@
+{
+  "descricao": "Banco de casos reais para espelho social no passo 8 (Storytelling) e ao longo da conversa. Cite o caso que mais se parece com o prospect à sua frente. Estrutura: Antes → Gatilho → Depois.",
+  "fonte": "Apostila_Vendas_Arsenal_Nucleo — seção 0.5 + notebookLM Pitch vendas",
+  "regra_de_ouro": "Espelho social é mais poderoso que argumento. Escolha o caso que combina com o arquétipo do prospect. Nunca crie cenário; use literalmente.",
+  "casos": [
+    {
+      "id": "daniela_teixeira",
+      "nome": "Daniela Teixeira",
+      "profissao": "Advogada autônoma, 55 anos",
+      "etiqueta_de_uso": "mulher 50+ endividada, divorciada, obesa, carregando família",
+      "antes": "Obesa (+110kg), efeito sanfona, piadas autodepreciativas. Divorciada do 5º marido narcisista, perdeu tudo, morava de favor na casa de amiga, R$ 0,31 na conta. Dependência financeira da mãe. Clientes não pagavam honorários, perdia prazos.",
+      "depois": "Emagreceu 40kg, virou corredora. Destravou R$ 500k de honorários travados 6 anos na justiça. Abriu instituto com novo marido. R$ 80k/mês. Primeiro milhão.",
+      "padrao_rompido": "Culpa da Sobrevivência + Efeito Sanfona como proteção inconsciente"
+    },
+    {
+      "id": "regiane_rodrigues",
+      "nome": "Dra. Regiane Rodrigues",
+      "profissao": "Médica, 49 anos",
+      "etiqueta_de_uso": "profissional técnica altamente qualificada, presa em teto salarial, fugindo via estudos",
+      "antes": "R$ 8k/mês. 3 pós-graduações simultâneas pra fugir da realidade. Burnout. Vivia pra agradar mãe, igreja, ex-marido (separada há 4 anos).",
+      "depois": "Saltou de R$ 8k pra R$ 30k em 4 meses. Destravou comunicação online. Estabeleceu limites com ex. Abriu espaço pra novo namorado.",
+      "padrao_rompido": "Teto Financeiro + Escada da Maturidade travada no Reconhecimento"
+    },
+    {
+      "id": "vanilton",
+      "nome": "Vanilton",
+      "profissao": "Advogado corporativo, 58 anos",
+      "etiqueta_de_uso": "profissional que 'ganha e não leva', origem humilde, lealdade inconsciente à pobreza familiar",
+      "antes": "Origem pobre ('isso é só pra ricos'). Advogado de grandes causas mas ganhava as causas e nunca recebia o dinheiro. Travado em teto desde a juventude.",
+      "depois": "Rodou protocolos de 'Medo da Pobreza'. Recebeu soma milionária travada desde 2020. Atingiu, no centavo, a meta do Plano Perfeito.",
+      "padrao_rompido": "Ganhar e Não Levar + Lealdade à escassez familiar"
+    },
+    {
+      "id": "icaro",
+      "nome": "Ícaro",
+      "profissao": "Dentista, 42 anos",
+      "etiqueta_de_uso": "empresário/profissional que auto-sabota novos negócios, tem família humilde ou irmãos em situação pior",
+      "antes": "Consultório rentável, mas abria várias empresas paralelas sem concluir por medo. Descobriu: medo de ficar rico por não ter permissão de ser o mais próspero da família.",
+      "depois": "Encerrou sociedades ruins, absorveu prejuízo com postura adulta, multiplicou faturamento do consultório.",
+      "padrao_rompido": "Medo do Brilho + Pré-Queda em sociedades"
+    },
+    {
+      "id": "berenice",
+      "nome": "Berenice",
+      "profissao": "Química / Empresária de cosméticos",
+      "etiqueta_de_uso": "empresário(a) salvador, sustentando família extensa, à beira de uma decisão ruim por pressão emocional",
+      "antes": "Empresa faturava R$ 10M, faliu após trauma societário/conjugal. R$ 7M em dívidas. Tentava salvar 11 irmãos. Ia assinar sociedade tóxica por medo do abandono.",
+      "depois": "Não assinou a sociedade. Saltou faturamento de R$ 200k pra R$ 700k via parcerias com influenciadores.",
+      "padrao_rompido": "Narcisista/Salvador + Festa no Banheiro"
+    },
+    {
+      "id": "edmilson",
+      "nome": "Edmilson Lucena Júnior",
+      "profissao": "Advogado em sindicato",
+      "etiqueta_de_uso": "profissional empregado/servidor com pavor de cobrar/empreender, problemas de saúde por estresse",
+      "antes": "R$ 4.500 no sindicato, obeso, hipertenso, diabético, casamento conturbado. Medo de cobrar clientes.",
+      "depois": "Aplicou Protocolo do Medo. 1º mês: R$ 740k em honorários. Perdeu 13kg. Casamento reconectado.",
+      "padrao_rompido": "Medo da Rejeição Financeira + Teto herdado"
+    },
+    {
+      "id": "andre_rodrigues",
+      "nome": "André Rodrigues",
+      "profissao": "Engenheiro Civil",
+      "etiqueta_de_uso": "homem 30-45, morando de favor, dependência emocional materna, uso de ansiolíticos",
+      "antes": "Desempregado, sem projetos, morando em rancho emprestado. Ansiedade severa, ansiolíticos. Dependência emocional com mãe e padrasto.",
+      "depois": "Limites com mãe (que aceitou bem). Abandonou medicação psiquiátrica. Fechou R$ 110k. Atraiu investidores pra construtora.",
+      "padrao_rompido": "Dependência Emocional + Modo Fome invertido"
+    },
+    {
+      "id": "jaciara_novais_melo",
+      "nome": "Jaciara Novais Melo",
+      "profissao": "(saúde extrema)",
+      "etiqueta_de_uso": "cliente com doença crônica/reincidente, histórico de tentativas de suicídio, isolamento",
+      "antes": "12 anos com tumores reincidentes, 17 cirurgias. Depressão profunda, síndrome do pânico, tentativas de suicídio.",
+      "depois": "Corrigiu dependência emocional → tumores desapareceram (a doença perdeu a utilidade). Independência emocional e profissional. Relacionamento restaurado.",
+      "padrao_rompido": "Utilidade Inconsciente da Doença + Dependência Emocional"
+    },
+    {
+      "id": "patricia_galvao",
+      "nome": "Patrícia Pereira Galvão",
+      "profissao": "Arquiteta",
+      "etiqueta_de_uso": "mãe solo/divorciada em dívida, usando vulnerabilidade (do filho/da condição) como moeda",
+      "antes": "Limbo total. Dívidas, usando cartão do irmão. Vítima do ex-marido e da mãe. Usava autismo do filho pra conseguir compaixão dos clientes.",
+      "depois": "Devolveu cartão quitado. Saltou de dívidas pra R$ 500k+ de faturamento. Filho evoluiu exponencialmente. Clientes passaram a pagar à vista.",
+      "padrao_rompido": "Vítima + Filho como Escudo"
+    },
+    {
+      "id": "ligiane",
+      "nome": "Ligiane",
+      "profissao": "Tosadora de cães",
+      "etiqueta_de_uso": "cliente em fundo do poço absoluto, imigrante, ameaçado, lavando trabalho braçal",
+      "antes": "Levou golpe, perdeu tudo. Casa vazia, colchão no chão, desespero, cogitou suicídio. Lavava pratos em pizzaria.",
+      "depois": "Protocolos de proteção (ameaça de morte do ex). Voltou pros EUA. Em 6 meses: sócia de grande hotel pet (sem investir), US$ 20k/mês, comprou casa própria.",
+      "padrao_rompido": "Renascimento absoluto + Proteção Emocional"
+    },
+    {
+      "id": "ivana",
+      "nome": "Ivana",
+      "profissao": "Empresária, 63 anos",
+      "etiqueta_de_uso": "empresário 55+, negócio tradicional quebrando, pressão de data (folha, 13º, imposto)",
+      "antes": "Fábrica de amplificadores quebrada, 6 meses de prejuízo, véspera de pagar 13ºs.",
+      "depois": "Sofreu Pré-Queda (batida de caminhão) e continuou rodando protocolos no estacionamento. No mesmo dia: clientes antigos voltaram, pagamentos à vista → R$ 300k em dezembro.",
+      "padrao_rompido": "Pré-Queda como treino + Postura inabalável"
+    },
+    {
+      "id": "ariane_roseiro",
+      "nome": "Ariane Roseiro",
+      "profissao": "Mentora de músicos",
+      "etiqueta_de_uso": "mulher que sustenta tudo, não confia em parceiro, acha que tem que 'sofrer pra merecer'",
+      "antes": "Padrão 'mulher guerreira' — autossuficiente, controladora, não deixava marido prover (ele batia o carro de propósito pra ela se sentir útil). Acreditava que sucesso precisava ser doloroso.",
+      "depois": "Aceitou facilidade. Em vez de trabalhar um ano pra R$ 50k, vendeu uma flauta parada em casa por R$ 45k em 1 dia (95% da meta). Empresa dobrou. Casou.",
+      "padrao_rompido": "Mulher Guerreira + Merecer por Sofrer"
+    }
+  ],
+  "como_escolher_caso_na_sessao": "1. Observe a profissão, idade, gênero, e arquétipo do prospect. 2. Procure na etiqueta_de_uso o caso mais próximo. 3. Conte em 3 frases: Antes → Gatilho → Depois. 4. Amarre ao que o lead acabou de verbalizar no passo 7 (Necessidade de Solução)."
+}

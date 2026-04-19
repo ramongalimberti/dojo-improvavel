@@ -1,292 +1,215 @@
-// gamification.js — XP, níveis, streak, conquistas, técnicas dominadas, desafios diários
+// gamification.js v2 — XP, 4 Tiers, streak, conquistas, 18-passos, técnicas dominadas
 
 const Gamification = (() => {
 
-  // ========= STORAGE KEYS =========
   const K = {
     profile: 'dojo:ramon:profile',
     skills: 'dojo:ramon:skills',
-    sessions: 'dojo:ramon:sessions',
-    achievements: 'dojo:ramon:achievements',
+    sessions: 'dojo:ramon:sessions_v2',
+    achievements: 'dojo:ramon:achievements_v2',
     daily: 'dojo:ramon:daily_challenge',
-    personasUsed: 'dojo:ramon:personas_usadas',
-    techniques: 'dojo:ramon:tecnicas_dominadas'
+    techniques: 'dojo:ramon:tecnicas_dominadas_v2',
+    stepHits: 'dojo:ramon:step_hits',         // { "1": count, "2": count... }
+    tierLevels: 'dojo:ramon:tier_levels',     // { fundacao: {level, xp}, ... }
+    semana: 'dojo:ramon:semana_treino'        // 1-8 das 8 semanas do plano
   };
 
-  // ========= DEFAULTS =========
+  const TIERS = [
+    { id: 'fundacao', nome: 'Fundação', descricao: 'Abertura + Investigação', cor: '#6BA368', passos: [1,2,3,4,5,6,7] },
+    { id: 'conducao', nome: 'Condução', descricao: 'Apresentação', cor: '#C89A2E', passos: [8,9,10] },
+    { id: 'fechamento', nome: 'Fechamento', descricao: 'Looping + Closes + Avanço', cor: '#C65D2E', passos: [11,12,13,14,15,16,17,18] },
+    { id: 'palco', nome: 'Palco', descricao: '(Arena 3 — em breve)', cor: '#9B4520', passos: [] }
+  ];
+
+  const TECHNIQUES = [
+    { id: 'mirror', name: 'Mirror', xp: 10, tier: 'fundacao' },
+    { id: 'label', name: 'Label', xp: 10, tier: 'fundacao' },
+    { id: 'perguntas_calibradas', name: 'Perguntas Calibradas', xp: 10, tier: 'fundacao' },
+    { id: 'silencio_dinamico', name: 'Silêncio Dinâmico', xp: 15, tier: 'fundacao' },
+    { id: '4_segundos', name: 'Os 4 Segundos', xp: 10, tier: 'fundacao' },
+    { id: 'tom_eu_me_importo', name: 'Tom "Eu me importo"', xp: 10, tier: 'fundacao' },
+    { id: 'pergunta_implicacao', name: 'Pergunta de Implicação', xp: 25, tier: 'fundacao' },
+    { id: 'pergunta_necessidade', name: 'Pergunta de Necessidade de Solução', xp: 25, tier: 'fundacao' },
+    { id: 'patamar_ledge', name: 'Patamar (Ledge)', xp: 10, tier: 'fundacao' },
+    { id: 'thats_right', name: 'That\'s Right', xp: 20, tier: 'conducao' },
+    { id: 'accusation_audit', name: 'Accusation Audit', xp: 15, tier: 'conducao' },
+    { id: 'storytelling_cena', name: 'Storytelling (cena + decisão)', xp: 15, tier: 'conducao' },
+    { id: 'pre_handling_3_objecoes', name: 'Pre-handling 3 Objeções', xp: 15, tier: 'conducao' },
+    { id: '3_dez', name: '3 Dez na ordem (Produto→Você→Aliança)', xp: 30, tier: 'conducao' },
+    { id: 'framework_3a', name: 'Framework 3A (Acknowledge Associate Ask)', xp: 15, tier: 'conducao' },
+    { id: 'metodo_4_passos_concer', name: 'Método 4 Passos Concer', xp: 15, tier: 'conducao' },
+    { id: 'cisnes_negros', name: 'Cisnes Negros', xp: 20, tier: 'conducao' },
+    { id: '10_tonalidades', name: '10 Tonalidades (3 Tons no pedido)', xp: 20, tier: 'fechamento' },
+    { id: 'looping_universal', name: 'Looping Universal', xp: 25, tier: 'fechamento' },
+    { id: 'isolamento_preco', name: 'Isolamento de Preço', xp: 20, tier: 'fechamento' },
+    { id: 'cadeira_balanco', name: 'Cadeira de Balanço / Custo da Inação', xp: 20, tier: 'fechamento' },
+    { id: 'skin_in_the_game', name: 'Skin in the Game', xp: 20, tier: 'fechamento' },
+    { id: 'assumptive_close', name: 'Assumptive Close', xp: 20, tier: 'fechamento' },
+    { id: 'alternative_close', name: 'Alternative Close', xp: 15, tier: 'fechamento' },
+    { id: 'avanco_concreto', name: 'Avanço Concreto (vs Continuação)', xp: 25, tier: 'fechamento' },
+    { id: 'teste_hipotetico', name: 'Teste Hipotético', xp: 15, tier: 'fechamento' },
+    { id: 'best_worst_case', name: 'Best / Worst Case', xp: 15, tier: 'fechamento' },
+    { id: 'risco_reverso', name: 'Risco Reverso', xp: 15, tier: 'fechamento' },
+    { id: 'ancoragem_preco', name: 'Ancoragem de Preço', xp: 15, tier: 'fechamento' },
+    { id: 'takeaway', name: 'Takeaway (Retirada)', xp: 15, tier: 'fechamento' },
+    { id: 'micro_commitments', name: 'Micro Compromissos', xp: 10, tier: 'conducao' },
+    { id: 'nomeou_conceito_permissao', name: 'Nomeou conceito Teoria da Permissão', xp: 15, tier: 'conducao' },
+    { id: 'frase_ancora_ancorada', name: 'Frase-âncora com contexto real', xp: 10, tier: 'conducao' },
+    { id: 'caso_real_citado', name: 'Citou caso real da Aliança', xp: 10, tier: 'conducao' },
+    { id: 'fechou_venda', name: 'Fechou a venda', xp: 50, tier: 'fechamento' },
+    { id: 'fechou_dificil', name: 'Fechou lead Difícil/Hostil', xp: 100, tier: 'fechamento' }
+  ];
+
+  const ACHIEVEMENTS = [
+    { id: 'primeiro_caminho', icon: '🚀', name: 'Primeiro Caminho', desc: 'Completou primeira sessão Arena 2' },
+    { id: 'caminho_completo', icon: '🗺️', name: 'Caminho Completo', desc: 'Cumpriu 15+ dos 18 passos numa sessão' },
+    { id: 'mestre_implicacao', icon: '⛓️', name: 'Mestre da Implicação', desc: 'Pergunta de Implicação aplicada 15×' },
+    { id: 'necessidade_cravada', icon: '🎯', name: 'Necessidade Cravada', desc: 'Necessidade de Solução aplicada 15×' },
+    { id: 'mestre_3_dez', icon: '3️⃣', name: 'Mestre dos 3 Dez', desc: '3 Dez na ordem correta 10×' },
+    { id: 'looper', icon: '🔁', name: 'Looper', desc: 'Looping Universal usado 10×' },
+    { id: 'dono_silencio', icon: '⏳', name: 'Dono do Silêncio', desc: 'Silêncio Dinâmico usado 10×' },
+    { id: 'avanço_concreto', icon: '📅', name: 'Avanço Concreto', desc: 'Marcou Avanço (vs Continuação) 10×' },
+    { id: 'fiel_mesa', icon: '🧠', name: 'Fiel à Mesa de Jantar', desc: '10 sessões sem clichê/religiosidade/desconto' },
+    { id: 'mestre_mirror', icon: '👂', name: 'Mestre do Mirror', desc: 'Mirror 20× com Escuta ≥ 8' },
+    { id: 'rotulador', icon: '🏷️', name: 'Rotulador', desc: 'Label 20× com precisão' },
+    { id: 'nomeador_padroes', icon: '📛', name: 'Nomeador de Padrões', desc: 'Nomeou conceito Permissão 20×' },
+    { id: 'fechador_improvavel', icon: '⚔️', name: 'Fechador Improvável', desc: 'Fechou 5 leads hostis' },
+    { id: 'playbook_concer', icon: '📖', name: 'Playbook Concer', desc: 'Aplicou os 4 passos numa única sessão' },
+    { id: 'tier_fundacao_l10', icon: '🟢', name: 'Fundação L10', desc: 'Alcançou Nível 10 em Fundação' },
+    { id: 'tier_conducao_l10', icon: '🟡', name: 'Condução L10', desc: 'Alcançou Nível 10 em Condução' },
+    { id: 'tier_fechamento_l10', icon: '🟠', name: 'Fechamento L10', desc: 'Alcançou Nível 10 em Fechamento' },
+    { id: 'tier_fundacao_l50', icon: '💚', name: 'Fundação Mestre', desc: 'Alcançou Nível 50 em Fundação' },
+    { id: 'tier_fechamento_l50', icon: '🧡', name: 'Fechamento Mestre', desc: 'Alcançou Nível 50 em Fechamento' },
+    { id: 'maratonista_30', icon: '🔥', name: 'Maratonista', desc: 'Streak de 30 dias' },
+    { id: 'maratonista_100', icon: '♾️', name: 'Maratonista 100', desc: 'Streak de 100 dias' },
+    { id: 'semana_completa', icon: '📚', name: 'Semana Completa', desc: 'Cumpriu uma semana inteira do plano de 8 semanas' },
+    { id: 'plano_8_semanas', icon: '🎓', name: 'Plano 8 Semanas', desc: 'Concluiu o plano de treino de 8 semanas' },
+    { id: 'l99_geral', icon: '👑', name: 'L99 Geral', desc: 'Nível 99 acumulado entre todos os Tiers' },
+    { id: 'caso_real_mestre', icon: '📋', name: 'Mestre dos Casos Reais', desc: 'Citou caso real 20×' }
+  ];
+
+  const DAILY_CHALLENGES = [
+    { id: 'implicacao_hoje', text: 'Hoje: 3 Perguntas de Implicação em cada sessão.', hint: 'pergunta_implicacao' },
+    { id: 'necessidade_hoje', text: 'Hoje: faça o lead verbalizar o benefício com as PRÓPRIAS palavras.', hint: 'pergunta_necessidade' },
+    { id: '3_dez_ordem', text: 'Hoje: 3 Dez na ordem Produto → Você → Aliança em toda apresentação.', hint: '3_dez' },
+    { id: 'looping_universal_hoje', text: 'Hoje: Looping Universal em toda objeção — NUNCA responda a objeção direto.', hint: 'looping_universal' },
+    { id: 'silencio_pos_preco', text: 'Hoje: silêncio de 7-10s após o preço ([silêncio 10s] explícito).', hint: 'silencio_dinamico' },
+    { id: 'avanço_concreto_hoje', text: 'Hoje: NUNCA aceite "vou pensar e te falo". Sempre marque Avanço concreto.', hint: 'avanco_concreto' },
+    { id: 'pre_handling_hoje', text: 'Hoje: 3 objeções pré-listadas antes de revelar o preço.', hint: 'pre_handling_3_objecoes' },
+    { id: 'tacaro_sem_desconto', text: 'Hoje: quebre "tá caro" pela tradução Permissão (Culpa da Sobrevivência) — SEM desconto.', hint: 'nomeou_conceito_permissao' },
+    { id: 'padrao_antes_3', text: 'Hoje: nomeie o Padrão antes do 3º turno.', hint: 'nomeou_conceito_permissao' },
+    { id: 'isolamento_toda_objecao', text: 'Hoje: Isolamento de Preço após cada objeção financeira.', hint: 'isolamento_preco' },
+    { id: 'caso_real_sempre', text: 'Hoje: cite 1 caso real por sessão (Daniela, Regiane, Vanilton, Ícaro...).', hint: 'caso_real_citado' },
+    { id: 'storytelling_hoje', text: 'Hoje: use Storytelling com cena + decisão, não cena + aprendizado.', hint: 'storytelling_cena' }
+  ];
+
+  const MISSAO_8_SEMANAS = [
+    { semana: 1, foco: 'Abertura (passos 1-3) — 4 Segundos + Tom Importo + Abertura Focada' },
+    { semana: 2, foco: 'Abertura — consolidar. Meta: em 4s o lead está no estado de escuta, não de defesa' },
+    { semana: 3, foco: 'Investigação (passos 5-7) — Problema + Implicação + Necessidade de Solução' },
+    { semana: 4, foco: 'Investigação — consolidar. Meta: o cliente verbaliza o benefício antes de você falar' },
+    { semana: 5, foco: 'Apresentação (passo 10) — 3 Dez na ordem + Pre-handling' },
+    { semana: 6, foco: 'Apresentação — consolidar. Meta: lead pergunta "quanto é?" no meio da apresentação' },
+    { semana: 7, foco: 'Fechamento (passos 11-18) — 3 Tons + Looping + Assumptive + Avanço' },
+    { semana: 8, foco: 'Fechamento — consolidar. Meta: "vou pensar" vira Avanço ou fechamento no ato' }
+  ];
+
+  // ========= STORAGE =========
+  function _get(key, def) {
+    try { const s = localStorage.getItem(key); return s ? JSON.parse(s) : def; }
+    catch (e) { return def; }
+  }
+  function _set(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
   function defaultProfile() {
-    return {
-      name: 'Ramon',
-      level: 1,
-      xp: 0,
-      xp_total_acumulado: 0,
-      streak: 0,
-      last_session_date: null,
-      created_at: new Date().toISOString()
-    };
+    return { name: 'Ramon', xp_total_acumulado: 0, streak: 0, last_session_date: null,
+             semana_atual: 1, created_at: new Date().toISOString() };
   }
-
   function defaultSkills() {
-    return {
-      escuta: 0,        // Escuta Ativa
-      objecao: 0,       // Quebra de Objeção
-      dor: 0,           // Ativação de Dor
-      conducao: 0,      // Condução ao Fechamento
-      fidelidade: 0     // Fidelidade à Metodologia
-    };
+    return { escuta: 0, investigacao: 0, apresentacao: 0, fechamento: 0, fidelidade: 0 };
   }
-
+  function defaultTiers() {
+    return TIERS.reduce((acc, t) => { acc[t.id] = { level: 1, xp: 0 }; return acc; }, {});
+  }
   function defaultAchievements() {
     return ACHIEVEMENTS.reduce((acc, a) => { acc[a.id] = false; return acc; }, {});
   }
-
   function defaultTechniques() {
     return TECHNIQUES.reduce((acc, t) => { acc[t.id] = 0; return acc; }, {});
   }
-
-  // ========= TECHNIQUES (15 bonificadas) =========
-  const TECHNIQUES = [
-    { id: 'mirror', name: 'Mirror (3 últimas palavras)', xp: 10 },
-    { id: 'label', name: 'Label (rotular emoção)', xp: 10 },
-    { id: 'isolamento_concer', name: 'Isolamento Concer', xp: 15 },
-    { id: 'teste_hipotetico', name: 'Teste Hipotético Hormozi', xp: 15 },
-    { id: 'dinheiro_vs_tempo', name: 'Pagar com dinheiro vs com tempo', xp: 15 },
-    { id: 'silencio_estrategico', name: 'Silêncio estratégico [silêncio 3s]', xp: 10 },
-    { id: 'nomeou_conceito_permissao', name: 'Nomeou conceito Teoria da Permissão', xp: 15 },
-    { id: 'frase_ancora_ancorada', name: 'Frase-âncora com contexto real', xp: 10 },
-    { id: 'alinhamento_logico', name: 'Alinhamento Lógico (3 perguntas)', xp: 20 },
-    { id: 'dupla_alternativa', name: 'Dupla Alternativa', xp: 10 },
-    { id: 'inversao_papeis', name: 'Inversão de papéis', xp: 15 },
-    { id: 'cadeira_balanco', name: 'Cadeira de Balanço', xp: 15 },
-    { id: 'ciclo_quase_devolvido', name: 'Ciclo do Quase devolvido', xp: 15 },
-    { id: 'risco_reverso', name: 'Risco Reverso', xp: 15 },
-    { id: 'fechou_dificil', name: 'Fechou lead Difícil/Hostil', xp: 50 }
-  ];
-
-  // ========= GUIAS DAS TÉCNICAS (explicação + exemplo curto) =========
-  const TECHNIQUE_GUIDES = {
-    mirror: {
-      origem: 'Chris Voss — Never Split the Difference',
-      resumo: 'Repetir as 2-3 últimas palavras do lead como pergunta, com entonação subindo no fim. Faz ele elaborar sozinho, sem pressão.',
-      quando: 'Logo depois que o lead revela algo emocional ou ambíguo. Abre camada sem forçar.',
-      exemplo: 'Lead: "Não consigo sair do lugar."\nRamon: "Não consegue sair do lugar?" [pausa]',
-      aliases: ['mirror', 'espelho', 'espelhar', 'espelhamento', 'mirror voss']
-    },
-    label: {
-      origem: 'Chris Voss — Tactical Empathy',
-      resumo: 'Nomear a emoção que você percebe, sem julgar. Começa com "parece que…" ou "soa como…". Valida sem concordar.',
-      quando: 'Quando o lead está tenso, envergonhado ou defensivo. Label desarma.',
-      exemplo: '"Parece que isso já virou parte da sua rotina — uma exaustão que você nem questiona mais."',
-      aliases: ['label', 'rotular', 'rotulação', 'nomear emoção', 'labeling']
-    },
-    isolamento_concer: {
-      origem: 'Thiago Concer — 4 Passos (passo 3)',
-      resumo: 'Pergunta de ISOLAMENTO: separa a objeção declarada das outras ocultas. Se o lead não tiver mais objeção, você quebra a única que ele declarou.',
-      quando: 'Sempre que o lead apresentar UMA objeção — antes de responder, pergunte se é SÓ aquilo.',
-      exemplo: '"Entendi. Só pra eu entender: ALÉM do valor, tem mais algum motivo ou alguma coisa que não faz sentido pra você?"',
-      aliases: ['isolamento', 'isolamento concer', 'pergunta de isolamento', '4 passos concer', 'concer', 'quatro passos']
-    },
-    teste_hipotetico: {
-      origem: 'Alex Hormozi — $100M Offers',
-      resumo: 'Remova mentalmente a objeção declarada pra ver se há outra por trás. Se o lead continuar travado, a objeção real é outra.',
-      quando: 'Contra "tá caro", "não tenho tempo", "não é o momento" — pra validar se é a objeção real.',
-      exemplo: '"Num mundo hipotético onde dinheiro não fosse o tema — você entraria hoje?"',
-      aliases: ['hipotético', 'teste hipotético', 'hormozi', 'mundo hipotético']
-    },
-    dinheiro_vs_tempo: {
-      origem: 'Playbook Live — tradução Permissão',
-      resumo: 'Mostre que recusar não é "economia" — é pagar com outra moeda. O custo da inação é tempo, vida, padrão que continua.',
-      quando: 'Contra "tá caro" quando o lead já tem o dinheiro, mas trava em se dar permissão.',
-      exemplo: '"Você não tá escolhendo entre pagar ou não pagar. Tá escolhendo entre pagar com dinheiro agora ou pagar com mais 3 anos da sua vida igual a hoje."',
-      aliases: ['dinheiro vs tempo', 'custo de inação', 'pagar com tempo', 'pagar com dinheiro']
-    },
-    silencio_estrategico: {
-      origem: 'Straight Line + Voss',
-      resumo: 'Depois da pergunta-chave ou do preço, você CALA. 3 a 10 segundos. O silêncio empurra o lead a responder o que importa. No texto, marque explícito: [silêncio 5s].',
-      quando: 'Depois de preço, de pergunta de fechamento, ou depois de nomear um padrão pesado.',
-      exemplo: '"Faz sentido pra você? [silêncio 5s]"',
-      aliases: ['silêncio', 'silencio', 'silencio estrategico', 'pausa', 'pausa estratégica']
-    },
-    nomeou_conceito_permissao: {
-      origem: 'Teoria da Permissão (Ramon)',
-      resumo: 'Dar NOME ao padrão do lead: Pré-Queda, Mula de Carga, Culpa da Sobrevivência, Banheiro Emocional, Medo do Brilho, PDA, Plano Perfeito. Nomear vira lucidez.',
-      quando: 'Depois que você escutou o padrão se repetindo. Não use como etiqueta de palco — use como diagnóstico.',
-      exemplo: '"Isso que você tá descrevendo chama Mula de Carga. Você virou represa da sua família — todo problema chega e para em você."',
-      aliases: ['nomear conceito', 'nomear padrão', 'conceito permissão', 'teoria da permissão', 'padrão oculto']
-    },
-    frase_ancora_ancorada: {
-      origem: 'Teoria da Permissão',
-      resumo: 'Frase cirúrgica ancorada no contexto ESPECÍFICO do lead. Nada de citação gratuita — é martelada no exato momento em que ele percebe a contradição.',
-      quando: 'Depois do lead confessar algo que confirma o padrão. Selo, não introdução.',
-      exemplo: 'Lead acabou de dizer que sabe o que precisa fazer mas não faz. Ramon: "Perceber sem decidir é se iludir."',
-      aliases: ['frase âncora', 'frase ancora', 'ancorar', 'ancoragem']
-    },
-    alinhamento_logico: {
-      origem: 'Playbook Live — 5 passos indeciso',
-      resumo: 'Três perguntas fechadas em ordem: 1) Se funcionar, RESOLVE? 2) Você CONFIA no método e em mim? 3) Você tem RECURSOS pra investir hoje? Três "sim" desarmam qualquer "vou pensar".',
-      quando: 'Pré-fechamento, quando o lead já recebeu a solução e precisa assumir a decisão.',
-      exemplo: '"Pergunta 1: se isso funcionar como a gente conversou, resolve o que você me trouxe? [sim] Pergunta 2: você confia em mim e no método? [sim] Pergunta 3: você tem como investir hoje? [sim]. Então o que falta é só a decisão."',
-      aliases: ['alinhamento lógico', 'alinhamento logico', '3 perguntas fechadas', 'três perguntas']
-    },
-    dupla_alternativa: {
-      origem: 'Straight Line — Jordan Belfort / Hormozi',
-      resumo: 'No fechamento, nunca pergunta "sim ou não". Pergunta "A ou B" — as duas opções já presumem o sim.',
-      quando: 'No fechamento, depois do alinhamento lógico.',
-      exemplo: '"Você prefere crédito em 12x ou à vista com desconto de tabela?"',
-      aliases: ['dupla alternativa', 'alternativa dupla', 'crédito ou à vista', 'a ou b']
-    },
-    inversao_papeis: {
-      origem: 'Playbook Live — 5 passos indeciso',
-      resumo: 'Contra "preciso falar com meu cônjuge/sócio". Em vez de aceitar o adiamento, você VIRA pergunta pra ele. Quem decide é ELE, não o outro.',
-      quando: '"Vou conversar com minha esposa", "preciso alinhar com meu sócio".',
-      exemplo: '"Claro. Me conta: o que exatamente você vai dizer pra ela? Porque a resposta dela depende da conversa que VOCÊ vai liderar. Se você chegar em dúvida, volta dúvida."',
-      aliases: ['inversão de papéis', 'inversao de papeis', 'inversão', 'cônjuge', 'falar com sócio']
-    },
-    cadeira_balanco: {
-      origem: 'Playbook Live — contorno de "vou pensar"',
-      resumo: 'Nomeia o "vou pensar" como cadeira de balanço — se mexe, faz barulho, mas não sai do lugar. Depois pede o que EXATAMENTE falta decidir.',
-      quando: 'Qualquer "vou pensar", "preciso refletir", "me dá uns dias".',
-      exemplo: '"\'Vou pensar\' é cadeira de balanço — se mexe, parece que tá fazendo algo, mas não sai do lugar. Me diz: o que EXATAMENTE você precisa decidir que já não decidiu aqui?"',
-      aliases: ['cadeira de balanço', 'cadeira balanço', 'vou pensar', 'pensar']
-    },
-    ciclo_quase_devolvido: {
-      origem: 'Teoria da Permissão — Pré-Queda',
-      resumo: 'Espelha a repetição do "quase" na vida do lead. Pergunta quanto tempo ele tá quase lá. Expõe o padrão sem acusar.',
-      quando: 'Lead descreve 2+ situações onde "quase" aconteceu algo bom e desmoronou.',
-      exemplo: '"Há quantos anos você tá quase lá? Porque cada vez que você conta, tem a palavra \'quase\' no meio."',
-      aliases: ['ciclo do quase', 'quase', 'ciclo quase', 'devolvido']
-    },
-    risco_reverso: {
-      origem: 'Hormozi / Brunson',
-      resumo: 'Você assume parte do risco — inverte a assimetria. Mas amarrado em condição de aplicação, não em promessa de resultado.',
-      quando: 'No fechamento, contra descrença ("já tentei tudo, nada funciona").',
-      exemplo: '"Se em 30 dias você aplicar o protocolo e não sentir shift real, eu devolvo. Mas o trato é: só entra quem vai aplicar — não quem vai assistir."',
-      aliases: ['risco reverso', 'garantia', 'garantia reversa', 'risco invertido']
-    },
-    fechou_dificil: {
-      origem: 'Bônus — não é técnica a aplicar, é resultado',
-      resumo: 'Fechar um lead classificado como "difícil" ou "hostil" vale +50 XP bônus automático.',
-      quando: '—',
-      exemplo: '—',
-      aliases: ['fechou difícil', 'fechou hostil', 'fechamento difícil']
-    }
-  };
-
-  // ========= FUZZY LOOKUP DE GUIA POR NOME (vindo do LLM) =========
-  function _norm(s) {
-    return (s || '')
-      .toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[()\[\]{}.,;:!?"']/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
+  function defaultStepHits() {
+    const obj = {}; for (let i = 1; i <= 18; i++) obj[i] = 0; return obj;
   }
 
-  function findTechniqueGuide(rawName) {
-    const norm = _norm(rawName);
-    if (!norm) return null;
+  function getProfile() { return _get(K.profile, defaultProfile()); }
+  function saveProfile(p) { _set(K.profile, p); }
+  function getSkills() { return _get(K.skills, defaultSkills()); }
+  function saveSkills(s) { _set(K.skills, s); }
+  function getSessions() { return _get(K.sessions, []); }
+  function getAchievements() { return _get(K.achievements, defaultAchievements()); }
+  function saveAchievements(a) { _set(K.achievements, a); }
+  function getTechniques() { return _get(K.techniques, defaultTechniques()); }
+  function saveTechniques(t) { _set(K.techniques, t); }
+  function getStepHits() { return _get(K.stepHits, defaultStepHits()); }
+  function saveStepHits(s) { _set(K.stepHits, s); }
+  function getTierLevels() { return _get(K.tierLevels, defaultTiers()); }
+  function saveTierLevels(t) { _set(K.tierLevels, t); }
 
-    // Tentativa 1: match direto em id ou nome oficial
-    for (const t of TECHNIQUES) {
-      if (_norm(t.id) === norm || _norm(t.name) === norm) {
-        const g = TECHNIQUE_GUIDES[t.id];
-        if (g) return { id: t.id, name: t.name, ...g };
-      }
-    }
-    // Tentativa 2: aliases (substring nos dois lados)
-    for (const id of Object.keys(TECHNIQUE_GUIDES)) {
-      const g = TECHNIQUE_GUIDES[id];
-      const aliases = (g.aliases || []).map(_norm);
-      if (aliases.some(a => norm.includes(a) || a.includes(norm))) {
-        const t = TECHNIQUES.find(x => x.id === id);
-        return { id, name: t ? t.name : id, ...g };
-      }
-    }
-    // Tentativa 3: substring no nome oficial
-    for (const t of TECHNIQUES) {
-      const n = _norm(t.name);
-      if (n.includes(norm) || norm.includes(n.split(' ')[0])) {
-        const g = TECHNIQUE_GUIDES[t.id];
-        if (g) return { id: t.id, name: t.name, ...g };
-      }
-    }
-    return null;
+  function saveSession(session) {
+    const all = getSessions();
+    all.unshift(session);
+    if (all.length > 100) all.length = 100;
+    _set(K.sessions, all);
   }
 
-  // ========= ACHIEVEMENTS =========
-  const ACHIEVEMENTS = [
-    { id: 'primeira_quebra', icon: '🎯', name: 'Primeira Quebra', desc: 'Quebrou objeção sem baixar preço' },
-    { id: 'mestre_mirror', icon: '👂', name: 'Mestre do Mirror', desc: 'Mirror aplicado 20x com Escuta > 8' },
-    { id: 'rotulador', icon: '🏷️', name: 'Rotulador', desc: 'Label aplicado 20x com precisão' },
-    { id: 'isolador', icon: '🔍', name: 'Isolador', desc: 'Pergunta de Isolamento usada 15x' },
-    { id: 'hipotetico', icon: '🎲', name: 'Hipotético', desc: 'Teste Hipotético aplicado 15x' },
-    { id: 'dono_silencio', icon: '⏳', name: 'Dono do Silêncio', desc: 'Silêncio estratégico em 10 sessões' },
-    { id: 'maratonista', icon: '🔥', name: 'Maratonista', desc: 'Streak de 30 dias' },
-    { id: 'fiel_mesa', icon: '🧠', name: 'Fiel à Mesa', desc: '10 sessões sem clichê nem religiosidade' },
-    { id: 'fechador_improvavel', icon: '⚔️', name: 'Fechador Improvável', desc: 'Fechou 3 leads hostis' },
-    { id: 'espelho_afiado', icon: '🪞', name: 'Espelho Afiado', desc: 'Nomeou padrão correto em 5 sessões seguidas' },
-    { id: 'quebra_pedra', icon: '🧱', name: 'Quebra-Pedra', desc: 'Aplicou as 7 quebras validadas ao menos 1x' },
-    { id: 'playbook_vivo', icon: '📖', name: 'Playbook Vivo', desc: 'Aplicou os 4 passos de Concer numa única sessão' },
-    { id: 'l99', icon: '👑', name: 'L99 Mestre do Dojô', desc: 'Alcançou o Nível 99' }
-  ];
+  // ========= XP / NÍVEIS POR TIER =========
+  function xpToLevel(level) { return 100 + (level - 1) * 50; }
 
-  // ========= DESAFIOS DIÁRIOS =========
-  const DAILY_CHALLENGES = [
-    { id: 'mirror_label_turnos', text: 'Em toda sessão hoje: aplique Mirror + Label nos primeiros 2 turnos.', technique_hint: 'mirror,label' },
-    { id: 'hipotetico_1x', text: 'Use o Teste Hipotético Hormozi em pelo menos 1 sessão hoje.', technique_hint: 'teste_hipotetico' },
-    { id: 'tacaro_sem_desconto', text: 'Quebre "tá caro" pela tradução Permissão — SEM oferecer desconto.', technique_hint: 'nomeou_conceito_permissao' },
-    { id: 'silencio_pos_preco', text: 'Use [silêncio 3s] explícito depois do preço em 1 sessão.', technique_hint: 'silencio_estrategico' },
-    { id: 'padrao_antes_3', text: 'Nomeie o Padrão do lead antes do 3º turno.', technique_hint: 'nomeou_conceito_permissao' },
-    { id: 'sedeusquiser_sem_fe', text: 'Quebre "se Deus quiser" sem atacar a fé — separe fé de paralisia.', technique_hint: 'nomeou_conceito_permissao' },
-    { id: 'protocolo_5_passos', text: 'Aplique o protocolo completo: Label → Mirror → Reframe → PDA → Silêncio.', technique_hint: 'label,mirror,silencio_estrategico' },
-    { id: 'isolamento_toda_objecao', text: 'Use a Pergunta de Isolamento (Concer) em TODA objeção que aparecer.', technique_hint: 'isolamento_concer' },
-    { id: 'cadeira_balanco_voupensar', text: 'Use Cadeira de Balanço quando aparecer "vou pensar".', technique_hint: 'cadeira_balanco' },
-    { id: 'ciclo_quase_devolver', text: 'Devolva o Ciclo do Quase pro lead em 1 sessão.', technique_hint: 'ciclo_quase_devolvido' }
-  ];
-
-  // ========= XP & NÍVEIS =========
-  // Curva: XP_necessario(n) = 100 + (n-1)*50  — nível 1 começa em 0
-  function xpToLevel(level) {
-    return 100 + (level - 1) * 50;
-  }
-
-  function addXp(amount) {
-    const p = getProfile();
-    p.xp += amount;
-    p.xp_total_acumulado += amount;
+  function addXpToTier(tierId, amount) {
+    const tiers = getTierLevels();
+    const t = tiers[tierId];
+    if (!t) return null;
+    t.xp += amount;
     let leveled = false;
-    while (p.xp >= xpToLevel(p.level)) {
-      p.xp -= xpToLevel(p.level);
-      p.level = Math.min(99, p.level + 1);
+    while (t.xp >= xpToLevel(t.level) && t.level < 99) {
+      t.xp -= xpToLevel(t.level);
+      t.level += 1;
       leveled = true;
-      if (p.level >= 99) break;
     }
+    tiers[tierId] = t;
+    saveTierLevels(tiers);
+
+    const p = getProfile();
+    p.xp_total_acumulado += amount;
     saveProfile(p);
-    if (p.level === 99) unlockAchievement('l99');
-    return { profile: p, leveled };
+
+    // Achievements de Tier
+    if (tierId === 'fundacao' && t.level >= 10) unlockAchievement('tier_fundacao_l10');
+    if (tierId === 'conducao' && t.level >= 10) unlockAchievement('tier_conducao_l10');
+    if (tierId === 'fechamento' && t.level >= 10) unlockAchievement('tier_fechamento_l10');
+    if (tierId === 'fundacao' && t.level >= 50) unlockAchievement('tier_fundacao_l50');
+    if (tierId === 'fechamento' && t.level >= 50) unlockAchievement('tier_fechamento_l50');
+
+    const sumLevels = Object.values(tiers).reduce((a, x) => a + x.level, 0);
+    if (sumLevels >= 99) unlockAchievement('l99_geral');
+
+    return { tier: t, leveled };
   }
 
-  // ========= PROFILE / SKILLS =========
-  function getProfile() {
-    const s = localStorage.getItem(K.profile);
-    return s ? JSON.parse(s) : defaultProfile();
+  function tierOfTechnique(techId) {
+    const t = TECHNIQUES.find(x => x.id === techId);
+    return t ? t.tier : 'fundacao';
   }
-  function saveProfile(p) { localStorage.setItem(K.profile, JSON.stringify(p)); }
 
-  function getSkills() {
-    const s = localStorage.getItem(K.skills);
-    return s ? JSON.parse(s) : defaultSkills();
-  }
-  function saveSkills(s) { localStorage.setItem(K.skills, JSON.stringify(s)); }
-
-  // Nota de cada dimensão (0-10) entra pesada pra subir a habilidade (0-100).
-  // Movimento suave: skill += (nota*10 - skill) * 0.12
+  // ========= SKILLS =========
   function updateSkillsFromScores(notas) {
     const s = getSkills();
-    const keys = ['escuta', 'objecao', 'dor', 'conducao', 'fidelidade'];
+    const keys = ['escuta', 'investigacao', 'apresentacao', 'fechamento', 'fidelidade'];
     keys.forEach(k => {
-      const target = (notas[k] || 0) * 10;
-      s[k] = Math.max(0, Math.min(100, Math.round(s[k] + (target - s[k]) * 0.12)));
+      if (notas[k] !== undefined) {
+        const target = notas[k] * 10;
+        s[k] = Math.max(0, Math.min(100, Math.round(s[k] + (target - s[k]) * 0.12)));
+      }
     });
     saveSkills(s);
     return s;
@@ -297,182 +220,168 @@ const Gamification = (() => {
     const p = getProfile();
     const today = new Date().toISOString().slice(0, 10);
     const last = p.last_session_date;
-    if (last === today) { return p; }
+    if (last === today) return p;
     if (!last) { p.streak = 1; }
     else {
-      const diff = (new Date(today) - new Date(last)) / (1000 * 60 * 60 * 24);
+      const diff = Math.round((new Date(today) - new Date(last)) / 86400000);
       if (diff === 1) p.streak += 1;
       else if (diff > 1) p.streak = 1;
     }
     p.last_session_date = today;
     saveProfile(p);
-    if (p.streak >= 30) unlockAchievement('maratonista');
+    if (p.streak >= 30) unlockAchievement('maratonista_30');
+    if (p.streak >= 100) unlockAchievement('maratonista_100');
     return p;
   }
 
-  // ========= SESSIONS =========
-  function getSessions() {
-    const s = localStorage.getItem(K.sessions);
-    return s ? JSON.parse(s) : [];
-  }
-  function saveSession(session) {
-    const all = getSessions();
-    all.unshift(session);
-    if (all.length > 100) all.length = 100;
-    localStorage.setItem(K.sessions, JSON.stringify(all));
-  }
-
-  // Média das últimas N sessões de um dojô
-  function avgScoreInDojo(dojo, lastN = 10) {
-    const sessions = getSessions().filter(s => s.dojo === dojo).slice(0, lastN);
-    if (sessions.length < lastN) return { avg: null, count: sessions.length };
-    const sum = sessions.reduce((a, s) => a + (s.nota_final || 0), 0);
-    return { avg: sum / sessions.length, count: sessions.length };
-  }
-
-  function isDojoUnlocked(dojo) {
-    if (dojo === 'DM_1_1') return true;
-    if (dojo === 'AO_VIVO') {
-      const { avg, count } = avgScoreInDojo('DM_1_1', 10);
-      return count >= 10 && avg >= 7.0;
-    }
-    if (dojo === 'LIVE') {
-      const { avg, count } = avgScoreInDojo('AO_VIVO', 10);
-      return count >= 10 && avg >= 7.5;
-    }
-    return false;
-  }
-
   // ========= ACHIEVEMENTS =========
-  function getAchievements() {
-    const s = localStorage.getItem(K.achievements);
-    return s ? JSON.parse(s) : defaultAchievements();
-  }
-  function saveAchievements(a) { localStorage.setItem(K.achievements, JSON.stringify(a)); }
-
   function unlockAchievement(id) {
     const a = getAchievements();
-    if (!a[id]) {
-      a[id] = true;
-      saveAchievements(a);
-      return true;
-    }
+    if (!a[id]) { a[id] = true; saveAchievements(a); return true; }
     return false;
   }
 
   // ========= TECHNIQUES =========
-  function getTechniques() {
-    const s = localStorage.getItem(K.techniques);
-    return s ? JSON.parse(s) : defaultTechniques();
-  }
-  function saveTechniques(t) { localStorage.setItem(K.techniques, JSON.stringify(t)); }
-
   function recordTechniques(applied) {
     const t = getTechniques();
-    const hits = [];
     Object.keys(applied).forEach(k => {
-      if (applied[k] && t[k] !== undefined) {
-        t[k] += 1;
-        hits.push(k);
-      }
+      if (applied[k] && t[k] !== undefined) t[k] += 1;
     });
     saveTechniques(t);
-    checkTechniqueAchievements(t);
-    return hits;
-  }
-
-  function checkTechniqueAchievements(t) {
+    if (t.pergunta_implicacao >= 15) unlockAchievement('mestre_implicacao');
+    if (t.pergunta_necessidade >= 15) unlockAchievement('necessidade_cravada');
+    if (t['3_dez'] >= 10) unlockAchievement('mestre_3_dez');
+    if (t.looping_universal >= 10) unlockAchievement('looper');
+    if (t.silencio_dinamico >= 10) unlockAchievement('dono_silencio');
+    if (t.avanco_concreto >= 10) unlockAchievement('avanço_concreto');
     if (t.mirror >= 20) unlockAchievement('mestre_mirror');
     if (t.label >= 20) unlockAchievement('rotulador');
-    if (t.isolamento_concer >= 15) unlockAchievement('isolador');
-    if (t.teste_hipotetico >= 15) unlockAchievement('hipotetico');
-    if (t.silencio_estrategico >= 10) unlockAchievement('dono_silencio');
-    if ((t.fechou_dificil || 0) >= 3) unlockAchievement('fechador_improvavel');
+    if (t.nomeou_conceito_permissao >= 20) unlockAchievement('nomeador_padroes');
+    if (t.caso_real_citado >= 20) unlockAchievement('caso_real_mestre');
+    if ((t.fechou_dificil || 0) >= 5) unlockAchievement('fechador_improvavel');
   }
 
-  // ========= DAILY CHALLENGE =========
+  // ========= 18-STEP HITS =========
+  function recordStepHits(stepsCompleted) {
+    const hits = getStepHits();
+    (stepsCompleted || []).forEach(s => {
+      if (hits[s] !== undefined) hits[s] += 1;
+    });
+    saveStepHits(hits);
+    if ((stepsCompleted || []).length >= 15) unlockAchievement('caminho_completo');
+  }
+
+  // ========= DAILY =========
   function getDailyChallenge() {
     const today = new Date().toISOString().slice(0, 10);
-    const stored = localStorage.getItem(K.daily);
-    if (stored) {
-      const d = JSON.parse(stored);
-      if (d.date === today) return d;
-    }
-    // gerar novo
-    const random = DAILY_CHALLENGES[Math.floor(Math.random() * DAILY_CHALLENGES.length)];
-    const d = { date: today, challenge_id: random.id, text: random.text, technique_hint: random.technique_hint, completed: false };
-    localStorage.setItem(K.daily, JSON.stringify(d));
+    const stored = _get(K.daily, null);
+    if (stored && stored.date === today) return stored;
+    const pick = DAILY_CHALLENGES[Math.floor(Math.random() * DAILY_CHALLENGES.length)];
+    const d = { date: today, challenge_id: pick.id, text: pick.text, hint: pick.hint, completed: false };
+    _set(K.daily, d);
     return d;
   }
 
-  function checkDailyCompletion(technicas_aplicadas_na_sessao) {
+  function checkDailyCompletion(tecnicasAplicadas) {
     const d = getDailyChallenge();
     if (d.completed) return { completed: true, already: true };
-    const required = (d.technique_hint || '').split(',').filter(Boolean);
-    if (required.length === 0) return { completed: false };
-    const allHit = required.every(r => technicas_aplicadas_na_sessao[r]);
-    if (allHit) {
+    const required = (d.hint || '').split(',').filter(Boolean);
+    if (!required.length) return { completed: false };
+    const all = required.every(r => tecnicasAplicadas[r]);
+    if (all) {
       d.completed = true;
-      localStorage.setItem(K.daily, JSON.stringify(d));
+      _set(K.daily, d);
       return { completed: true, already: false };
     }
     return { completed: false };
   }
 
   // ========= XP CALC =========
-  function computeSessionXp({ nota_geral, streak, tecnicas_aplicadas, fechou, leadDificil, desafioCumprido }) {
-    let breakdown = [];
-    let baseXp = Math.round((nota_geral || 0) * 10);
-    breakdown.push({ label: `Nota ${nota_geral.toFixed(1)} × 10`, value: baseXp });
+  function computeSessionXp({ nota_geral, streak, tecnicas_aplicadas, stepsCompleted, fechou, leadDificil, desafioCumprido, ordemBonus }) {
+    const breakdown = [];
+    const base = Math.round((nota_geral || 0) * 10);
+    breakdown.push({ label: `Nota ${(nota_geral || 0).toFixed(1)} × 10`, value: base, tier: null });
 
     const streakBonus = Math.min(60, streak * 2);
-    if (streakBonus > 0) breakdown.push({ label: `Streak ${streak} dias × 2`, value: streakBonus });
+    if (streakBonus) breakdown.push({ label: `Streak ${streak} dias × 2`, value: streakBonus, tier: null });
 
-    let tecBonus = 0;
+    const tiersXp = { fundacao: 0, conducao: 0, fechamento: 0, palco: 0 };
     const tecHits = [];
     TECHNIQUES.forEach(t => {
       if (tecnicas_aplicadas[t.id]) {
-        tecBonus += t.xp;
+        tiersXp[t.tier] += t.xp;
         tecHits.push(t.name);
       }
     });
-    if (tecBonus > 0) breakdown.push({ label: `Técnicas aplicadas (${tecHits.length})`, value: tecBonus, details: tecHits });
+    const tecTotal = Object.values(tiersXp).reduce((a, b) => a + b, 0);
+    if (tecTotal) breakdown.push({ label: `Técnicas aplicadas (${tecHits.length})`, value: tecTotal, details: tecHits, tier: null });
 
-    let fechoBonus = 0;
+    const stepBonus = (stepsCompleted || []).length * 5;
+    if (stepBonus) breakdown.push({ label: `Passos cumpridos (${stepsCompleted.length}/18) × 5`, value: stepBonus, tier: null });
+
+    const ordem = ordemBonus || 0;
+    if (ordem) breakdown.push({ label: 'Bônus ordem correta do Caminho', value: ordem, tier: null });
+
+    let fechamentoBonus = 0;
     if (fechou) {
-      fechoBonus = leadDificil ? 100 : 50;
-      breakdown.push({ label: leadDificil ? 'Fechou lead hostil' : 'Fechou a venda', value: fechoBonus });
+      fechamentoBonus = leadDificil ? 100 : 50;
+      breakdown.push({ label: leadDificil ? 'Fechou lead hostil' : 'Fechou a venda', value: fechamentoBonus, tier: 'fechamento' });
+      tiersXp.fechamento += fechamentoBonus;
     }
 
     const desafioBonus = desafioCumprido ? 25 : 0;
-    if (desafioBonus > 0) breakdown.push({ label: 'Desafio do dia cumprido', value: desafioBonus });
+    if (desafioBonus) breakdown.push({ label: 'Desafio do dia cumprido', value: desafioBonus, tier: null });
 
-    const total = baseXp + streakBonus + tecBonus + fechoBonus + desafioBonus;
-    return { total, breakdown };
+    const total = base + streakBonus + tecTotal + stepBonus + ordem + fechamentoBonus + desafioBonus;
+
+    // Distribuir XP geral entre tiers proporcionalmente ao esforço
+    const distributed = {};
+    if (base + streakBonus + stepBonus + ordem + desafioBonus > 0) {
+      const generalBucket = base + streakBonus + stepBonus + ordem + desafioBonus;
+      distributed.fundacao = Math.round(generalBucket * 0.35);
+      distributed.conducao = Math.round(generalBucket * 0.30);
+      distributed.fechamento = Math.round(generalBucket * 0.35);
+    }
+    Object.keys(tiersXp).forEach(tid => {
+      distributed[tid] = (distributed[tid] || 0) + tiersXp[tid];
+    });
+
+    return { total, breakdown, tiersXp: distributed };
+  }
+
+  function applySessionXp(xpInfo) {
+    // Adiciona XP em cada tier
+    const leveledUp = [];
+    Object.keys(xpInfo.tiersXp).forEach(tid => {
+      const amt = xpInfo.tiersXp[tid];
+      if (amt > 0) {
+        const r = addXpToTier(tid, amt);
+        if (r && r.leveled) leveledUp.push({ tier: tid, newLevel: r.tier.level });
+      }
+    });
+    return leveledUp;
   }
 
   // ========= RESET =========
   function resetAll() {
     Object.values(K).forEach(key => localStorage.removeItem(key));
+    // Limpa também as chaves do v1 se existirem
+    ['dojo:ramon:sessions', 'dojo:ramon:achievements', 'dojo:ramon:tecnicas_dominadas',
+     'dojo:ramon:scenario_hashes', 'dojo:ramon:personas_usadas'].forEach(k => localStorage.removeItem(k));
   }
 
-  // ========= EXPOSED =========
   return {
-    K,
-    TECHNIQUES,
-    TECHNIQUE_GUIDES,
-    findTechniqueGuide,
-    ACHIEVEMENTS,
-    DAILY_CHALLENGES,
-
+    K, TIERS, TECHNIQUES, ACHIEVEMENTS, DAILY_CHALLENGES, MISSAO_8_SEMANAS,
     getProfile, saveProfile,
     getSkills, saveSkills, updateSkillsFromScores,
-    getSessions, saveSession, avgScoreInDojo, isDojoUnlocked,
+    getSessions, saveSession,
     getAchievements, unlockAchievement,
     getTechniques, recordTechniques,
+    getStepHits, recordStepHits,
+    getTierLevels, addXpToTier, tierOfTechnique,
+    xpToLevel, updateStreak,
     getDailyChallenge, checkDailyCompletion,
-    computeSessionXp, addXp, xpToLevel,
-    updateStreak,
+    computeSessionXp, applySessionXp,
     resetAll
   };
 })();

@@ -1,0 +1,137 @@
+{
+  "descricao": "Scripts literais pras 5 objeções mais críticas pós-evento, com a quebra Teoria da Permissão traduzida. Evoluiu do v1 — agora alinhado com o Caminho de 18 passos.",
+  "fonte": "Tecnicas_Vendas_Compendio T07-T11 + Apostila_Vendas_Arsenal_Nucleo seção 2",
+  "protocolo_geral": "1. Looping Universal primeiro (não responda objeção diretamente) → 2. Se persistir, Isolamento → 3. Se é só preço, Cadeira de Balanço + Skin in the Game → 4. Reforça 3 Dez → 5. Tenta Close → 6. Se não fechou, Avanço.",
+  "objecoes": [
+    {
+      "id": "ta_caro",
+      "categoria": "dinheiro",
+      "manifestacoes": [
+        "Tá caro pra mim",
+        "Não tô num momento financeiro bom",
+        "Tô endividado",
+        "Se fosse metade do preço eu entrava",
+        "Muito caro"
+      ],
+      "objecao_real_permissao": "Culpa da Sobrevivência — não se dá Permissão de gastar com ele mesmo. Gastar consigo = ofuscar família que sofreu. Também pode ser Medo do Brilho: se funcionar, vai ter que mudar, e mudar cobra preço.",
+      "fases_de_quebra": {
+        "fase_1_looping": "Entendo o que você está dizendo, [Nome], mas deixa eu te fazer uma pergunta: a ideia faz sentido pra você? Você gosta da ideia?",
+        "fase_2_isolamento": "Tirando a questão do investimento, faz sentido pra você? É isso que você está procurando?",
+        "fase_3_cadeira_de_balanço": "[Nome], daqui a 6 meses se nada mudar, você ainda vai estar aqui sentindo o mesmo, certo? E quanto isso já te custou até aqui — não tô falando do programa, tô falando do que essa dor já cobrou em dinheiro, em tempo, em relação?",
+        "fase_4_permissao": "Você não tem dinheiro pra VOCÊ. Mas tem pra pagar a conta do seu irmão, o médico do seu pai, o remédio da sua mãe. O problema não é dinheiro. É que você não se enxerga como destino legítimo do seu próprio dinheiro. Isso tem nome: Culpa da Sobrevivência.",
+        "fase_5_skin_in_the_game": "O valor ser esse é justamente o que faz funcionar. Quem entra aqui com skin in the game, entra pra valer. Quem paga pouco, não executa. É o preço que cria o comprometimento.",
+        "fase_6_close": "Você prefere começar no pagamento à vista com desconto, ou parcelado em 12×?"
+      },
+      "armadilhas_proibidas": [
+        "Oferecer desconto — confirma que não vale o preço pedido",
+        "Parcelar em mais vezes sem quebrar a objeção real",
+        "Minimizar ('é só um cafezinho por dia')",
+        "Apelar pra ROI infocomercial",
+        "Repetir o preço 2+ vezes"
+      ]
+    },
+    {
+      "id": "vou_pensar",
+      "categoria": "tempo_decisao",
+      "manifestacoes": [
+        "Vou pensar",
+        "Preciso refletir",
+        "Me dá uns dias",
+        "Quero dormir com a ideia",
+        "Deixa eu conversar comigo primeiro"
+      ],
+      "objecao_real_permissao": "Plano Perfeito disfarçado. 'Vou pensar' é cadeira de balanço — se mexe, faz barulho, não sai do lugar. Lead trava no D do PDA.",
+      "fases_de_quebra": {
+        "fase_1_takeaway": "Uau, ótimo, adoro quando as pessoas dizem que querem pensar — significa interesse real. Você não está tentando se livrar de mim, está?",
+        "fase_2_looping": "Entendo totalmente. Mas deixa eu te fazer uma pergunta: deixando a questão do dinheiro de lado, a ideia faz sentido pra você? Você gosta do formato?",
+        "fase_3_4_gatilhos_pre_queda": "Entre a vontade, a dúvida, a decisão e a desistência você não precisa de mais que 24h pra viver uma Pré-Queda. Você já tem a vontade (veio até aqui). Agora vem a dúvida. Depois a decisão. E se você não decide agora conscientemente, a vida decide por você.",
+        "fase_4_cadeira_balanço": "'Vou pensar' é cadeira de balanço — se mexe, faz barulho, mas não sai do lugar. Me diz: o que EXATAMENTE você precisa decidir que já não decidiu aqui?",
+        "fase_5_avanço": "Sem problema. Mas NÃO quero que isso vire um 'vou pensar' que morre no tempo. Amanhã às 15h eu te ligo 15 minutos. Até lá você fala com quem tem que falar, e às 15h você me diz sim ou não. Pode ser?"
+      },
+      "armadilhas_proibidas": [
+        "Aceitar 'vou pensar e te falo' sem Avanço concreto",
+        "Concordar ('claro, é uma decisão importante')",
+        "Sumir depois — 80% do 'vou pensar' morre sem segundo contato"
+      ]
+    },
+    {
+      "id": "falar_conjuge",
+      "categoria": "familia",
+      "manifestacoes": [
+        "Preciso conversar com meu marido",
+        "Minha esposa tem que saber antes",
+        "Vou falar com meu pai",
+        "Não posso decidir sozinho",
+        "Preciso consultar em casa primeiro"
+      ],
+      "objecao_real_permissao": "Coleiras Invisíveis + Dependência Emocional. Cônjuge/família como autoridade emocional acima da própria decisão. Medo do Brilho disfarçado de prudência.",
+      "fases_de_quebra": {
+        "fase_1_looping": "Entendo, super sensato e justo você querer conversar. Mas deixa eu te fazer uma pergunta: a ideia faz sentido pra você? Você gosta do formato?",
+        "fase_2_inversao_papeis": "Claro. Me conta: o que exatamente você vai dizer pra ela? Porque a resposta dela depende da conversa que VOCÊ vai liderar. Se você chegar em dúvida, volta dúvida.",
+        "fase_3_coleiras": "Por trás de algumas ajudas, havia coleiras invisíveis. O boleto real era emocional. Pra se importar menos com a opinião dos outros, você precisa ter coragem de ser menos importante pra eles.",
+        "fase_4_3a_hormozi": "Isso te faz igual ao [Caso Real — Regiane, Berenice, André]. Pessoa inteligente toma decisão em conjunto. Só por curiosidade — qual parte da nossa estratégia você acha que ela não ia gostar?",
+        "fase_5_escada_maturidade": "Tem algo acontecendo que não é sobre falta de decisão. É sobre em qual degrau da Maturidade você está. Se ainda precisa da aprovação do cônjuge pra decisão de prosperidade, você está no degrau do Afeto ou Reconhecimento. Enquanto estiver aí, não chega no da Recompensa.",
+        "fase_6_avanço": "Você fala com ela hoje à noite. Amanhã 10h eu te ligo 15 minutos. Você me dá a resposta. Fechado?"
+      },
+      "armadilhas_proibidas": [
+        "Aceitar 'depois eu te falo' — Continuação morre",
+        "Atacar o cônjuge — ataque o PADRÃO, não pessoa",
+        "Concordar passivamente ('claro, tem que alinhar')",
+        "Mandar link do programa pro cônjuge ver — perde o controle"
+      ]
+    },
+    {
+      "id": "ja_tentei_tudo",
+      "categoria": "descrenca",
+      "manifestacoes": [
+        "Já fiz vários cursos",
+        "Nenhum funcionou comigo",
+        "Tô descrente",
+        "Isso não é pra mim",
+        "Já tentei terapia, coach, tudo"
+      ],
+      "objecao_real_permissao": "Obesidade Intelectual pura. Ele confunde acumular teoria com resolver problema. Tentou tudo em Capacidade, nada em Permissão. Inconscientemente ESPERA que isso também não funcione — pra ter desculpa.",
+      "fases_de_quebra": {
+        "fase_1_label": "Parece que você já investiu muito e ficou frustrado. Cansou de esperança.",
+        "fase_2_distincao_cdp": "Olha — tudo que você tentou foi na camada de Capacidade. Você tem capacidade de sobra. Você já tem disposição (trabalha muito). O que nunca foi tratado é Permissão. E Permissão não é curso — é ambiente de rompimento.",
+        "fase_3_entender_nao_quebra": "Entender o padrão não rompe o padrão. Você já foi pra vida e entendeu tudo. Entender não muda nada. Padrão é rompido vivendo, não compreendendo.",
+        "fase_4_software_danificado": "Tem gente que diz que tem medo, mas na verdade o 'software da vontade' está danificado. Você consegue QUERER de verdade? Ou tá só justificando não querer?",
+        "fase_5_desculpa_sofisticada": "A desculpa sofisticada justifica tudo, mas não explica nada. 'Minha mãe me rejeitou no ventre', 'tenho genética'. Diagnósticos sem cura. Qual é a UTILIDADE dessa história pra você? O que ela te oferece que você não teria sem ela?",
+        "fase_6_risco_reverso": "Garantia de 30 dias incondicional. Se não sentir shift, devolvemos. Mas o trato é: só entra quem vai aplicar — não quem vai assistir.",
+        "fase_7_close": "Seu único problema vai ser não ter entrado mais cedo. Crédito ou à vista?"
+      },
+      "armadilhas_proibidas": [
+        "Prometer que 'este é diferente' genérico",
+        "Listar features do produto",
+        "Minimizar o que ele já tentou",
+        "Cair na armadilha do 'mas este aqui tem IA...'"
+      ]
+    },
+    {
+      "id": "nao_e_hora",
+      "categoria": "timing",
+      "manifestacoes": [
+        "Não é a hora",
+        "Agora tô num momento complicado",
+        "Deixa passar essa tempestade",
+        "Quando as coisas acalmarem eu entro",
+        "Ano que vem"
+      ],
+      "objecao_real_permissao": "Plano Perfeito. Medo do Brilho — se for AGORA, vai funcionar, e se funcionar ele vai ter que mudar. Adiar é estratégia de permanência. Ou Mula de Carga pura — não tem tempo porque é bombeiro de todo mundo.",
+      "fases_de_quebra": {
+        "fase_1_looping": "Entendo o que você está dizendo. Mas deixa eu te perguntar: a ideia faz sentido pra você?",
+        "fase_2_plano_perfeito": "Me descreve esse momento certo. Que sinais têm que aparecer pra você saber que é A hora? Porque se você não souber descrever, é Plano Perfeito — forma chique de dizer 'nunca'.",
+        "fase_3_pre_queda_como_treino": "A vida não te sabota, te treina. Quando você tenta algo que exige mais Permissão do que você tem, a vida sobe, deveria continuar subindo, e para ou cai. Isso é Pré-Queda. Quem foge da Pré-Queda foge do crescimento. A tempestade é o TREINO.",
+        "fase_4_bateria_vontade": "A vontade tem prazo de validade. Você carregou a bateria no evento. Em 2-3 semanas, se não virar plano estruturado, descarrega. Qual é sua decisão?",
+        "fase_5_cadeira_balanço": "Daqui a 6 meses se nada mudar, você ainda vai estar aqui. Quanto isso já te custou em dinheiro, tempo, relação?",
+        "fase_6_avanço": "Ano que vem não é um prazo — é uma fuga. Amanhã 15h eu te ligo 15 minutos. Você me diz sim ou não."
+      },
+      "armadilhas_proibidas": [
+        "Concordar ('claro, timing é tudo')",
+        "Urgência artificial ('última turma', 'só até amanhã' quando não é verdade)",
+        "Validar o Plano Perfeito ('faz sentido, se organiza e volta')",
+        "Chamar de procrastinação — é mais profundo que isso"
+      ]
+    }
+  ]
+}

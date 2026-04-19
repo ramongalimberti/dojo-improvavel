@@ -1,0 +1,374 @@
+{
+  "nome": "Caminho do Lead Pós-Evento (Zoom / Chamada 1×1)",
+  "fonte": "Tecnicas_Vendas_Compendio — Parte 1 (compilado de Belfort/Voss/Blount/Rackham/Concer/Hormozi/Cardone)",
+  "publico_alvo": "Arena 2 do Dojô — chamada 1×1 com lead aquecido de live/evento",
+  "objetivo": "Conduzir da conversa inicial ao fechamento em 1-2 sessões, sem perder a energia do evento. Espinha dorsal técnica do treino.",
+  "fases": [
+    {"id": "abertura", "nome": "Abertura", "passos": [1, 2, 3], "duracao_esperada_min": 2, "cor": "#6BA368"},
+    {"id": "investigacao", "nome": "Investigação expressa", "passos": [4, 5, 6, 7], "duracao_esperada_min": 10, "cor": "#C89A2E"},
+    {"id": "apresentacao", "nome": "Apresentação", "passos": [8, 9, 10], "duracao_esperada_min": 12, "cor": "#C65D2E"},
+    {"id": "fechamento", "nome": "Fechamento", "passos": [11, 12, 13, 14, 15, 16, 17, 18], "duracao_esperada_min": 8, "cor": "#9B4520"}
+  ],
+  "passos": [
+    {
+      "numero": 1,
+      "fase": "abertura",
+      "nome": "Os Primeiros 4 Segundos",
+      "tecnica": "4 Segundos",
+      "autor": "Jordan Belfort",
+      "objetivo": "Projetar em 4 segundos: afiado como tachinha + entusiasmado + especialista. Reativa o estado do evento.",
+      "exemplo_literal": "E aí, [Nome]! Tudo bem? Tô aqui com tempo reservado pra você, vamos fazer bom uso desses minutos.",
+      "sinais_de_deteccao": [
+        "saudação curta pelo nome",
+        "tom direto não-formal",
+        "sem apresentação protocolar",
+        "sem 'meu nome é Ramon Galimberti da Aliança Divergente'"
+      ],
+      "armadilha": "Abertura de telemarketing ('Oi, meu nome é Ramon da Aliança Divergente, estou entrando em contato porque...') — mata na origem.",
+      "skippable": false,
+      "xp_base": 10,
+      "tier": 1
+    },
+    {
+      "numero": 2,
+      "fase": "abertura",
+      "nome": "Tom 'Eu Me Importo'",
+      "tecnica": "Tonalidade 'Eu me importo' (1 das 10)",
+      "autor": "Jordan Belfort",
+      "objetivo": "Primeiros segundos transmitem: 'não estou aqui só pra vender, quero saber quem você é'. Tom faz 45% do trabalho.",
+      "exemplo_literal": "Me conta — o que te trouxe ao evento? O que te fez ficar até o final?",
+      "sinais_de_deteccao": [
+        "pergunta sobre a pessoa/contexto dela",
+        "interesse genuíno no que ela viveu",
+        "sem pressa pra apresentar produto"
+      ],
+      "armadilha": "Pergunta morna, genérica, sem conexão com o evento ('como você tá?', 'tudo bem?').",
+      "skippable": false,
+      "xp_base": 10,
+      "tier": 1
+    },
+    {
+      "numero": 3,
+      "fase": "abertura",
+      "nome": "Abertura Focada no Objetivo",
+      "tecnica": "Pedir permissão explícita pra perguntar",
+      "autor": "Neil Rackham (SPIN)",
+      "objetivo": "Pedir permissão pra fazer perguntas — o cliente dá permissão inconsciente pras perguntas 'invasivas' que vêm depois.",
+      "exemplo_literal": "Antes da gente falar do programa, posso te fazer duas perguntas rápidas pra eu não desperdiçar o seu tempo?",
+      "sinais_de_deteccao": [
+        "pede permissão pra investigar",
+        "sinaliza que vai ser objetivo",
+        "protege o tempo do lead"
+      ],
+      "armadilha": "Entrar direto nas perguntas sem pedir permissão — soa invasivo.",
+      "skippable": true,
+      "xp_base": 8,
+      "tier": 1
+    },
+    {
+      "numero": 4,
+      "fase": "investigacao",
+      "nome": "Situação Expressa (1 pergunta só)",
+      "tecnica": "Pergunta de Situação (SPIN)",
+      "autor": "Neil Rackham",
+      "objetivo": "No pós-evento você já sabe 80% do contexto. Faça UMA pergunta de calibração.",
+      "exemplo_literal": "Você já tinha participado de alguma coisa nossa antes, ou o evento foi seu primeiro contato direto?",
+      "sinais_de_deteccao": [
+        "1 pergunta factual curta",
+        "sobre histórico com o trabalho do Ramon"
+      ],
+      "armadilha": "Fazer muitas perguntas de situação — entedia. Rackham provou que vendedor bem-sucedido faz MENOS dessas.",
+      "skippable": true,
+      "xp_base": 5,
+      "tier": 1
+    },
+    {
+      "numero": 5,
+      "fase": "investigacao",
+      "nome": "Perguntas de Problema",
+      "tecnica": "Perguntas de Problema (SPIN)",
+      "autor": "Neil Rackham",
+      "objetivo": "Trazer à tona a dor que o evento tocou. O lead já sentiu algo — faça ele verbalizar.",
+      "exemplo_literal": "O que você viu no evento que bateu mais forte com o que você tá vivendo agora? O que não está funcionando hoje?",
+      "sinais_de_deteccao": [
+        "pergunta sobre dor/problema específico",
+        "referência ao que o lead sentiu no evento",
+        "convite à verbalização"
+      ],
+      "armadilha": "Pular pra implicação sem deixar o lead nomear o problema primeiro.",
+      "skippable": false,
+      "xp_base": 12,
+      "tier": 1
+    },
+    {
+      "numero": 6,
+      "fase": "investigacao",
+      "nome": "Perguntas de Implicação (ALAVANCA MÁXIMA)",
+      "tecnica": "Perguntas de Implicação (SPIN)",
+      "autor": "Neil Rackham",
+      "objetivo": "Ampliar o efeito dominó do problema até o preço da solução parecer pequeno. Pesa o lado 'custo de não fazer nada'.",
+      "exemplo_literal": "Se esse padrão continuar mais 6 meses, como isso chega na sua relação com sua esposa? Na sua filha? Quanto isso já te custou até aqui — em dinheiro, em tempo, em oportunidade?",
+      "sinais_de_deteccao": [
+        "pergunta que projeta o problema no futuro",
+        "conecta problema a outras áreas da vida (relação, saúde, filhos, trabalho)",
+        "pergunta sobre custo acumulado",
+        "'se nada mudar', 'daqui a X meses', 'como isso afeta'"
+      ],
+      "armadilha": "Ficar SÓ nas implicações — deprime o cliente (Regra de Quincy). Assim que a dor está no pico, vá pro Passo 7.",
+      "skippable": false,
+      "xp_base": 25,
+      "tier": 1,
+      "is_alavanca_maxima": true
+    },
+    {
+      "numero": 7,
+      "fase": "investigacao",
+      "nome": "Perguntas de Necessidade de Solução",
+      "tecnica": "Perguntas de Necessidade de Solução (SPIN)",
+      "autor": "Neil Rackham",
+      "objetivo": "Virar a chave da dor pra solução. O cliente VERBALIZA o benefício com palavras dele. Quando o cliente fala o benefício, é decisão tomada.",
+      "exemplo_literal": "Se esse padrão fosse quebrado, o que destravaria primeiro na sua vida? Como seria acordar daqui a 3 meses sabendo que isso virou diferente? Por que seria importante resolver isso agora, e não daqui a um ano?",
+      "sinais_de_deteccao": [
+        "pergunta sobre ganho/benefício",
+        "projeta futuro positivo",
+        "faz o lead imaginar o resolvido",
+        "'se isso mudasse', 'como seria', 'o que destravaria'"
+      ],
+      "armadilha": "Perguntar sobre benefício que a Aliança NÃO entrega — inflama desejo que você não satisfaz.",
+      "skippable": false,
+      "xp_base": 25,
+      "tier": 1,
+      "is_alavanca_maxima": true
+    },
+    {
+      "numero": 8,
+      "fase": "apresentacao",
+      "nome": "Transição com História",
+      "tecnica": "Storytelling (cena + decisão)",
+      "autor": "Ramon + Alex Hormozi",
+      "objetivo": "Conta UMA história curta de alguém parecido que entrou e teve desfecho concreto. História termina em DECISÃO, não em aprendizado.",
+      "exemplo_literal": "Tive um aluno ano passado que falou exatamente o que você tá falando agora. [cena em 3 frases]. Ele entrou. Seis meses depois ele me mandou um print de [resultado concreto].",
+      "sinais_de_deteccao": [
+        "narrativa breve sobre outro aluno",
+        "paralelo com a situação do lead atual",
+        "termina em decisão + resultado (não em 'aprendeu')",
+        "usa caso real do banco (Daniela, Regiane, Vanilton, Ícaro, etc.)"
+      ],
+      "armadilha": "História longa ou que termina em aprendizado abstrato. Ou citar caso que não se parece com o prospect.",
+      "skippable": true,
+      "xp_base": 15,
+      "tier": 2
+    },
+    {
+      "numero": 9,
+      "fase": "apresentacao",
+      "nome": "Pre-handling de 3 Objeções",
+      "tecnica": "Accusation Audit / Pre-handling",
+      "autor": "Jeb Blount + Chris Voss",
+      "objetivo": "ANTES de falar o preço, desarma as 3 objeções que VÃO vir. Mata 60-70% das objeções antes de nascerem.",
+      "exemplo_literal": "Antes de eu te falar o valor, três coisas que provavelmente vão passar na sua cabeça. Primeiro: 'Será que dá tempo?'. [resposta]. Segundo: 'Será que é pra mim?'. [resposta]. Terceiro: 'E se não funcionar?'. [resposta]. Beleza, agora posso te falar.",
+      "sinais_de_deteccao": [
+        "anúncio explícito das 3 objeções antes do preço",
+        "cada objeção é respondida brevemente",
+        "tom: 'você vai achar que...', 'você provavelmente vai pensar...'"
+      ],
+      "armadilha": "Pular esse passo e encarar as objeções reativamente depois do preço.",
+      "skippable": true,
+      "xp_base": 15,
+      "tier": 2
+    },
+    {
+      "numero": 10,
+      "fase": "apresentacao",
+      "nome": "Os 3 Dez na Ordem",
+      "tecnica": "3 Dez / Três Certezas",
+      "autor": "Jordan Belfort",
+      "objetivo": "Ordem INEGOCIÁVEL: Produto → Você → Aliança. Inverter destrói a venda. Construir certeza nas 3 dimensões.",
+      "exemplo_literal": "PRODUTO: 'A Aliança não é curso. É ambiente com IA que age como terapeuta de bolso 24/7...' VOCÊ: 'Eu sou co-liderança com o Elton Euler, já passei mais de 150 mil pessoas...' ALIANÇA: 'Somos uma comunidade de improváveis, com Mapa de Aliados, encontros semanais...'",
+      "sinais_de_deteccao": [
+        "fala sobre o programa (pilares, método, diferença)",
+        "depois fala sobre ele mesmo (autoridade, histórico)",
+        "depois fala sobre Aliança Divergente (comunidade, estrutura)",
+        "ordem respeitada (Produto antes de Você antes de Aliança)"
+      ],
+      "armadilha": "Inverter a ordem (começar por 'sou Ramon, mentor há 15 anos' em vez do produto). Misturar os 3 ao mesmo tempo.",
+      "skippable": false,
+      "xp_base": 30,
+      "tier": 2,
+      "is_alavanca_maxima": true,
+      "deteccao_estrutural": {
+        "requer_ordem": true,
+        "componentes": ["produto", "voce", "alianca"]
+      }
+    },
+    {
+      "numero": 11,
+      "fase": "fechamento",
+      "nome": "Pedido em 3 Tons",
+      "tecnica": "Padrão 3 Tons + Silêncio",
+      "autor": "Jordan Belfort",
+      "objetivo": "Pedido de compromisso em 3 tonalidades coladas: Absoluta Certeza → Completa Sinceridade → Homem Razoável. Depois: silêncio.",
+      "exemplo_literal": "Se você me der uma chance, [Nome] [Absoluta Certeza], acredite, você vai ficar realmente impressionado [Completa Sinceridade]. Parece suficientemente justo? [Homem Razoável] [silêncio 7-10s]",
+      "sinais_de_deteccao": [
+        "pedido explícito de uma chance/compromisso",
+        "estrutura 'se você me der uma chance... acredite... parece justo?'",
+        "silêncio marcado no fim",
+        "[silêncio Xs] explícito"
+      ],
+      "armadilha": "Fechar com 'e aí, tem interesse?' ou 'alguma dúvida?' — tonalidade errada, mata o peso do pedido.",
+      "skippable": false,
+      "xp_base": 25,
+      "tier": 3,
+      "is_alavanca_maxima": true
+    },
+    {
+      "numero": 12,
+      "fase": "fechamento",
+      "nome": "Looping Universal de Objeção",
+      "tecnica": "Looping Universal",
+      "autor": "Jordan Belfort",
+      "objetivo": "Qualquer objeção ('vou pensar' / 'tá caro' / 'preciso falar com esposa') recebe a MESMA resposta inicial. Não responde a objeção de frente.",
+      "exemplo_literal": "Entendo o que você está dizendo, [Nome], mas deixa eu te fazer uma pergunta: a ideia faz sentido pra você? Você gosta da ideia?",
+      "sinais_de_deteccao": [
+        "NÃO responde a objeção específica diretamente",
+        "pergunta se a ideia faz sentido / se ele gosta",
+        "isola o sentimento antes de atacar a trava",
+        "'deixa eu te fazer uma pergunta'"
+      ],
+      "armadilha": "Responder diretamente à objeção ('não é caro porque...', 'dá tempo sim porque...'). Espiral da morte — ele inventa a próxima objeção.",
+      "skippable": false,
+      "xp_base": 25,
+      "tier": 3,
+      "is_alavanca_maxima": true,
+      "ativado_quando": "lead apresenta objeção explícita depois do preço"
+    },
+    {
+      "numero": 13,
+      "fase": "fechamento",
+      "nome": "Isolamento de Preço",
+      "tecnica": "Isolamento de Preço",
+      "autor": "Jordan Belfort",
+      "objetivo": "Se depois do Loop 1 ainda está pendurado no preço: isolar. Se diz 'sim' → o problema é SÓ preço. Se hesita → problema NÃO é preço.",
+      "exemplo_literal": "[Nome], deixa eu isolar uma coisa: tirando a questão do investimento, faz sentido pra você? É isso que você está procurando?",
+      "sinais_de_deteccao": [
+        "'tirando o valor', 'tirando o investimento'",
+        "pergunta se fora o preço tá bom",
+        "separa objeção de preço das outras"
+      ],
+      "armadilha": "Ir pra argumentação de preço sem isolar primeiro.",
+      "skippable": true,
+      "xp_base": 20,
+      "tier": 3
+    },
+    {
+      "numero": 14,
+      "fase": "fechamento",
+      "nome": "Custo da Inação / Cadeira de Balanço",
+      "tecnica": "Cadeira de Balanço + Custo da Inação",
+      "autor": "Alex Hormozi + Thiago Concer",
+      "objetivo": "Apontar que NÃO fazer também tem preço. Converte o preço da AÇÃO em preço da INAÇÃO.",
+      "exemplo_literal": "[Nome], daqui a 6 meses se nada mudar, você ainda vai estar aqui sentindo o mesmo, certo? E quanto isso já te custou até aqui? Não tô falando do investimento do programa. Tô falando do que essa dor já cobrou de você em dinheiro, tempo, relação.",
+      "sinais_de_deteccao": [
+        "projeta inação no futuro",
+        "soma o custo acumulado da dor",
+        "'daqui a X meses, se nada mudar'",
+        "compara preço do programa com preço de continuar igual"
+      ],
+      "armadilha": "Defender o preço do programa em vez de mostrar o preço da inação.",
+      "skippable": true,
+      "xp_base": 20,
+      "tier": 3
+    },
+    {
+      "numero": 15,
+      "fase": "fechamento",
+      "nome": "Skin in the Game",
+      "tecnica": "Skin in the Game",
+      "autor": "Thiago Concer",
+      "objetivo": "Converter o preço de fraqueza em PROVA de seriedade. Casa com Escada da Postura.",
+      "exemplo_literal": "O valor ser esse é justamente o que faz funcionar. Quem entra aqui com skin in the game, entra pra valer. Quem paga pouco, não executa. É o preço que cria o comprometimento.",
+      "sinais_de_deteccao": [
+        "'o valor ser esse é o que faz funcionar'",
+        "'skin in the game'",
+        "'quem paga pouco não executa'",
+        "preço como filtro/comprometimento"
+      ],
+      "armadilha": "Oferecer desconto ou parcelamento maior — quebra postura e Fidelidade à Metodologia.",
+      "skippable": true,
+      "xp_base": 20,
+      "tier": 3
+    },
+    {
+      "numero": 16,
+      "fase": "fechamento",
+      "nome": "Assumptive ou Alternative Close",
+      "tecnica": "Assumptive Close / Alternative Close",
+      "autor": "Grant Cardone / Jordan Belfort",
+      "objetivo": "Não pergunta 'quer entrar?'. Assume que sim e pergunta o próximo passo OU oferece A ou B (ambos = sim).",
+      "exemplo_literal": "ASSUMPTIVE: 'Ótimo. Vou te mandar agora o link de cadastro. Qual é o melhor e-mail pra eu mandar?' ALTERNATIVE: 'Você prefere começar no pagamento à vista com o desconto, ou no parcelado em 12x?'",
+      "sinais_de_deteccao": [
+        "pergunta NÃO é sim/não",
+        "assume que vai acontecer",
+        "pede próximo passo concreto (e-mail, dados)",
+        "ou oferece A ou B"
+      ],
+      "armadilha": "Voltar pra 'você quer entrar? faz sentido?' — é pedido, não fechamento.",
+      "skippable": false,
+      "xp_base": 20,
+      "tier": 3
+    },
+    {
+      "numero": 17,
+      "fase": "fechamento",
+      "nome": "Redução do Limiar (SÓ se muito indeciso)",
+      "tecnica": "Redução de Limiar",
+      "autor": "Jordan Belfort",
+      "objetivo": "SÓ na segunda metade, depois dos 3 Dez estarem em 9-10. Oferece versão menor se certeza lógica é alta mas medo trava.",
+      "exemplo_literal": "É a primeira vez que a gente trabalha junto. Que tal começarmos com [versão menor do programa]? Se você tiver metade do resultado que meus outros alunos tiveram, seu único problema vai ser não ter entrado mais cedo. Parece justo?",
+      "sinais_de_deteccao": [
+        "oferta de versão reduzida/menor",
+        "reconhece que é primeira vez trabalhando juntos",
+        "reforça certeza mesmo em versão menor"
+      ],
+      "armadilha": "Oferecer cedo demais = descontar sem motivo = quebrar postura. Só use quando certeza lógica está no topo mas o medo trava.",
+      "skippable": true,
+      "xp_base": 10,
+      "tier": 3,
+      "ativacao_condicional": true
+    },
+    {
+      "numero": 18,
+      "fase": "fechamento",
+      "nome": "Avanço Concreto (se não fechou)",
+      "tecnica": "Avanço vs Continuação",
+      "autor": "Neil Rackham",
+      "objetivo": "JAMAIS aceite Continuação ('vou pensar e te falo'). Sempre marque Avanço — ação concreta, horário marcado, prazo.",
+      "exemplo_literal": "Sem problema. Olha, eu NÃO quero que você decida na correria. Mas também não quero que isso vire um 'vou pensar' que morre no tempo. Amanhã às 15h eu te ligo 15 minutos. Até lá você fala com quem tem que falar, pensa com calma, e às 15h você me diz sim ou não. Pode ser?",
+      "sinais_de_deteccao": [
+        "data + hora + duração específicas",
+        "próximo passo claro e acionável",
+        "não aceita 'depois eu te falo'",
+        "'amanhã às Xh eu te ligo Y minutos'"
+      ],
+      "armadilha": "Aceitar 'vou pensar e te falo' — é Continuação, morre no tempo. Derruba Condução ao Fechamento pra ≤ 3 automaticamente.",
+      "skippable": false,
+      "xp_base": 25,
+      "tier": 3,
+      "is_alavanca_maxima": true,
+      "ativacao_condicional": "se não fechou no passo 16"
+    }
+  ],
+  "tiers_cobertos": {
+    "tier_1_fundacao": [1, 2, 3, 4, 5, 6, 7],
+    "tier_2_conducao": [8, 9, 10],
+    "tier_3_fechamento": [11, 12, 13, 14, 15, 16, 17, 18]
+  },
+  "passos_inegociaveis": [1, 2, 5, 6, 7, 10, 11, 12, 16, 18],
+  "alavancas_maximas": [6, 7, 10, 11, 12, 18],
+  "regras_de_avaliacao": {
+    "bonus_ordem_correta": "Se Ramon seguir 3+ passos em ordem, +20 XP bônus ordem.",
+    "bonus_caminho_completo": "Se cumpriu 15+ dos 18 passos numa sessão, +100 XP conquista 'Caminho Completo'.",
+    "penalidade_pular_inegociavel": "Se pulou passo inegociável, marcar vermelho no mapa e aplicar penalidade na dimensão correspondente.",
+    "bonus_3_dez_em_ordem": "Passo 10 — se os 3 Dez foram construídos na ordem correta (Produto → Você → Aliança), +30 XP bônus."
+  }
+}

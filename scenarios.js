@@ -1,13 +1,12 @@
-// scenarios.js — gerador dinâmico de cenários (persona + objeção + técnicas ideais)
-// + prompt do lead para o role-play
+// scenarios.js v2 — geração de cenários e prompt do lead para Arena 2
 
 const Scenarios = (() => {
 
-  const KEY_HASHES = 'dojo:ramon:scenario_hashes';
+  const KEY_HASHES = 'dojo:ramon:scenario_hashes_v2';
 
   function getUsedHashes() {
-    const s = localStorage.getItem(KEY_HASHES);
-    return s ? JSON.parse(s) : [];
+    try { return JSON.parse(localStorage.getItem(KEY_HASHES) || '[]'); }
+    catch (_) { return []; }
   }
   function pushHash(h) {
     const all = getUsedHashes();
@@ -16,154 +15,199 @@ const Scenarios = (() => {
     localStorage.setItem(KEY_HASHES, JSON.stringify(all));
   }
 
-  // ========= PROMPT DO GERADOR =========
-  function buildGeneratorPrompt({ level, dojo, data }) {
-    const hashes = getUsedHashes();
-    const canalMap = {
-      'DM_1_1': 'WhatsApp DM após live/CPL (linguagem de mensagem, áudios ocasionais)',
-      'AO_VIVO': 'Pergunta ao vivo em Q&A (fala solta, interrupções, emoção na voz)',
-      'LIVE': 'Chat da live/webinar (frases curtas, urgência, muita gente vendo)'
-    };
+  // ========= SUB-MODOS DA ARENA 2 =========
+  const SUB_MODOS = {
+    caminho_completo: {
+      nome: 'Caminho Completo',
+      descricao: 'Sessão longa e realista, do "oi" ao fechamento. Lead aquecido de evento, ~15-20 turnos.',
+      icone: '🎯',
+      passos_alvo: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+      fase_inicial: 'abertura',
+      estado_inicial_lead: 'aquecido, curioso, com dor fresca do evento',
+      tempo_estimado_min: 25
+    },
+    duvidas: {
+      nome: 'Modo Dúvidas',
+      descricao: 'Lead curioso perguntando sobre pilares, preço, duração, método. Foco em investigação e apresentação.',
+      icone: '❓',
+      passos_alvo: [4, 5, 6, 7, 8, 9, 10],
+      fase_inicial: 'investigacao',
+      estado_inicial_lead: 'curioso, cheio de perguntas específicas sobre o programa',
+      tempo_estimado_min: 15
+    },
+    quebra: {
+      nome: 'Modo Quebra de Objeção',
+      descricao: 'Lead chega JÁ com objeção declarada ("tá caro" / "vou pensar" / "esposa" / "não é pra mim"). Pratica Looping + Isolamento + Close.',
+      icone: '🛡️',
+      passos_alvo: [12, 13, 14, 15, 16, 18],
+      fase_inicial: 'fechamento',
+      estado_inicial_lead: 'defensivo, com objeção pronta na ponta da língua',
+      tempo_estimado_min: 12
+    },
+    fechamento: {
+      nome: 'Modo Fechamento',
+      descricao: 'Lead já aceitou a lógica, trava só no último passo (medo, 3º elemento). Pratica 3 Tons + Close + Avanço.',
+      icone: '🔒',
+      passos_alvo: [11, 12, 16, 17, 18],
+      fase_inicial: 'fechamento',
+      estado_inicial_lead: 'quase convencido, mas travado no medo de agir',
+      tempo_estimado_min: 10
+    }
+  };
 
-    const personasCompact = (data.personas?.arquetipos || []).map(p => ({
+  // ========= PROMPT DO GERADOR =========
+  function buildGeneratorPrompt({ submodo, data, tierLevels }) {
+    const mode = SUB_MODOS[submodo] || SUB_MODOS.caminho_completo;
+    const hashes = getUsedHashes();
+
+    const personasCompact = (data.persona_improvavel?.arquetipos || []).map(p => ({
       id: p.id,
       nome: p.nome_sugerido,
       idade: p.idade_range,
+      genero: p.genero,
       profissao: p.profissao,
       objecao_superficial: p.objecao_superficial_tipica,
       objecao_real: p.objecao_real,
       padrao: p.padrao_oculto,
       gatilho: p.gatilho_contato_tipico,
       linguagem: p.linguagem,
-      ja_tentou: p.ja_tentou
+      ja_tentou: p.ja_tentou,
+      caso_real: p.caso_real_inspiracao
     }));
 
-    const objecoesCompact = (data.objecoes?.categorias || []).map(c => ({
-      categoria: c.categoria,
-      manifestacoes: c.manifestacoes_superficiais,
-      real: c.objecao_real,
-      mentiras_funcionais: c.mentiras_funcionais_recorrentes || []
+    const objecoesCompact = (data.objecoes_scripts?.objecoes || []).map(o => ({
+      id: o.id,
+      categoria: o.categoria,
+      manifestacoes: o.manifestacoes,
+      objecao_real: o.objecao_real_permissao
     }));
 
-    return `Gere UM cenário único para o Dojô Improvável.
+    const dificuldade = tierLevels?.fundacao?.level >= 30 ? 'dificil' :
+                        tierLevels?.fundacao?.level >= 15 ? 'medio' : 'facil';
 
-NÍVEL DO ALUNO: ${level}
-DOJÔ: ${dojo} — ${canalMap[dojo] || ''}
+    return `Gere UM cenário único para Arena 2 do Dojô Improvável — Chamada 1×1 Pós-Evento.
 
-Base de arquétipos disponíveis (recombine, não copie literal):
+SUB-MODO: ${mode.nome} — ${mode.descricao}
+ESTADO INICIAL DO LEAD: ${mode.estado_inicial_lead}
+FASE INICIAL DA CONVERSA: ${mode.fase_inicial}
+NÍVEL DO ALUNO (dificuldade): ${dificuldade}
+
+CANAL: Chamada de voz Zoom ou telefone — lead atendeu a chamada do Ramon depois de evento/live da Aliança Divergente.
+
+ARQUÉTIPOS DISPONÍVEIS (recombine, não copie literal):
 ${JSON.stringify(personasCompact, null, 2)}
 
-Categorias de objeções (escolha uma "mentira funcional" como cortina de fumaça):
+OBJEÇÕES CLÁSSICAS (escolha uma de acordo com o sub-modo):
 ${JSON.stringify(objecoesCompact, null, 2)}
 
-HASHES JÁ USADAS (NÃO repetir nome+padrão+profissão combinados):
+HASHES JÁ USADAS (NÃO repetir combinação nome+padrão):
 ${JSON.stringify(hashes)}
 
-Regras:
-- Recombine: escolha um arquétipo, misture contexto familiar, gatilho e nível de resistência de outro.
-- A objeção superficial (o que o lead DIZ primeiro) deve ser diferente da objeção real (que fica oculta).
-- Identifique o padrão real da Teoria da Permissão (Pré-Queda, Mula de Carga, Banheiro Emocional, Medo do Brilho, Culpa da Sobrevivência, Plano Perfeito, etc.).
-- "primeira_mensagem" deve soar como mensagem REAL do canal (${canalMap[dojo]}). 1-3 frases. Nada artificial.
-- Ajuste a dificuldade ao nível L${level}: L1-L10 fáceis, L11-L30 médios, L31-L60 difíceis, L61+ hostis.
+REGRAS:
+- Recombine: escolha arquétipo, misture contexto familiar, gatilho e nível de resistência.
+- Objeção superficial ≠ objeção real. A real fica oculta — só revela quando Ramon cava com técnica.
+- Nomeie o padrão da Teoria da Permissão (Culpa da Sobrevivência, Medo do Brilho, Mula de Carga, Ciclo do Quase, Pré-Queda, Plano Perfeito, Obesidade Intelectual, etc).
+- "primeira_mensagem_lead" = a PRIMEIRA frase do lead depois do Ramon cumprimentar. No Modo Quebra/Fechamento ela já vem com objeção declarada. No Modo Dúvidas, vem com pergunta específica sobre o programa. No Caminho Completo, vem aberta/acolhedora.
+- Dificuldade: ${dificuldade}. Se fácil, lead coopera. Se médio, lead é cauteloso. Se difícil, lead é seco ou hostil.
 
-SAÍDA: JSON estrito sem markdown nem fences.
+SAÍDA: JSON estrito, sem markdown.
 {
   "persona": {
     "nome": "...",
     "idade": N,
+    "genero": "masculino" | "feminino",
     "profissao": "...",
     "cidade": "...",
-    "situacao_financeira": "...",
     "estrutura_familiar": "...",
-    "ja_tentou": ["...", "..."]
+    "situacao_atual": "...",
+    "ja_tentou": ["...", "..."],
+    "caso_real_inspiracao": "ID ou nome do caso (Daniela, Regiane, Vanilton, Ícaro...)"
   },
-  "gatilho_contato": "o que fez ela mandar mensagem AGORA",
-  "primeira_mensagem": "texto real 1-3 frases, linguagem do canal",
+  "evento_origem": "descrição curta do evento/live de onde veio",
+  "gatilho_contato": "o que fez ela atender a chamada AGORA",
+  "primeira_mensagem_lead": "a primeira fala do lead, 1-3 frases, tom condizente com o sub-modo",
   "objecao_superficial": "...",
-  "objecao_real": "... (oculta pro Ramon, visível pro avaliador)",
-  "padrao_oculto": "nome do padrão Teoria da Permissão",
-  "tecnicas_do_playbook_ideais_aqui": ["Isolamento Concer", "Teste Hipotético"],
-  "nivel_dificuldade": "facil | medio | dificil | hostil",
-  "hash": "string-unica-nome-padrao-profissao"
+  "objecao_real": "... (oculta pro Ramon)",
+  "padrao_oculto_teoria_permissao": "nome do padrão",
+  "tecnicas_ideais_aqui": ["Pergunta de Implicação", "Cadeira de Balanço", "Looping Universal"],
+  "conceitos_ideais_aqui": ["Culpa da Sobrevivência", "Pré-Queda"],
+  "dificuldade": "${dificuldade}",
+  "submodo": "${submodo}",
+  "hash": "string-unica"
 }`;
   }
 
-  async function generate({ level, dojo, data }) {
-    const system = 'Você é um gerador de cenários de role-play para treino de vendas consultivas no mercado brasileiro high-ticket. Responda SEMPRE em JSON estrito, sem markdown.';
-    const prompt = buildGeneratorPrompt({ level, dojo, data });
+  async function generate({ submodo, data, tierLevels }) {
+    const system = 'Você gera cenários para treino de vendas consultivas da Aliança Divergente. Responda SEMPRE em JSON estrito sem markdown.';
+    const prompt = buildGeneratorPrompt({ submodo, data, tierLevels });
     const { text } = await ClaudeAPI.call({
-      system,
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 800,
-      temperature: 0.95
+      system, messages: [{ role: 'user', content: prompt }],
+      max_tokens: 900, temperature: 0.95
     });
     const parsed = ClaudeAPI.extractJSON(text);
-    if (!parsed) throw new Error('Cenário inválido, resposta não era JSON');
+    if (!parsed) throw new Error('Cenário inválido');
     if (parsed.hash) pushHash(parsed.hash);
+    parsed._submodo_config = SUB_MODOS[submodo] || SUB_MODOS.caminho_completo;
     return parsed;
   }
 
-  // ========= PROMPT DO LEAD (role-play) =========
-  function buildLeadSystemPrompt({ scenario, dojo, data }) {
-    const canalMap = {
-      'DM_1_1': 'WhatsApp, mensagem direta após uma live do Ramon. Frases curtas, às vezes áudio transcrito.',
-      'AO_VIVO': 'Pergunta ao vivo no Q&A. Voz trêmula quando toca a dor. Emocionalmente ativo.',
-      'LIVE': 'Chat rápido da live/webinar. Frases curtas, urgência, muita gente vendo — fala mais guardado.'
-    };
-
-    const mentirasGerais = (data.objecoes?.categorias || [])
-      .flatMap(c => c.mentiras_funcionais_recorrentes || [])
-      .slice(0, 20);
+  // ========= PROMPT DO LEAD =========
+  function buildLeadSystemPrompt({ scenario, data }) {
+    const mentirasGerais = data.persona_improvavel?.mentiras_funcionais_recorrentes || [];
 
     return `Você é ${scenario.persona.nome}, ${scenario.persona.idade} anos, ${scenario.persona.profissao}, de ${scenario.persona.cidade}.
 
-Situação: ${scenario.persona.situacao_financeira}. Família: ${scenario.persona.estrutura_familiar}.
-Já tentou: ${(scenario.persona.ja_tentou || []).join(', ')}.
+Estrutura familiar: ${scenario.persona.estrutura_familiar}
+Situação atual: ${scenario.persona.situacao_atual}
+Já tentou: ${(scenario.persona.ja_tentou || []).join(', ')}
 
-Gatilho que te fez mandar mensagem AGORA: ${scenario.gatilho_contato}.
-
-Canal: ${canalMap[dojo] || dojo}.
+Você está numa CHAMADA DE VOZ com Ramon, co-líder da Aliança Divergente (150 mil alunos). Você veio do evento: ${scenario.evento_origem}.
+Gatilho pra atender AGORA: ${scenario.gatilho_contato}
 
 OBJEÇÃO SUPERFICIAL (o que você diz de cara): "${scenario.objecao_superficial}"
-OBJEÇÃO REAL (o que você NÃO revela de graça — só cede quando Ramon cava com técnica): "${scenario.objecao_real}"
-PADRÃO OCULTO (Teoria da Permissão): ${scenario.padrao_oculto}
+OBJEÇÃO REAL (o que NÃO revela de graça): "${scenario.objecao_real}"
+PADRÃO OCULTO: ${scenario.padrao_oculto_teoria_permissao}
 
 MENTIRAS FUNCIONAIS que você pode usar pra se proteger: ${JSON.stringify(mentirasGerais.slice(0, 8))}
 
-Você está conversando com Ramon, mentor da Aliança Divergente.
-
 REGRAS DE RESPOSTA:
 - SEMPRE em personagem, nunca saia
-- Linguagem real brasileira, como gente de verdade fala — NÃO auto-descritiva ("sinto insegurança"), mas crua ("tô meio travado")
+- Linguagem real brasileira, de gente que atende chamada — não auto-descritiva ("me sinto ansioso") mas crua ("tô meio travado")
 - 2-4 frases por resposta, MÁXIMO
-- A indústria do caô te machucou — você desconfia, não cede fácil
-- Camadas: objeção superficial primeiro. A REAL só aparece se Ramon cavar com técnica precisa.
+- Desconfia: a indústria do caô te machucou
+- Camadas: superficial primeiro. Real só se Ramon cavar com técnica precisa
 
-GATILHOS DE ENDURECIMENTO (responder SECO, fechado, quase desligando):
-- Ramon usar clichê motivacional ("você é capaz", "acredite no seu potencial")
-- Ramon usar religiosidade indevida ("se Deus quiser", "tempo de Deus")
-- Ramon oferecer desconto ou parcelamento como quebra
-- Ramon falar em lei da atração, vibração, abundância
-- Ramon fazer urgência artificial ("última vaga", "só até hoje")
-- Ramon atacar sua família diretamente
-- Ramon prometer enriquecimento rápido, 10k/mês, luxo
+GATILHOS DE ENDURECIMENTO (responda SECO):
+- Clichê motivacional ("você é capaz", "acredite", "descubra seu potencial")
+- Religiosidade indevida ("tempo de Deus" fora de contexto, "se Deus quiser")
+- Lei da atração, vibração, abundância
+- Oferecer desconto ou parcelamento como quebra
+- Urgência artificial (escassez falsa)
+- Promessa de enriquecimento rápido (10k/mês, luxo)
+- Atacar diretamente sua família
+- Ramon responder à sua objeção DIRETAMENTE (sem Looping)
 
-GATILHOS DE CEDER UMA CAMADA (revelar algo mais real sobre sua dor):
-- Ramon aplicou Mirror (repetiu suas últimas palavras com tom de pergunta)
-- Ramon aplicou Label (rotulou sua emoção sem julgar, ex: "parece que isso te esgota")
-- Ramon nomeou o Padrão correto POR NOME (Pré-Queda, Mula de Carga, Culpa da Sobrevivência, etc.)
-- Ramon fez Pergunta de Isolamento ("além disso, tem mais algum motivo?")
-- Ramon usou Teste Hipotético ("num mundo onde dinheiro não fosse o tema, você faria?")
-- Ramon usou Silêncio estratégico (explícito no texto como [silêncio 3s])
+GATILHOS DE CEDER UMA CAMADA (revelar algo mais real):
+- Mirror preciso (repetiu 2-3 últimas palavras com tom de pergunta)
+- Label certeiro ("parece que...", "soa como...")
+- Looping Universal ("a ideia faz sentido pra você?")
+- Isolamento ("tirando o investimento, faz sentido?")
+- Teste Hipotético ("num mundo onde dinheiro não fosse o tema...")
+- Cadeira de Balanço ("daqui a 6 meses, se nada mudar...")
+- Nomeou POR NOME o padrão correto (Culpa da Sobrevivência / Medo do Brilho / Mula de Carga / etc.)
+- Pergunta de Implicação bem feita
+- Pergunta de Necessidade de Solução
+- Silêncio estratégico explícito [silêncio Ns]
 
 GATILHO DE FECHAMENTO:
-- Ramon chegou ao 5º turno ou além
-- Todas as camadas foram quebradas com técnica
-- Ramon fez uma pergunta de fechamento CLARA (Dupla Alternativa ou Alinhamento Lógico)
-- E só então você pode dizer algo como "tá, faz sentido, como faço pra entrar"
+- Ramon já aplicou 3 Dez na ordem (Produto → Você → Aliança)
+- Ramon já usou Looping pelo menos 1×
+- Ramon fez pergunta de fechamento clara (Assumptive ou Alternative Close)
+- Todas camadas foram quebradas
+Aí você pode ceder: "Tá, faz sentido. Me manda o link" ou "bora, que e-mail você quer?"
 
-Responda AGORA apenas com a sua fala, como a pessoa. Sem narração, sem aspas em volta.`;
+Responda APENAS com sua fala, como a pessoa — sem narração, sem aspas em volta, sem descrever ações entre asteriscos. É uma chamada de voz transcrita.`;
   }
 
-  return { generate, buildLeadSystemPrompt };
+  return { generate, buildLeadSystemPrompt, SUB_MODOS };
 })();

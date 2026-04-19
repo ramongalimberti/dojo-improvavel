@@ -2,16 +2,23 @@
 
 const Speech = (() => {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const MAX_LISTEN_MS = 30000;
+  const MAX_LISTEN_MS = 60000;        // 60s max pra call mode
 
   let recognition = null;
   let listening = false;
   let autoStopTimer = null;
   let manualStop = false;
   let callbacks = null;
+  let currentOptions = null;
 
-  // Silence timer (Modo Chamada)
-  let silenceTimerStart = null;  // timestamp quando o lead terminou de falar
+  // Silence-watchdog — auto-stop quando fica N ms sem nova transcrição
+  let silenceWatchdog = null;
+  let lastResultAt = null;
+  let silenceTimeoutMs = null;   // se null, watchdog desligado
+  let autoStopReason = null;      // 'silence' | 'timeout' | 'manual'
+
+  // Timer de silêncio "narrado" (Modo Chamada visual) — desde fim do TTS até 1ª fala do usuário
+  let silenceTimerStart = null;
   let lastSilenceDuration = 0;
 
   function isSupported() { return !!SR; }
@@ -75,21 +82,21 @@ const Speech = (() => {
   }
 
   function clearAutoStop() { if (autoStopTimer) { clearTimeout(autoStopTimer); autoStopTimer = null; } }
+  function clearSilenceWatchdog() { if (silenceWatchdog) { clearInterval(silenceWatchdog); silenceWatchdog = null; } }
 
+  // cb: { onInterim, onFinal, onError, onEnd, onAutoStop, silenceTimeoutMs, maxListenMs }
   function startListening(cb) {
     if (!SR) { cb?.onError?.('Reconhecimento de voz não suportado. Use Chrome ou Edge.'); return; }
     if (listening) return;
 
     callbacks = cb || {};
+    currentOptions = cb || {};
+    silenceTimeoutMs = currentOptions.silenceTimeoutMs || null;
+    autoStopReason = null;
     recognition = createRecognition();
     manualStop = false;
+    lastResultAt = null;
     let finalText = '';
-
-    // Captura o tempo de silêncio DESDE que o lead falou pela última vez
-    if (silenceTimerStart) {
-      lastSilenceDuration = (Date.now() - silenceTimerStart) / 1000;
-      silenceTimerStart = null;
-    }
 
     recognition.onresult = (e) => {
       let interim = '';
@@ -100,6 +107,17 @@ const Speech = (() => {
         else interim += transcript;
       }
       if (newFinal) finalText += newFinal;
+
+      const hasNewContent = (newFinal || interim);
+      if (hasNewContent) {
+        lastResultAt = Date.now();
+        // Se era a primeira fala do usuário neste listening, captura o tempo de silêncio
+        if (silenceTimerStart) {
+          lastSilenceDuration = (Date.now() - silenceTimerStart) / 1000;
+          silenceTimerStart = null;
+        }
+      }
+
       const combined = processVoiceCommands((finalText + ' ' + interim).trim());
       if (combined && callbacks.onInterim) callbacks.onInterim(combined);
       if (newFinal && callbacks.onFinal) callbacks.onFinal(processVoiceCommands(finalText.trim()));
@@ -114,14 +132,22 @@ const Speech = (() => {
       if (manualStop) {
         listening = false;
         clearAutoStop();
-        callbacks?.onEnd?.(processVoiceCommands(finalText.trim()));
+        clearSilenceWatchdog();
+        const cleanText = processVoiceCommands(finalText.trim());
+        if (autoStopReason === 'silence') {
+          callbacks?.onAutoStop?.(cleanText);
+        } else {
+          callbacks?.onEnd?.(cleanText);
+        }
         return;
       }
+      // Reinício automático se continuous e ainda listening
       if (listening) {
         try { recognition.start(); }
         catch (_) {
           listening = false;
           clearAutoStop();
+          clearSilenceWatchdog();
           callbacks?.onEnd?.(processVoiceCommands(finalText.trim()));
         }
       }
@@ -135,22 +161,46 @@ const Speech = (() => {
       return;
     }
 
+    // Max duration
+    const maxMs = currentOptions.maxListenMs || MAX_LISTEN_MS;
     autoStopTimer = setTimeout(() => {
       if (listening) {
+        autoStopReason = 'timeout';
         manualStop = true;
         try { recognition.stop(); } catch (_) {}
       }
-    }, MAX_LISTEN_MS);
+    }, maxMs);
+
+    // Silence watchdog (detecta quando usuário parou de falar)
+    if (silenceTimeoutMs) {
+      silenceWatchdog = setInterval(() => {
+        if (!listening || !lastResultAt) return;
+        const silentFor = Date.now() - lastResultAt;
+        if (silentFor >= silenceTimeoutMs && finalText.trim().length > 0) {
+          autoStopReason = 'silence';
+          manualStop = true;
+          try { recognition.stop(); } catch (_) {}
+        }
+      }, 200);
+    }
   }
 
   function stopListening() {
+    autoStopReason = 'manual';
     manualStop = true;
     clearAutoStop();
+    clearSilenceWatchdog();
     if (recognition && listening) {
       try { recognition.stop(); } catch (_) {}
     } else {
       listening = false;
     }
+  }
+
+  // Retorna ms desde a última transcrição (pra mostrar countdown)
+  function getMsSinceLastResult() {
+    if (!listening || !lastResultAt) return null;
+    return Date.now() - lastResultAt;
   }
 
   function isListening() { return listening; }
@@ -224,6 +274,7 @@ const Speech = (() => {
     isSupported, startListening, stopListening, isListening,
     speak, stopSpeaking, processVoiceCommands,
     resetSilenceTimer, getSilenceStartTime, getCurrentSilenceSeconds,
-    getLastSilenceDuration, captureAndResetSilence
+    getLastSilenceDuration, captureAndResetSilence,
+    getMsSinceLastResult
   };
 })();

@@ -304,22 +304,95 @@ code {
 .session-persona { font-size: 0.85em; color: var(--ink-muted); }
 .session-meta { display: flex; gap: 0.8em; align-items: center; font-size: 0.9em; color: var(--ink-soft); font-weight: 600; }
 
-.call-badge {
+/* ================= CALL PANEL ================= */
+.call-panel {
   background: var(--paper);
-  color: var(--ink-muted);
-  padding: 0.3em 0.7em;
-  border-radius: 999px;
-  font-size: 0.85em;
-  font-weight: 600;
   border: 1px solid var(--line);
-  cursor: pointer;
-  user-select: none;
+  border-radius: var(--radius);
+  padding: 0.8em 1em;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  flex-wrap: wrap;
 }
-.call-badge.active {
-  background: var(--call-red);
-  color: white;
+.call-panel.active {
   border-color: var(--call-red);
-  animation: pulse 2s infinite;
+  border-left: 4px solid var(--call-red);
+  background: linear-gradient(90deg, rgba(215,58,58,0.06), var(--paper) 40%);
+}
+.call-panel.paused {
+  border-color: var(--amber);
+  border-left: 4px solid var(--amber);
+}
+
+.call-status {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  min-width: 220px;
+}
+.call-status .ping {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--call-red);
+  animation: pulse 1.2s infinite;
+  margin-right: 0.2em;
+}
+
+.call-controls {
+  display: flex;
+  gap: 0.4em;
+  flex-wrap: wrap;
+}
+.call-controls button {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9em;
+  font-weight: 600;
+  padding: 0.5em 1em;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  transition: transform 0.08s ease;
+}
+.call-controls button:hover:not(:disabled) { transform: translateY(-1px); }
+.call-controls button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-call-start {
+  background: var(--call-red) !important;
+  color: white !important;
+  border-color: var(--call-red) !important;
+}
+.btn-call-start:hover { background: #b82f2f !important; }
+.btn-call-pause {
+  background: var(--amber) !important;
+  color: white !important;
+  border-color: var(--amber) !important;
+}
+.btn-call-resume {
+  background: var(--success) !important;
+  color: white !important;
+  border-color: var(--success) !important;
+}
+.btn-call-end {
+  background: var(--ink) !important;
+  color: white !important;
+  border-color: var(--ink) !important;
+}
+
+.call-countdown {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05em;
+  color: var(--call-red);
+  font-weight: 700;
+  margin-left: 0.4em;
 }
 
 /* ================= MAPA 18 PASSOS ================= */

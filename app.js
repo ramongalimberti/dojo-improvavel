@@ -20,11 +20,18 @@
     leadCederCamada: false,
     leadEndurecer: false,
     podeFechar: false,
-    modoChamada: false,          // TTS auto + cronômetro ativos
-    silenceTickTimer: null
+    modoChamada: false,          // (legacy — substituído pelo call state)
+    silenceTickTimer: null,
+    call: {
+      active: false,
+      paused: false,
+      phase: 'idle',       // idle | lead_speaking | listening | processing | paused
+      countdownTimer: null
+    }
   };
 
   const MAX_TURNS = 18;
+  const SILENCE_AUTO_SEND_MS = 7000;   // 7s de silêncio → auto-envio
 
   function $(s) { return document.querySelector(s); }
   function $$(s) { return [...document.querySelectorAll(s)]; }
@@ -200,7 +207,10 @@
     $('#turnCounter').textContent = '1';
 
     renderCaminhoMap([]);
-    updateSilenceMeter();
+
+    // Reset call state ao iniciar nova sessão
+    endCall();
+    updateCallUI();
 
     showScreen('session');
 
@@ -216,10 +226,7 @@
       state.currentScenario = scenario;
       renderPersona(scenario);
 
-      // Se modo chamada ligado, auto-speaks primeira fala do lead
-      const { hintSlot } = pushLeadMessage(scenario.primeira_mensagem_lead, {
-        autoSpeak: state.modoChamada
-      });
+      const { hintSlot } = pushLeadMessage(scenario.primeira_mensagem_lead);
       Evaluator.leadHint({
         scenario, leadMessage: scenario.primeira_mensagem_lead,
         conversation: state.conversation, turn: 0, data: state.data
@@ -304,7 +311,7 @@
   }
 
   // ========= MESSAGES =========
-  function pushLeadMessage(text, { autoSpeak = false } = {}) {
+  function pushLeadMessage(text) {
     state.conversation.push({ role: 'assistant', content: text });
     const wrap = document.createElement('div');
     wrap.className = 'msg-wrap lead-wrap';
@@ -314,12 +321,6 @@
     el.dataset.persona = state.currentScenario?.persona?.nome || 'Lead';
     el.textContent = text;
     wrap.appendChild(el);
-
-    const speakingBadge = document.createElement('div');
-    speakingBadge.className = 'lead-speaking';
-    speakingBadge.style.display = 'none';
-    speakingBadge.textContent = '🔊 falando...';
-    wrap.appendChild(speakingBadge);
 
     const hintSlot = document.createElement('div');
     hintSlot.className = 'hint-slot';
@@ -331,25 +332,7 @@
 
     $('#chat').appendChild(wrap);
     wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
-
-    if (autoSpeak) {
-      speakingBadge.style.display = 'block';
-      Speech.resetSilenceTimer();
-      Speech.speak(text, {
-        onStart: () => { speakingBadge.style.display = 'block'; },
-        onEnd: () => {
-          speakingBadge.style.display = 'none';
-          startSilenceTick();
-        }
-      });
-    } else {
-      // Modo texto: começa cronômetro quando mensagem aparece
-      Speech.resetSilenceTimer();
-      // O silence timer só começa no cenário onde o TTS termina; em modo texto, inicia manualmente
-      // através do getter
-    }
-
-    return { wrap, bubble: el, hintSlot, speakingBadge };
+    return { wrap, bubble: el, hintSlot };
   }
 
   function pushRamonMessage(text, silenceSec) {
@@ -445,23 +428,8 @@
   }
   function removeTyping() { const t = document.getElementById('typingMsg'); if (t) t.remove(); }
 
-  // ========= SILENCE METER =========
-  function startSilenceTick() {
-    stopSilenceTick();
-    if (!state.modoChamada) return;
-    state.silenceTickTimer = setInterval(updateSilenceMeter, 250);
-    $('#silenceMeter').classList.add('active');
-  }
-  function stopSilenceTick() {
-    if (state.silenceTickTimer) { clearInterval(state.silenceTickTimer); state.silenceTickTimer = null; }
-  }
-  function updateSilenceMeter() {
-    const s = Speech.getCurrentSilenceSeconds();
-    const el = $('#silenceValue');
-    el.textContent = s > 0 ? s.toFixed(1) + 's' : '—';
-    el.classList.toggle('good', s >= 3);
-    if (!state.modoChamada) $('#silenceMeter').classList.remove('active');
-  }
+  // (silence meter UI legacy removido — substituído pelo call panel)
+  function stopSilenceTick() { /* no-op */ }
 
   // ========= SEND =========
   async function handleSend() {
@@ -542,7 +510,7 @@
         podeFechar: state.podeFechar
       });
       removeTyping();
-      const leadMsg = pushLeadMessage(leadReply, { autoSpeak: state.modoChamada });
+      const leadMsg = pushLeadMessage(leadReply);
       Evaluator.leadHint({
         scenario: state.currentScenario, leadMessage: leadReply,
         conversation: state.conversation, turn: state.turn, data: state.data
@@ -754,6 +722,179 @@
     $('#reportPhrase').textContent = report.frase_caderno || '';
   }
 
+  // ========= CALL STATE MACHINE =========
+  function updateCallUI() {
+    const panel = $('#callPanel');
+    const status = $('#callStatus');
+    const btnStart = $('#btnCallStart');
+    const btnPause = $('#btnCallPause');
+    const btnResume = $('#btnCallResume');
+    const btnEnd = $('#btnCallEnd');
+
+    btnStart.hidden = state.call.active;
+    btnPause.hidden = !(state.call.active && !state.call.paused);
+    btnResume.hidden = !(state.call.active && state.call.paused);
+    btnEnd.hidden = !state.call.active;
+
+    panel.classList.toggle('active', state.call.active && !state.call.paused);
+    panel.classList.toggle('paused', state.call.active && state.call.paused);
+
+    const phaseMap = {
+      idle: '🟢 Pronto (modo texto)',
+      lead_speaking: '<span class="ping"></span> 🔊 Lead falando...',
+      listening: '<span class="ping"></span> 🎤 Ouvindo você... <span class="muted" style="font-weight:400;font-size:0.85em">(7s de silêncio = envia)</span>',
+      processing: '🤔 Processando resposta...',
+      paused: '⏸️ Em pausa'
+    };
+    status.innerHTML = phaseMap[state.call.phase] || phaseMap.idle;
+
+    // Enquanto chamada ativa, desabilita mic/send manuais
+    $('#btnMic').disabled = state.call.active && !state.call.paused;
+    $('#btnSend').disabled = state.call.active && !state.call.paused;
+  }
+
+  function startCall() {
+    if (!state.currentScenario) {
+      alert('Precisa estar numa sessão ativa pra iniciar a chamada.');
+      return;
+    }
+    state.call.active = true;
+    state.call.paused = false;
+    Speech.stopSpeaking();
+    Speech.stopListening();
+    // Fala a última mensagem do lead (ou a primeira se ainda não respondeu)
+    const last = [...state.conversation].reverse().find(m => m.role === 'assistant');
+    if (last) {
+      speakLeadThenListen(last.content);
+    } else {
+      beginListening();
+    }
+    updateCallUI();
+  }
+
+  function pauseCall() {
+    state.call.paused = true;
+    state.call.phase = 'paused';
+    Speech.stopSpeaking();
+    Speech.stopListening();
+    stopCountdownTicker();
+    updateCallUI();
+  }
+
+  function resumeCall() {
+    state.call.paused = false;
+    // Retoma falando a última mensagem do lead, ou indo direto pra listening se Ramon já estava falando
+    const last = [...state.conversation].reverse().find(m => m.role === 'assistant');
+    const ramonFaloumaisRecente = state.conversation.length > 0 && state.conversation[state.conversation.length - 1].role === 'user';
+    if (last && !ramonFaloumaisRecente) {
+      speakLeadThenListen(last.content);
+    } else {
+      beginListening();
+    }
+    updateCallUI();
+  }
+
+  function endCall() {
+    state.call.active = false;
+    state.call.paused = false;
+    state.call.phase = 'idle';
+    Speech.stopSpeaking();
+    Speech.stopListening();
+    stopCountdownTicker();
+    updateCallUI();
+  }
+
+  function speakLeadThenListen(text) {
+    state.call.phase = 'lead_speaking';
+    updateCallUI();
+    Speech.resetSilenceTimer();
+    Speech.speak(text, {
+      onEnd: () => {
+        if (state.call.active && !state.call.paused) {
+          beginListening();
+        }
+      }
+    });
+  }
+
+  function beginListening() {
+    state.call.phase = 'listening';
+    updateCallUI();
+    const input = $('#userInput');
+    input.value = '';    // limpa anterior pra captura nova
+    startCountdownTicker();
+
+    Speech.startListening({
+      silenceTimeoutMs: SILENCE_AUTO_SEND_MS,
+      maxListenMs: 90000,
+      onInterim: (t) => { input.value = t; },
+      onFinal: (t) => { input.value = t; },
+      onAutoStop: (finalText) => {
+        stopCountdownTicker();
+        const text = (finalText || '').trim();
+        // valida tamanho mínimo — se muito curto, assume falha de captura e reinicia
+        if (!text || text.split(/\s+/).length < 2) {
+          if (state.call.active && !state.call.paused) {
+            // tenta de novo
+            beginListening();
+          }
+          return;
+        }
+        state.call.phase = 'processing';
+        updateCallUI();
+        autoSubmitFromCall(text);
+      },
+      onError: (err) => {
+        stopCountdownTicker();
+        $('#micStatus').textContent = 'Erro: ' + err;
+        // não encerra a chamada — só registra
+      },
+      onEnd: () => {
+        stopCountdownTicker();
+      }
+    });
+  }
+
+  async function autoSubmitFromCall(text) {
+    $('#userInput').value = text;
+    await handleSend();    // handleSend já roda a avaliação e busca a resposta do lead
+    // Depois que handleSend retorna, a mensagem do lead já foi adicionada.
+    // Em call mode, vamos falar a nova mensagem do lead e voltar a ouvir.
+    if (!state.call.active || state.call.paused) { return; }
+    if (state.sessionClosed) { endCall(); return; }
+    const last = [...state.conversation].reverse().find(m => m.role === 'assistant');
+    if (last) {
+      speakLeadThenListen(last.content);
+    } else {
+      beginListening();
+    }
+  }
+
+  function startCountdownTicker() {
+    stopCountdownTicker();
+    state.call.countdownTimer = setInterval(() => {
+      if (state.call.phase !== 'listening') return;
+      const since = Speech.getMsSinceLastResult();
+      const status = $('#callStatus');
+      if (since == null) {
+        status.innerHTML = '<span class="ping"></span> 🎤 Ouvindo você... <span class="muted" style="font-weight:400;font-size:0.85em">(aguardando fala)</span>';
+        return;
+      }
+      const remaining = Math.max(0, SILENCE_AUTO_SEND_MS - since);
+      if (remaining < SILENCE_AUTO_SEND_MS) {
+        const sec = (remaining / 1000).toFixed(1);
+        status.innerHTML = `<span class="ping"></span> 🎤 Ouvindo você... <span class="call-countdown">envia em ${sec}s</span>`;
+      }
+    }, 200);
+  }
+
+  function stopCountdownTicker() {
+    if (state.call.countdownTimer) {
+      clearInterval(state.call.countdownTimer);
+      state.call.countdownTimer = null;
+    }
+  }
+
   // ========= INIT SESSION HANDLERS =========
   function initSession() {
     $('#btnSend').addEventListener('click', handleSend);
@@ -780,27 +921,17 @@
       showScreen('dashboard');
     });
 
-    // Call badge toggle
-    $('#callBadge').addEventListener('click', () => {
-      state.modoChamada = !state.modoChamada;
-      const b = $('#callBadge');
-      const t = $('#callBadgeText');
-      if (state.modoChamada) {
-        b.classList.add('active');
-        t.textContent = 'Em Chamada';
-        $('#silenceMeter').classList.add('active');
-        Speech.resetSilenceTimer();
-        // Se já há mensagem do lead, fala agora
-        const last = state.conversation[state.conversation.length - 1];
-        if (last && last.role === 'assistant') Speech.speak(last.content, {
-          onEnd: () => startSilenceTick()
-        });
-      } else {
-        b.classList.remove('active');
-        t.textContent = 'Chamada';
-        $('#silenceMeter').classList.remove('active');
-        Speech.stopSpeaking();
-        stopSilenceTick();
+    // Call controls
+    $('#btnCallStart').addEventListener('click', startCall);
+    $('#btnCallPause').addEventListener('click', pauseCall);
+    $('#btnCallResume').addEventListener('click', resumeCall);
+    $('#btnCallEnd').addEventListener('click', endCall);
+
+    // ESC cancela o countdown de auto-envio (volta a ouvir)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && state.call.active && state.call.phase === 'listening') {
+        // Nada a fazer aqui diretamente — o watchdog só dispara após 7s sem fala
+        // ESC pode ser usado para forçar "continuar ouvindo": reset lastResultAt via nova fala
       }
     });
 

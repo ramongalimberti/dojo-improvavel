@@ -92,10 +92,20 @@
           <div class="session-persona" id="sessionPersonaName">—</div>
         </div>
         <div class="session-meta">
-          <span class="call-badge" id="callBadge" title="Toggle Modo Chamada">🔴 <span id="callBadgeText">Chamada</span></span>
           <span>Turno <span id="turnCounter">1</span></span>
         </div>
       </header>
+
+      <!-- Controles de chamada -->
+      <div class="call-panel" id="callPanel">
+        <div class="call-status" id="callStatus">🟢 Pronto (modo texto)</div>
+        <div class="call-controls">
+          <button id="btnCallStart" class="btn-call-start">▶️ Iniciar Chamada</button>
+          <button id="btnCallPause" class="btn-call-pause" hidden>⏸️ Pausar</button>
+          <button id="btnCallResume" class="btn-call-resume" hidden>▶️ Retomar</button>
+          <button id="btnCallEnd" class="btn-call-end" hidden>⏹️ Encerrar</button>
+        </div>
+      </div>
 
       <!-- Mapa de 18 passos -->
       <div class="caminho-wrap">
@@ -124,13 +134,6 @@
           <summary>🤫 Dica do cenário (spoiler)</summary>
           <div id="personaHint"></div>
         </details>
-      </div>
-
-      <!-- Cronômetro de silêncio (Modo Chamada) -->
-      <div class="silence-meter" id="silenceMeter">
-        <div class="silence-label">⏱️ Silêncio desde fim da fala do lead:</div>
-        <div class="silence-value" id="silenceValue">—</div>
-        <div class="silence-hint" id="silenceHint">meta: ≥ 3s após o preço ou pergunta-chave</div>
       </div>
 
       <div class="chat" id="chat"></div>

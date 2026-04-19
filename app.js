@@ -440,8 +440,6 @@
     // Captura o silêncio ANTES de enviar (tempo que o Ramon ficou quieto antes de falar)
     const silenceSec = Speech.captureAndResetSilence();
     state.silences.push({ turn: state.turn + 1, seconds: silenceSec });
-    stopSilenceTick();
-    updateSilenceMeter();
 
     input.value = '';
     state.turn += 1;
@@ -504,27 +502,43 @@
       updateCallUI();
     }
 
-    // Resposta do lead
+    // Resposta do lead — com retry automático (2 tentativas)
     pushTypingPlaceholder();
-    try {
-      const leadReply = await Evaluator.leadResponse({
-        scenario: state.currentScenario,
-        conversation: state.conversation,
-        data: state.data,
-        leadCederCamada: state.leadCederCamada,
-        leadEndurecer: state.leadEndurecer,
-        podeFechar: state.podeFechar
-      });
-      removeTyping();
+    let leadReply = null;
+    let lastErr = null;
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        leadReply = await Evaluator.leadResponse({
+          scenario: state.currentScenario,
+          conversation: state.conversation,
+          data: state.data,
+          leadCederCamada: state.leadCederCamada,
+          leadEndurecer: state.leadEndurecer,
+          podeFechar: state.podeFechar
+        });
+        if (leadReply && leadReply.trim()) break;
+        // resposta vazia — trata como falha
+        throw new Error('resposta vazia');
+      } catch (err) {
+        lastErr = err;
+        console.warn(`[handleSend] leadResponse tentativa ${attempt} falhou:`, err.message);
+        if (attempt < 2) {
+          // espera 1s e tenta de novo
+          await new Promise(r => setTimeout(r, 1000));
+        }
+      }
+    }
+    removeTyping();
+    if (leadReply && leadReply.trim()) {
       const leadMsg = pushLeadMessage(leadReply);
       Evaluator.leadHint({
         scenario: state.currentScenario, leadMessage: leadReply,
         conversation: state.conversation, turn: state.turn, data: state.data
       }).then(h => attachLeadHint(leadMsg.hintSlot, h));
-    } catch (err) {
-      removeTyping();
-      console.error(err);
-      pushLeadMessage('(erro: ' + err.message + ')');
+    } else {
+      // Não empurra mensagem '(erro:...)' no chat — fica feio e o TTS lê.
+      // Deixa o autoSubmitFromCall detectar a ausência e mostrar status.
+      console.error('[handleSend] falha total em leadResponse:', lastErr);
     }
 
     $('#btnSend').disabled = false;
@@ -887,17 +901,25 @@
     const produzidaNova = allLeadMsgs.length > leadMsgsBefore;
     const ultimaLeadMsg = allLeadMsgs[allLeadMsgs.length - 1];
 
-    if (produzidaNova && ultimaLeadMsg?.content) {
+    // Filtra mensagens "de erro" — não queremos que TTS leia isso nem o flow fique estranho
+    const isErrorMsg = ultimaLeadMsg?.content && /^\(erro/i.test(ultimaLeadMsg.content.trim());
+
+    if (produzidaNova && ultimaLeadMsg?.content && !isErrorMsg) {
       // Fluxo normal — lead respondeu, TTS fala
       speakLeadThenListen(ultimaLeadMsg.content);
     } else {
-      // Nenhuma resposta nova do lead (API falhou ou algo travou) — volta a ouvir sem travar
-      console.warn('[autoSubmit] sem resposta nova do lead; reabrindo mic');
+      // API travou ou deu erro em série: a avaliação rodou (Ramon msg no chat), mas lead não respondeu.
+      // NÃO perde a resposta do Ramon — ela já está no chat avaliada.
+      // Só reabre o mic pra você falar o PRÓXIMO turno depois de um aviso.
+      console.warn('[autoSubmit] sem resposta válida do lead; mantém sua resposta e reabre mic');
       const statusEl = $('#callStatus');
-      if (statusEl) statusEl.innerHTML = '<span class="ping"></span> ⚠️ Sem resposta — tente falar de novo';
+      if (statusEl) {
+        statusEl.innerHTML = '<span class="ping" style="background:#c89a2e"></span> ⚠️ API do lead falhou (resposta sua já avaliada no chat). Continue falando ou ⏸️ Pausar.';
+      }
+      // espera 3s pra usuário ler, depois reabre o mic
       setTimeout(() => {
         if (state.call.active && !state.call.paused) beginListening();
-      }, 1500);
+      }, 3000);
     }
   }
 

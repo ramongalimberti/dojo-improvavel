@@ -1,0 +1,207 @@
+{
+  "fonte": "Playbook Live Final - Levante dos Improváveis",
+  "uso": "Usado no Dojô 3 (Live/Webinar em Massa) para treinar condução de live de fechamento. Também usado nos Dojôs 1 e 2 como referência para micro-protocolos de condução.",
+
+  "estrutura_live_final": {
+    "duracao_total_min": [90, 120],
+    "blocos": [
+      {
+        "numero": 1,
+        "nome": "Abertura Espelho",
+        "duracao_min": [0, 10],
+        "objetivo": "Fazer quem está assistindo sentir-se VISTO antes de sentir-se vendido",
+        "regras": [
+          "NÃO começar com 'hoje eu vou mostrar'",
+          "NÃO prometer nada na abertura",
+          "Descrever a pessoa que está na cerca, em primeira pessoa dela",
+          "Reconhecer a voz interna que diz 'não é pra mim'"
+        ],
+        "script_exemplo": "Eu sei quem tá aqui agora. Você assistiu as três aulas. Talvez tenha chorado em alguma. Escreveu uma frase num papel. E agora tá aí, pensando se vai ou se não vai. E tem uma voz dentro de você dizendo 'não é pra mim'. Eu vim conversar com essa voz hoje.",
+        "armadilhas": [
+          "Começar vendendo",
+          "Prometer transformação antes de reconhecer a dor",
+          "Soar como guru motivador"
+        ]
+      },
+      {
+        "numero": 2,
+        "nome": "Cena de Referência",
+        "duracao_min": [10, 25],
+        "objetivo": "Ancorar a live em UMA história concreta que contém todos os conceitos a ativar",
+        "regras": [
+          "UMA cena - própria ou de aluno com permissão",
+          "Precisa conter Pré-Queda, PDA e resultado ESPECÍFICO",
+          "Não 'tudo mudou' — 'ela consegue hoje X que antes era Y'"
+        ],
+        "fechamento_do_bloco": "Não foi o curso que mudou a vida dela. Foi o momento em que ela se deu Permissão. E a Permissão só veio porque ela tomou uma decisão concreta — não uma intenção.",
+        "armadilhas": [
+          "Usar cena genérica",
+          "Faltar resultado específico",
+          "Narrar sem sair da Chave conceitual"
+        ]
+      },
+      {
+        "numero": 3,
+        "nome": "Mapeamento de Objeções na Cara",
+        "duracao_min": [25, 55],
+        "objetivo": "Verbalizar objeções ANTES do indeciso (técnica pré-emptiva do Hormozi)",
+        "metodo": "Para cada objeção: (a) nomeia em voz alta, (b) conta cena que contém, (c) dá a chave da Teoria da Permissão, (d) convida à Permissão",
+        "sequencia_de_objeções_a_cobrir": [
+          {
+            "objecao_literal": "Tá caro",
+            "traducao_ramon": "Eu ainda não me sinto digno desse investimento",
+            "chave_permissao": "Não existe caro. Existe sem Permissão. Quanto tá custando continuar onde tá? A vida é justa e a demora nos resultados tá escondendo uma espera nas relações."
+          },
+          {
+            "objecao_literal": "Não é hora",
+            "traducao_ramon": "Tô com medo de começar e não terminar",
+            "chave_permissao": "Nunca é hora porque toda hora tem um motivo pra não ser. A hora não chega — a hora se cria quando alguma coisa muda. Tudo muda quando alguma coisa muda."
+          },
+          {
+            "objecao_literal": "Preciso pensar",
+            "traducao_ramon": "Eu sei que é sim mas não me dei Permissão ainda",
+            "chave_permissao": "Pensar em quê? Você já assistiu as aulas. Você não tá pensando — tá esperando a Permissão chegar de fora. Ela não vem. Você dá ela pra si mesmo."
+          },
+          {
+            "objecao_literal": "Preciso conversar com meu cônjuge",
+            "traducao_ramon": "Tô terceirizando a Permissão pra quem também não vai ter",
+            "chave_permissao": "Conversa sim. Mas primeiro pergunta: se seu companheiro dissesse 'vai', você iria? Se a resposta é sim, o problema não é ele. É a Permissão que você ainda não se deu."
+          },
+          {
+            "objecao_literal": "Já tentei coisas assim antes",
+            "traducao_ramon": "Medo de repetir o Padrão",
+            "chave_permissao": "Você acha que veio aqui por acaso depois de tudo que tentou? A Pré-Queda tava te preparando pra agora. Todo ciclo quebrado foi aula. O que você chama de fracasso, eu chamo de treino."
+          },
+          {
+            "objecao_literal": "Não tenho dinheiro",
+            "traducao_ramon": "Não me sinto autorizado a investir em mim",
+            "chave_permissao": "Dinheiro é consequência de Permissão. Quem se autoriza encontra caminho. Quem espera ter dinheiro pra se permitir passa a vida inteira esperando."
+          }
+        ]
+      },
+      {
+        "numero": 4,
+        "nome": "Convite",
+        "duracao_min": [55, 70],
+        "objetivo": "Apresentar o produto como INSTRUMENTO, não como produto",
+        "regras": [
+          "NUNCA dizer 'agora vou apresentar a oferta'",
+          "Empilhar ZONAS DE TRANSFORMAÇÃO, não bônus",
+          "Cada zona com UMA frase de sentido, não lista de features",
+          "Preço apresentado UMA vez só, voz firme e baixa, sem pausa dramática"
+        ],
+        "abertura_sugerida": "Agora eu quero te mostrar qual é o lugar onde essa Permissão vira prática. Não é curso. É um ambiente onde a mudança acontece porque as pessoas em volta também mudaram.",
+        "stack_ramon_zonas": [
+          "O ambiente",
+          "A metodologia",
+          "Os aliados",
+          "Os rituais semanais",
+          "A presença do mentor"
+        ],
+        "armadilhas": [
+          "Empilhar bônus de guru",
+          "Listar horas de aula (vende voo, não férias)",
+          "Dramatizar preço",
+          "Repetir valor"
+        ]
+      },
+      {
+        "numero": 5,
+        "nome": "Conversa com Indecisos",
+        "duracao_min": [70, 95],
+        "objetivo": "Onde indecisos viram decisões",
+        "ferramentas": [
+          {
+            "nome": "Pergunta-espelho",
+            "exemplo": "Me diz: o que acontece na sua vida se daqui a 6 meses você estiver exatamente no mesmo lugar que tá agora?"
+          },
+          {
+            "nome": "Cena de aluno",
+            "exemplo": "Ter 3-5 cenas curtas prontas — nome, situação antes, Permissão que se deu, resultado concreto"
+          },
+          {
+            "nome": "PDA guiado",
+            "exemplo": "O que você PERCEBE agora? O que você precisa DECIDIR? Qual o menor passo de AÇÃO?"
+          }
+        ],
+        "chamar_por_nome": "Ler pergunta do chat em voz alta, direcionar resposta para quem está em silêncio: 'Essa pergunta é da Maria, mas eu sei que tem outras 40 Marias aí em silêncio agora.'",
+        "protocolo_micro_5_passos": "Ver tecnicas_vendas.json.frameworks_principais.Label-Mirror-Reframe-PDA-Silêncio"
+      },
+      {
+        "numero": 6,
+        "nome": "Fechamento e Silêncio",
+        "duracao_min": [95, 120],
+        "objetivo": "Não empurrar. Convidar para o próximo passo concreto.",
+        "regras": [
+          "NÃO terminar com 'última chance'",
+          "Terminar com RESPONSABILIDADE",
+          "Silêncio estratégico de 10s após o link",
+          "Últimos 10 min: Tactical Empathy com quem está quase decidindo"
+        ],
+        "script_fechamento": "Eu fiz o que me cabia. Agora o passo é seu. Quem entrar, a gente se encontra dentro. Quem não entrar, a gente se encontra no próximo ciclo — e você vai saber por que não entrou dessa vez.",
+        "tactical_empathy_final": "Repete a objeção com o mesmo tom da pessoa, rotula a emoção ('parece que você tá com medo de repetir um padrão antigo'), espera ela confirmar com 'isso mesmo'"
+      }
+    ]
+  },
+
+  "protocolos_micro_condução": {
+    "descricao": "Usados em qualquer dojô quando aparece sinal específico",
+    "protocolos": [
+      {
+        "gatilho": "Lead aparece com 'só queria entender melhor'",
+        "tecnica": "Confronto Pré-Preço (Hormozi)",
+        "resposta": "Você não entra em conversa séria só pra buscar informação. Qual é o problema real que você tá tentando resolver hoje?"
+      },
+      {
+        "gatilho": "Lead dá resposta superficial na investigação",
+        "tecnica": "Curiosidade de criança",
+        "resposta": "[tom não-ameaçador, cabeça levemente inclinada] Me conta mais sobre isso. Quando você diz [palavra dele], você quer dizer o quê exatamente?"
+      },
+      {
+        "gatilho": "Lead fica em silêncio pós-preço sem verbalizar",
+        "tecnica": "Silêncio estratégico + pergunta de 3 segundos",
+        "resposta": "[3-4s de silêncio após soltar preço] Ficou alguma dúvida?"
+      },
+      {
+        "gatilho": "Lead pergunta sobre implementação, garantia, cláusulas",
+        "tecnica": "Pinta de compra - fechar direto",
+        "resposta": "Responde curto e firme + Dupla Alternativa: 'Sim, tem garantia de X. Pra começar hoje, fica melhor 12x ou à vista com desconto?'"
+      },
+      {
+        "gatilho": "Lead dá desculpa de 'fase corrida / muito ocupado'",
+        "tecnica": "Inversão (Hormozi)",
+        "resposta": "Você espera uma fase boa? Quando a boa vier você vai querer aproveitar, não começar curso. Começar no caos é exatamente o que faz o aprendizado durar pra vida toda."
+      },
+      {
+        "gatilho": "Lead fala em 'se Deus quiser'",
+        "tecnica": "Respeito à fé + separação fé/paralisia",
+        "resposta": "Respeito sua fé. Deus dá as sementes — quem planta é você. Tempo de Deus não é paralisia, é confiança em MOVIMENTO."
+      },
+      {
+        "gatilho": "Lead usa 'já tentei de tudo'",
+        "tecnica": "Nomear Obesidade Intelectual + tradução Pré-Queda",
+        "resposta": "Tentou várias coisas na mesma camada — capacidade. Aqui é outra camada: Permissão. E cada Pré-Queda que você viveu tava te preparando pra agora."
+      }
+    ]
+  },
+
+  "evitar_sempre": [
+    "Linguagem motivacional genérica ('você merece mais!')",
+    "Falsa urgência ('só tem 20 vagas' quando não é verdade)",
+    "Comparação com concorrentes",
+    "Desconto como argumento principal",
+    "Lista de bônus como gancho principal",
+    "Perguntar 'alguma dúvida?' no final",
+    "Repetir preço mais de uma vez",
+    "Responder objeção com defesa do produto (sempre com OUTRA pergunta)",
+    "Terminar live com 'última chance'",
+    "Preencher silêncio estratégico"
+  ],
+
+  "decisoes_metodologicas_curadoria": [
+    "Excluído: Grant Cardone e Jordan Belfort (linguagem agressiva contamina tom mentor-terapêutico)",
+    "Priorizado: Hormozi, Concer, Brunson, Voss — todos fazem venda por transformação, compatíveis com Teoria da Permissão",
+    "Adaptado: Stack do Brunson → 'zonas de transformação'; Label do Voss → 'rotular emoção antes de quebrar'",
+    "Traduzido: toda objeção externa ('tá caro') retraduzida em Permissão ('não me dei permissão')"
+  ]
+}

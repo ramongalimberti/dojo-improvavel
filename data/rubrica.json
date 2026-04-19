@@ -1,0 +1,194 @@
+{
+  "rubrica_avaliacao": "Dojô Improvável v2 - 5 dimensões integradas com playbook (Hormozi/Concer/Voss/Brunson + Teoria da Permissão)",
+  "fonte_tecnica": "Playbook Live Final - Levante dos Improváveis",
+
+  "dimensoes": [
+    {
+      "nome": "Escuta Ativa",
+      "pergunta_central": "Ramon respondeu o que o lead DISSE, ou respondeu um fantasma? Usou as palavras dele? Aplicou Mirror/Label?",
+      "peso_na_nota_geral": 0.2,
+      "tecnicas_validadas": [
+        "Mirror (Voss): repetir as 3 últimas palavras com tom de pergunta",
+        "Label (Voss): rotular a emoção percebida sem julgar",
+        "Devolver a palavra exata do lead na resposta",
+        "Curiosidade de criança (tom não-ameaçador) — Concer"
+      ],
+      "niveis": {
+        "3_de_10": {
+          "descricao": "Resposta 'pronta', roteiro genérico. Ignorou o que o lead disse. Zero uso das palavras dele.",
+          "exemplo_lead": "Eu trabalho muito e não consigo sair do lugar",
+          "exemplo_ramon_3": "Entendo. Deixa eu te explicar como funciona a Aliança. São 3 módulos..."
+        },
+        "6_de_10": {
+          "descricao": "Reconheceu o tema mas parafraseou genérico. Sem Mirror nem Label.",
+          "exemplo_lead": "Eu trabalho muito e não consigo sair do lugar",
+          "exemplo_ramon_6": "Entendi, você sente que tá estagnado apesar do esforço. É comum, várias pessoas sentem isso."
+        },
+        "9_de_10": {
+          "descricao": "Mirror + Label + pergunta que aprofunda o que ele disse.",
+          "exemplo_lead": "Eu trabalho muito e não consigo sair do lugar",
+          "exemplo_ramon_9": "'Não consigo sair do lugar.' [mirror, pausa] Parece que você tá sentindo que o esforço não vira resultado — uma exaustão que já virou parte da sua rotina. É isso? Em que momentos você tenta sair e algo te puxa de volta?"
+        }
+      }
+    },
+
+    {
+      "nome": "Quebra de Objeção",
+      "pergunta_central": "Aplicou os 4 passos de Concer? Isolou a objeção? Usou Teste Hipotético? Quebrou sem desvalorizar o produto?",
+      "peso_na_nota_geral": 0.25,
+      "tecnicas_validadas": [
+        "4 Passos Concer: Dissonância → Empatia → Isolamento → Argumento",
+        "Pergunta de Isolamento: 'Além disso, tem mais algum motivo?'",
+        "Teste Hipotético Hormozi: 'Num mundo hipotético onde isso não existisse, você faria?'",
+        "Tradução pra linguagem Permissão: 'não é caro, é sem permissão'",
+        "Pagar com dinheiro vs pagar com tempo"
+      ],
+      "niveis": {
+        "3_de_10": {
+          "descricao": "Aceitou objeção superficial como real. Ofereceu desconto/parcelamento. Defendeu o produto em vez de investigar.",
+          "exemplo_lead": "Tá caro pra mim agora",
+          "exemplo_ramon_3": "Consigo fazer condição especial, parcelo em mais vezes."
+        },
+        "6_de_10": {
+          "descricao": "Percebeu que tinha algo por trás, mas não isolou formalmente. Sem Teste Hipotético.",
+          "exemplo_lead": "Tá caro pra mim agora",
+          "exemplo_ramon_6": "Caro em relação a quê? O que você costuma investir em você?"
+        },
+        "9_de_10": {
+          "descricao": "Dissonância + Empatia + Isolamento + tradução Permissão. Não ofereceu desconto.",
+          "exemplo_lead": "Tá caro pra mim agora",
+          "exemplo_ramon_9": "Compreendo perfeitamente. Inclusive, é exatamente por ser um valor expressivo que faz sentido você entrar hoje — porque você vai pra dentro comprometido. Mas só pra eu entender: além do valor, tem mais algum motivo ou alguma coisa na proposta que não faz sentido? [isolamento] Porque deixa eu te devolver uma coisa: quanto você gasta por mês sustentando problemas dos outros? 'Caro pra mim' geralmente é 'não me dou permissão de ser destino do meu próprio dinheiro'. Culpa da Sobrevivência."
+        }
+      }
+    },
+
+    {
+      "nome": "Ativação de Dor",
+      "pergunta_central": "Conectou com a dor REAL (Permissão, Padrão, Pré-Queda, Mula de Carga, Medo do Brilho)? Usou CLOSER-O para revisar tentativas falhas?",
+      "peso_na_nota_geral": 0.2,
+      "tecnicas_validadas": [
+        "Overview do CLOSER: revisar o que já tentou e por que falhou",
+        "Nomear padrão específico por nome (não 'frustração' genérica)",
+        "Ciclo do Quase: 'há quanto tempo você tá quase lá?'",
+        "Custo da Inação + Risco Reverso",
+        "Metáfora concreta (supermercado, carrinho, banheiro emocional, represa)"
+      ],
+      "niveis": {
+        "3_de_10": {
+          "descricao": "Dor no nível de sintoma. Falou de resultado ('quer ganhar mais?'), venda transacional.",
+          "exemplo_lead": "Eu sustento minha mãe e meu irmão, tá apertado",
+          "exemplo_ramon_3": "Entendo, a gente vai te ensinar a ganhar mais pra dar conta disso."
+        },
+        "6_de_10": {
+          "descricao": "Tocou emoção mas genericamente. 'Frustração', 'cansaço' sem nomear padrão.",
+          "exemplo_lead": "Eu sustento minha mãe e meu irmão, tá apertado",
+          "exemplo_ramon_6": "Deve ser cansativo carregar todo mundo nas costas. Como você tá se sentindo nisso?"
+        },
+        "9_de_10": {
+          "descricao": "Nomeou padrão por nome. Pergunta que faz o lead perceber sozinho. Metáfora concreta + conceito Teoria da Permissão.",
+          "exemplo_lead": "Eu sustento minha mãe e meu irmão, tá apertado",
+          "exemplo_ramon_9": "Você virou represa. Todo problema da família chega e para em você. Chama-se Mula de Carga. Me responde uma coisa: quando foi a última vez que alguém da sua família resolveu algo sem passar por você? [pausa] E me diz: você tá cansado de mais um ano de 'quase'?"
+        }
+      }
+    },
+
+    {
+      "nome": "Condução ao Fechamento",
+      "pergunta_central": "Usou estrutura CLOSER ou 5-passos-indeciso? Terminou com pergunta cirúrgica ou deixou no vácuo? Silêncio estratégico?",
+      "peso_na_nota_geral": 0.2,
+      "tecnicas_validadas": [
+        "Sequência 5 passos: Label → Mirror → Reframe → PDA → Silêncio",
+        "Alinhamento Lógico (3 perguntas fechadas): resolve? confia? tem recursos?",
+        "Dupla Alternativa: 'crédito ou à vista?'",
+        "Silêncio de 3-10s depois do preço ou da pergunta-chave",
+        "PDA dirigido: 'qual o MENOR passo de ação?'",
+        "Pergunta cirúrgica no final da fala (nunca terminar no vácuo)"
+      ],
+      "niveis": {
+        "3_de_10": {
+          "descricao": "Sem pergunta. Deixou no vácuo. Pulou pro CTA sem construção.",
+          "exemplo_ramon_3": "É isso. Se quiser entrar, o link é esse. Te espero."
+        },
+        "6_de_10": {
+          "descricao": "Pergunta genérica. Não guiou o próximo passo. Conversa 'aberta'.",
+          "exemplo_ramon_6": "Faz sentido pra você? Quer saber mais?"
+        },
+        "9_de_10": {
+          "descricao": "Pergunta cirúrgica que exige resposta. Controlou ritmo. Guiou sem forçar.",
+          "exemplo_ramon_9": "Deixa eu te pedir uma coisa: entre tudo que a gente conversou, qual frase mais te incomodou? Porque é nela que a gente vai entrar primeiro. [silêncio]"
+        }
+      }
+    },
+
+    {
+      "nome": "Fidelidade à Metodologia",
+      "pergunta_central": "Usou conceitos da Teoria da Permissão + técnicas do playbook? Evitou as proibições absolutas?",
+      "peso_na_nota_geral": 0.15,
+      "tecnicas_validadas": [
+        "Nomear conceito por nome: Permissão, PDA, Pré-Queda, Mula de Carga, Banheiro Emocional, Plano Perfeito, Culpa da Sobrevivência, Efeito Paralelo, Escada da Postura",
+        "Frase-âncora com contexto real (não gratuitamente)",
+        "Voz de mesa de jantar, não de palco",
+        "Dissonância cognitiva sem parecer técnica"
+      ],
+      "niveis": {
+        "3_de_10_AUTOMATICO": {
+          "descricao": "Qualquer um dos itens abaixo derruba pra 2 automaticamente",
+          "gatilhos_de_rebaixamento": [
+            "Clichê motivacional ('você é capaz', 'descubra seu potencial', 'acredite')",
+            "Religiosidade ('tempo de Deus', 'se Deus quiser') — EXCETO quando separando fé de paralisia",
+            "Lei da atração / mentalidade abundância",
+            "Desconto como quebra de objeção",
+            "Urgência artificial sem ser verdade",
+            "Atacou a família do lead (atacar PADRÃO, não pessoa)",
+            "Prometeu enriquecimento, 10k/mês, luxo",
+            "Lista de bônus empilhada como gancho principal (guru, não mentor)",
+            "Repetiu o preço 2+ vezes (insegurança)",
+            "Respondeu objeção com defesa do produto em vez de pergunta",
+            "'Alguma dúvida?' no final como fechamento (desesperado)"
+          ]
+        },
+        "6_de_10": {
+          "descricao": "Voz correta mas não ancorou em conceito por nome. Soou como 'bom conselho' genérico.",
+          "exemplo_ramon_6": "Você precisa parar de carregar todo mundo. Isso tá te adoecendo."
+        },
+        "9_de_10": {
+          "descricao": "Nomeou 1-2 conceitos por nome, com contexto, momento certo. Frase-âncora ancorada. Mesa de jantar.",
+          "exemplo_ramon_9": "Você tá preso no P do PDA. Você já percebeu tudo isso. Mas perceber sem decidir é se iludir. E decidir exige pagar o preço de uma Conversa Difícil que você tá adiando há anos."
+        }
+      }
+    }
+  ],
+
+  "calculo_nota_geral": "nota_geral = escuta*0.2 + objecao*0.25 + dor*0.2 + conducao*0.2 + fidelidade*0.15",
+
+  "bonus_xp_por_tecnicas_aplicadas": {
+    "descricao": "Em cada sessão, o avaliador marca se o Ramon usou essas técnicas corretamente. Cada uma vale XP bônus.",
+    "tecnicas_bonificadas": [
+      {"tecnica": "Mirror (3 últimas palavras)", "xp": 10},
+      {"tecnica": "Label (rotular emoção)", "xp": 10},
+      {"tecnica": "Isolamento Concer", "xp": 15},
+      {"tecnica": "Teste Hipotético Hormozi", "xp": 15},
+      {"tecnica": "Pagar com dinheiro vs pagar com tempo", "xp": 15},
+      {"tecnica": "Silêncio estratégico (explicito no fim da fala)", "xp": 10},
+      {"tecnica": "Nomeou conceito da Teoria da Permissão por nome", "xp": 15},
+      {"tecnica": "Ancorou frase-âncora com contexto real", "xp": 10},
+      {"tecnica": "Alinhamento Lógico 3 perguntas", "xp": 20},
+      {"tecnica": "Dupla Alternativa (crédito ou à vista)", "xp": 10},
+      {"tecnica": "Inversão de papéis (no 'preciso falar com cônjuge')", "xp": 15},
+      {"tecnica": "Cadeira de Balanço (no 'vou pensar')", "xp": 15},
+      {"tecnica": "Ciclo do Quase devolvido ao lead", "xp": 15},
+      {"tecnica": "Risco Reverso", "xp": 15},
+      {"tecnica": "Fechou a venda com lead Difícil ou Hostil", "xp": 50}
+    ]
+  },
+
+  "armadilhas_criticas_que_zeram_dimensao": [
+    "Oferecer desconto como quebra → Fidelidade = 1",
+    "Usar clichê motivacional → Fidelidade = 2",
+    "Atacar família do lead → Fidelidade = 1 + Dor = 3 (máx)",
+    "Lei da atração → Fidelidade = 1",
+    "Repetir preço 3+ vezes → Condução = 3 (máx)",
+    "Falsa escassez → Fidelidade = 1 (queima autoridade)",
+    "Aceitar 'vou pensar' sem resposta → Condução = 3 (máx)"
+  ]
+}

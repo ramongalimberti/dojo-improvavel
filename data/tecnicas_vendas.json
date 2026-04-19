@@ -1,0 +1,211 @@
+{
+  "fonte": "Playbook Live Final - fusão Teoria da Permissão + Hormozi/Concer/Voss/Brunson traduzidos pra voz Ramon",
+  "premissa_central": "Vender pro Improvável não é técnica de fechamento. É ajudar a pessoa a se dar PERMISSÃO que ela não consegue se dar sozinha. As técnicas abaixo são ferramentas — a moldura é sempre a Teoria da Permissão.",
+
+  "frameworks_principais": [
+    {
+      "nome": "CLOSER (Hormozi) adaptado à Permissão",
+      "sigla": "CLOSER",
+      "uso": "Estrutura de condução de conversa 1:1 ou live",
+      "etapas": [
+        {
+          "letra": "C",
+          "nome": "Clarify - Esclarecer",
+          "objetivo": "Entender por que a pessoa está ali AGORA",
+          "pergunta_chave": "O que te trouxe até aqui hoje e não em outro momento?",
+          "adaptacao_ramon": "Não quero saber o que você quer. Quero saber O QUE TE TROUXE AQUI. Porque o gatilho revela o padrão."
+        },
+        {
+          "letra": "L",
+          "nome": "Label - Rotular o problema",
+          "objetivo": "Fazer a pessoa admitir que tem o problema em voz alta",
+          "pergunta_chave": "Você percebe que isso se repete?",
+          "adaptacao_ramon": "Não se pode curar câncer sem diagnóstico. Aqui: não se quebra Padrão sem nomear. Nomeia com ela, nunca POR ela."
+        },
+        {
+          "letra": "O",
+          "nome": "Overview - Revisar a dor do passado",
+          "objetivo": "Mapear o que já tentou e por que falhou (Obesidade Intelectual)",
+          "pergunta_chave": "O que você já tentou antes? E por que acha que não deu certo?",
+          "adaptacao_ramon": "A culpa não é sua. Tudo que tentou operou na camada da capacidade. O problema nunca foi ali."
+        },
+        {
+          "letra": "S",
+          "nome": "Sell the vacation - Vender o destino",
+          "objetivo": "Vender a TRANSFORMAÇÃO, não os módulos",
+          "pergunta_chave": null,
+          "adaptacao_ramon": "Vender o Mercado Sem Calculadora, o Casamento de Adultos, o Acaba em Mim. NÃO vender horas de aula, módulos, PDFs. Máximo 3 pilares em 3 minutos."
+        },
+        {
+          "letra": "E",
+          "nome": "Explain away concerns - Afastar as preocupações",
+          "objetivo": "Quebrar objeção com lógica + permissão",
+          "pergunta_chave": null,
+          "adaptacao_ramon": "Usar o isolamento do Concer (além disso, tem mais algum motivo?) + tradução Permissão (não é caro, é sem permissão)."
+        },
+        {
+          "letra": "R",
+          "nome": "Reinforce - Reforçar a decisão",
+          "objetivo": "Validar pós-venda pra prevenir arrependimento",
+          "pergunta_chave": null,
+          "adaptacao_ramon": "Nas primeiras 48h: mensagem pessoal citando algo específico da conversa. Prova de que foi visto."
+        }
+      ]
+    },
+    {
+      "nome": "Método dos 4 Passos de Contorno (Thiago Concer)",
+      "uso": "Protocolo para toda vez que surgir objeção",
+      "etapas": [
+        {
+          "passo": 1,
+          "nome": "Derrubar o muro (Dissonância Cognitiva)",
+          "como": "Concordar em vez de confrontar. Palavras-chave: 'compreendo', 'concordo', 'faz sentido'",
+          "exemplo": "Cliente: 'Tá muito caro.' Você: 'Compreendo perfeitamente. E, pra ser franco, é exatamente por isso que você precisa entrar hoje.'",
+          "adaptacao_ramon": "Não soar como vendedor. Soar como mesa de jantar. A dissonância funciona quando é genuína — porque você realmente concorda que caro é, e vai mostrar por quê faz sentido mesmo assim."
+        },
+        {
+          "passo": 2,
+          "nome": "Trazer o cliente pra perto (Empatia Estratégica)",
+          "como": "Pegar UM ponto válido e mostrar que você também pensa assim",
+          "exemplo": "Inclusive eu também, quando vou investir valor alto, preciso me sentir totalmente seguro antes.",
+          "adaptacao_ramon": "Nunca forçado. Só se for verdade. Ramon pode contar uma cena de Pré-Queda própria — vulnerabilidade real, não performada."
+        },
+        {
+          "passo": 3,
+          "nome": "Validar a mentira e isolar (Pergunta de Isolamento)",
+          "como": "Perguntar se ALÉM dessa questão tem outra coisa travando",
+          "exemplo": "Deixa eu só confirmar: além do valor, tem mais algum motivo ou alguma coisa na proposta que não faz sentido pra você?",
+          "adaptacao_ramon": "Quase sempre vai aparecer outra coisa. Essa outra coisa é a objeção REAL. Preço geralmente é cortina de fumaça da Culpa da Sobrevivência ou do Medo do Brilho."
+        },
+        {
+          "passo": 4,
+          "nome": "Argumentar sem acuar",
+          "como": "Pedir permissão pra explicar. Deixar porta aberta pra desistência.",
+          "exemplo": "Posso te explicar rapidamente por que isso custa o que custa? Se fizer sentido, a gente continua. Se não, encerra tranquilo.",
+          "adaptacao_ramon": "Desapego é condição. Quem precisa vender, perde. Quem tá disponível pra ajudar, fecha."
+        }
+      ]
+    },
+    {
+      "nome": "Label-Mirror-Reframe-PDA-Silêncio (condução de indeciso)",
+      "uso": "Protocolo micro de 5 passos quando alguém hesita no meio da conversa",
+      "etapas": [
+        {
+          "passo": 1,
+          "nome": "Label (rotular emoção - Chris Voss)",
+          "como": "Nomear a emoção que você percebe, sem julgar",
+          "exemplo": "Parece que você tá com medo de investir e não conseguir acompanhar. É isso?",
+          "armadilha": "Não adivinhar emoção que não está ali. Se errar, a pessoa corrige — e é ouro, porque ela nomeia certo."
+        },
+        {
+          "passo": 2,
+          "nome": "Mirror (espelhar as 3 últimas palavras)",
+          "como": "Repetir as 3 últimas palavras dela com tom de pergunta",
+          "exemplo": "Ela: 'Já tentei tanta coisa...' Você: 'Tentou tanta coisa...' [silêncio]",
+          "armadilha": "Não é papagaiar. É convidar ela a aprofundar o que acabou de dizer."
+        },
+        {
+          "passo": 3,
+          "nome": "Reframe via Padrão",
+          "como": "Transformar o que ela disse em diagnóstico do padrão",
+          "exemplo": "Olha o que você acabou de dizer: 'já tentei'. Isso não é falha. É um Padrão pedindo pra ser quebrado. Padrão não se quebra com mais tentativa — se quebra com Permissão.",
+          "armadilha": "Reframe é tradução, não imposição. Só funciona se ela RECONHECE o que você traduziu."
+        },
+        {
+          "passo": 4,
+          "nome": "PDA dirigido",
+          "como": "Perguntar qual o menor passo de ação possível",
+          "exemplo": "Se você fosse agir sem medo agora, qual seria o menor passo?",
+          "armadilha": "Não confundir com 'qual próximo passo'. É MENOR passo — quebra o Plano Perfeito."
+        },
+        {
+          "passo": 5,
+          "nome": "Silêncio",
+          "como": "Ficar quieto. Deixar ela responder. Não preencher.",
+          "exemplo": "[ficar em silêncio por 5-10s]",
+          "armadilha": "Vendedor amador preenche silêncio. Mestre usa silêncio como ferramenta. Quem fala primeiro, perde."
+        }
+      ]
+    }
+  ],
+
+  "gatilhos_mentais_permitidos": [
+    {
+      "nome": "Ancoragem (Brunson/Hormozi)",
+      "como_usar": "Apresentar primeiro uma versão de valor muito mais alto, depois a versão que você realmente quer vender. O cérebro compara e o segundo parece vantajoso.",
+      "exemplo_ramon": "Em vez de empilhar bônus, Ramon empilha ZONAS DE TRANSFORMAÇÃO: ambiente, metodologia, aliados, rituais semanais, presença do mentor. Cada uma com UMA frase de sentido — não lista de features.",
+      "armadilha": "Não inventar valor. Cada zona tem que ser real. Improvável cheira mentira."
+    },
+    {
+      "nome": "Prova Social Direcionada (Concer)",
+      "como_usar": "Citar depoimento específico de aluno na hora de quebrar uma objeção específica",
+      "exemplo_ramon": "Compreendo. De cada 10 pessoas que entram aqui, 8 chegaram com essa mesma trava. Tábita falou isso em dezembro, hoje ela [resultado específico].",
+      "armadilha": "Nunca prova social genérica ('muita gente muda'). Sempre cena concreta, nome, antes/depois específico."
+    },
+    {
+      "nome": "Reciprocidade Ativa",
+      "como_usar": "Entregar valor real na conversa antes de pedir qualquer coisa. Se a pessoa sair SEM comprar e ainda assim tiver ganho muito, a reciprocidade fica aberta.",
+      "exemplo_ramon": "Responder uma pergunta com profundidade que ela não esperava. Dar um protocolo curto aplicável hoje, mesmo que ela não entre.",
+      "armadilha": "Reciprocidade não é manipulação. Se você entrega só pra criar dívida, ela sente. Entrega porque faz parte de ser mentor."
+    },
+    {
+      "nome": "Risco Reverso",
+      "como_usar": "Mostrar que o verdadeiro risco NÃO é pagar o investimento. É ficar onde está.",
+      "exemplo_ramon": "O risco aqui não é o valor que você paga. O risco é daqui a um ano você estar exatamente onde tá hoje, pagando outro preço — tempo, desgaste, Pré-Queda — muito maior do que esse.",
+      "armadilha": "Não pintar catástrofe. Só nomear o óbvio que ela já sente."
+    },
+    {
+      "nome": "Medo da Perda Ética (FOMO honesto)",
+      "como_usar": "Se escassez é REAL, comunicar com fato seco. Nunca inventar urgência.",
+      "exemplo_ramon": "A turma fecha sexta. Depois abre outra em junho. Se junho for melhor pra você, junho é melhor. Mas não se iluda: você não tá esperando junho, tá esperando Permissão — e Permissão não vem com calendário.",
+      "armadilha": "Se mentiu sobre escassez uma vez, queimou autoridade pra sempre com o Improvável."
+    }
+  ],
+
+  "gatilhos_proibidos": [
+    "Falsa escassez ('só 20 vagas' quando tem 500)",
+    "Urgência artificial ('só hoje' quando é todo dia)",
+    "Desconto como argumento principal (commodity)",
+    "Comparação com concorrente",
+    "Lista de bônus empilhada como gancho principal (isso é guru, não mentor)",
+    "Perguntar 'alguma dúvida?' no final (sempre tem e você parece desesperado)",
+    "Repetir preço mais de uma vez (sinal de insegurança)",
+    "Responder objeção com defesa do produto (sempre responde com OUTRA pergunta)",
+    "Linguagem motivacional ('você merece mais!', 'acredite em você')",
+    "Religiosidade ('Deus quer isso', 'tempo de Deus')",
+    "Lei da atração / mentalidade abundância"
+  ],
+
+  "frases_pos_preco_validadas": [
+    {
+      "frase": "Ficou alguma dúvida?",
+      "quando": "Primeira coisa depois de soltar o preço e esperar 3 segundos de silêncio",
+      "efeito": "Quebra o silêncio com autoridade. Se ela diz não, você pede dados. Se diz sim, você trata a dúvida específica."
+    },
+    {
+      "frase": "Pra você fica melhor no cartão ou no Pix?",
+      "quando": "Depois da 'alguma dúvida?' ter sido respondida ou quando você sente que a decisão já foi tomada",
+      "efeito": "Dupla alternativa. Mente muda de 'vou pagar?' pra 'COMO vou pagar?'."
+    },
+    {
+      "frase": "Pra começar essa transformação hoje, fica melhor 12x no crédito ou à vista com desconto?",
+      "quando": "Variação da anterior com ancoragem de transformação",
+      "efeito": "Associa pagamento a começar mudança, não a custo"
+    },
+    {
+      "frase": "Faz sentido pra você essa proposta?",
+      "quando": "Quando sente que precisa medir temperatura antes de fechar",
+      "efeito": "Âncora de calibração. Obriga o cliente a confirmar o fit."
+    },
+    {
+      "frase": "Quais são os próximos passos pra você decidir?",
+      "quando": "Resposta a 'vou pensar'",
+      "efeito": "Força a pessoa a verbalizar o processo interno. Muitas vezes revela a objeção oculta de graça."
+    },
+    {
+      "frase": "Além de você, tem mais alguém que participa dessa decisão?",
+      "quando": "Começo da conversa, pra mapear terceiros antes de aparecer 'preciso falar com cônjuge'",
+      "efeito": "Pré-empte a objeção de autoridade. Se ela diz 'só eu', fechou essa porta de fuga."
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dojô Improvável</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ================= TELA DE BOAS-VINDAS / API KEY ================= -->
+    <section id="screen-welcome" class="screen active">
+      <div class="card welcome-card">
+        <h1 class="title">Dojô Improvável</h1>
+        <p class="subtitle">Treino cirúrgico de condução de vendas — Aliança Divergente.</p>
+
+        <div class="field">
+          <label for="apiKeyInput">Cole sua Anthropic API key</label>
+          <input type="password" id="apiKeyInput" placeholder="sk-ant-..." autocomplete="off" />
+          <small>Ela fica salva apenas no seu navegador (localStorage).</small>
+        </div>
+
+        <div class="field">
+          <label for="nameInput">Seu nome</label>
+          <input type="text" id="nameInput" placeholder="Ramon" />
+        </div>
+
+        <button id="btnStart" class="btn-primary">Entrar no Dojô</button>
+        <p class="hint">A pasta <code>data/</code> traz os 7 JSONs fiéis ao playbook. Substitua pelos curados quando quiser.</p>
+      </div>
+    </section>
+
+    <!-- ================= DASHBOARD ================= -->
+    <section id="screen-dashboard" class="screen">
+      <header class="dashboard-header">
+        <div>
+          <h1 class="title">Dojô Improvável</h1>
+          <p class="muted">Olá, <span id="userName">Ramon</span>. <span class="level-pill">Nível <span id="userLevel">1</span></span></p>
+        </div>
+        <div class="streak">
+          <span class="streak-flame">🔥</span>
+          <span id="streakCount">0</span>
+          <span class="muted">dias</span>
+        </div>
+      </header>
+
+      <div class="xp-bar-wrap">
+        <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width: 0%"></div></div>
+        <div class="xp-meta"><span id="xpText">0 / 100 XP</span></div>
+      </div>
+
+      <div class="daily-challenge" id="dailyChallenge">
+        <div class="challenge-icon">🎯</div>
+        <div class="challenge-body">
+          <div class="challenge-label">Desafio do dia</div>
+          <div class="challenge-text" id="challengeText">Carregando...</div>
+        </div>
+        <div class="challenge-reward" id="challengeStatus">+25 XP</div>
+      </div>
+
+      <h2 class="section-title">Habilidades</h2>
+      <div class="skills-grid" id="skillsGrid"></div>
+
+      <h2 class="section-title">Dojôs</h2>
+      <div class="dojos-grid">
+        <div class="dojo-card" data-dojo="DM_1_1">
+          <div class="dojo-num">I</div>
+          <h3>DM 1:1 Pós-Evento</h3>
+          <p class="muted">WhatsApp depois de uma live/CPL.</p>
+          <div class="dojo-status" id="status-DM_1_1">Aberto</div>
+          <button class="btn-primary btn-sm btn-enter-dojo" data-dojo="DM_1_1">Entrar</button>
+        </div>
+        <div class="dojo-card" data-dojo="AO_VIVO">
+          <div class="dojo-num">II</div>
+          <h3>Q&A Ao Vivo</h3>
+          <p class="muted">Pergunta crua no meio da live.</p>
+          <div class="dojo-status" id="status-AO_VIVO">🔒 Média 7.0 em 10+ sessões</div>
+          <button class="btn-primary btn-sm btn-enter-dojo" data-dojo="AO_VIVO" disabled>Bloqueado</button>
+        </div>
+        <div class="dojo-card" data-dojo="LIVE">
+          <div class="dojo-num">III</div>
+          <h3>Live/Webinar em Massa</h3>
+          <p class="muted">Chat rápido, sala cheia.</p>
+          <div class="dojo-status" id="status-LIVE">🔒 Média 7.5 em 10+ sessões</div>
+          <button class="btn-primary btn-sm btn-enter-dojo" data-dojo="LIVE" disabled>Bloqueado</button>
+        </div>
+      </div>
+
+      <h2 class="section-title">Técnicas dominadas</h2>
+      <div class="techniques-grid" id="techniquesGrid"></div>
+
+      <h2 class="section-title">Conquistas</h2>
+      <div class="achievements-grid" id="achievementsGrid"></div>
+
+      <footer class="dashboard-footer">
+        <button id="btnChangeKey" class="btn-ghost">Trocar API key</button>
+        <button id="btnResetProfile" class="btn-ghost btn-danger">Resetar progresso</button>
+      </footer>
+    </section>
+
+    <!-- ================= SESSÃO (role-play) ================= -->
+    <section id="screen-session" class="screen">
+      <header class="session-header">
+        <button id="btnExitSession" class="btn-ghost">← Sair</button>
+        <div class="session-context">
+          <div class="session-dojo" id="sessionDojoName">Dojô I</div>
+          <div class="session-persona" id="sessionPersonaName">—</div>
+        </div>
+        <div class="session-turn">Turno <span id="turnCounter">1</span></div>
+      </header>
+
+      <div class="persona-card" id="personaCard">
+        <div class="persona-header">
+          <div class="persona-avatar">👤</div>
+          <div>
+            <div class="persona-title" id="personaTitle">—</div>
+            <div class="persona-meta" id="personaMeta">—</div>
+          </div>
+        </div>
+        <div class="persona-trigger" id="personaTrigger"></div>
+        <details class="persona-hint">
+          <summary>🤫 Dica (spoiler do padrão)</summary>
+          <div id="personaHint"></div>
+        </details>
+      </div>
+
+      <div class="chat" id="chat"></div>
+
+      <div class="session-input-wrap">
+        <textarea id="userInput" placeholder="Sua resposta... (voz: &quot;vírgula&quot;, &quot;ponto&quot;, &quot;interrogação&quot;, &quot;pausa 3 segundos&quot;)"></textarea>
+        <div class="input-actions">
+          <details class="voice-help">
+            <summary>🎤 comandos de voz</summary>
+            <div class="voice-help-body">
+              <div class="vh-col">
+                <div class="vh-title">Pontuação</div>
+                <div><code>vírgula</code> → ,</div>
+                <div><code>ponto</code> / <code>ponto final</code> → .</div>
+                <div><code>interrogação</code> → ?</div>
+                <div><code>exclamação</code> → !</div>
+                <div><code>dois pontos</code> → :</div>
+                <div><code>ponto e vírgula</code> → ;</div>
+                <div><code>reticências</code> → ...</div>
+                <div><code>hífen</code> → -  ·  <code>traço</code> → —</div>
+              </div>
+              <div class="vh-col">
+                <div class="vh-title">Estrutura</div>
+                <div><code>nova linha</code> / <code>quebra de linha</code> → ⏎</div>
+                <div><code>parágrafo</code> → ⏎⏎</div>
+                <div><code>abre aspas</code> / <code>fecha aspas</code> → " "</div>
+                <div><code>abre parêntese</code> / <code>fecha parêntese</code> → ( )</div>
+                <div class="vh-title" style="margin-top:0.5em">Pausa (vira <code>[silêncio Ns]</code>)</div>
+                <div><code>pausa</code> → [silêncio 3s]</div>
+                <div><code>pausa 5 segundos</code> → [silêncio 5s]</div>
+                <div><code>pausa de 10s</code> → [silêncio 10s]</div>
+              </div>
+            </div>
+          </details>
+          <button id="btnMic" class="btn-ghost" title="Falar por áudio (espaço toggla)">🎤</button>
+          <button id="btnSend" class="btn-primary">Enviar</button>
+        </div>
+        <div class="mic-status" id="micStatus"></div>
+      </div>
+
+      <div class="feedback-panel" id="feedbackPanel"></div>
+    </section>
+
+    <!-- ================= RELATÓRIO FINAL ================= -->
+    <section id="screen-report" class="screen">
+      <div class="card report-card">
+        <h1 class="title">Relatório da Sessão</h1>
+        <div class="report-grade" id="reportGrade">—</div>
+
+        <div class="report-section">
+          <h3>XP ganho</h3>
+          <div class="report-xp" id="reportXp">+0</div>
+          <div class="report-xp-breakdown" id="reportXpBreakdown"></div>
+        </div>
+
+        <div class="report-section">
+          <h3>Habilidades</h3>
+          <div id="reportSkills"></div>
+        </div>
+
+        <div class="report-section">
+          <h3>Técnicas aplicadas nesta sessão</h3>
+          <div id="reportTechniques"></div>
+        </div>
+
+        <div class="report-section frase-caderno">
+          <h3>Frase pro caderno</h3>
+          <blockquote id="reportPhrase"></blockquote>
+        </div>
+
+        <div class="report-actions">
+          <button id="btnNewSession" class="btn-primary">Nova sessão</button>
+          <button id="btnBackDashboard" class="btn-ghost">Voltar ao dashboard</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Módulos -->
+  <script src="speech.js"></script>
+  <script src="claude-api.js"></script>
+  <script src="gamification.js"></script>
+  <script src="scenarios.js"></script>
+  <script src="evaluator.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

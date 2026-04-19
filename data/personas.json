@@ -1,0 +1,135 @@
+{
+  "publico_alvo": "O Improvável — adultos brasileiros 30-50+ anos, exaustos, ferido pela indústria do caô",
+  "arquetipos": [
+    {
+      "id": "icaro_dentista",
+      "nome_sugerido": "Ícaro",
+      "idade_range": [38, 48],
+      "profissao": "Dentista / cirurgião / médico com clínica própria",
+      "historia_base": "Clínica cheia, agenda lotada, cobra barato, não consegue subir preço. Quando tenta, perde paciente e volta pro valor antigo. Tem pós, especialização, até MBA. Parede cheia de certificado, conta vazia.",
+      "objecao_superficial_tipica": "Não tenho tempo agora, clínica tá apertada",
+      "objecao_real": "Medo de Ficar Rico — sabe que se prosperar, se afasta da família. Irmão pede dinheiro, mãe liga cobrando visita, pai compara com o tio que enricou e abandonou todo mundo.",
+      "padrao_oculto": "Pré-Queda + Medo de Ofuscar",
+      "gatilho_contato_tipico": "Viu live, foi indicado por colega da faculdade, ou recebeu carrossel no Instagram",
+      "linguagem": "Articulado, educado, usa argumentos técnicos pra parecer racional quando na verdade é medo",
+      "ja_tentou": ["Coach executivo", "Terapia tradicional", "Curso de precificação", "Mentoria de gestão de clínica"]
+    },
+    {
+      "id": "mae_solo_corporativa",
+      "nome_sugerido": "Luciana",
+      "idade_range": [35, 45],
+      "profissao": "Gerente / coordenadora em multinacional ou banco",
+      "historia_base": "Mãe solo, 1-2 filhos, sustenta a família toda (ex não paga, pais idosos, irmão enrolado). Carreira estagnada. Tentou MBA à noite pra subir. Exausta. Toma ansiolítico.",
+      "objecao_superficial_tipica": "Tá caro pra mim agora, com as despesas dos meninos",
+      "objecao_real": "Culpa da Sobrevivência — não se dá permissão de gastar com ela quando os filhos 'precisam'. Usa os filhos como blindagem contra o próprio investimento. No fundo tem medo de se descobrir e não poder voltar pra onde está.",
+      "padrao_oculto": "Mula de Carga + Culpa da Sobrevivência",
+      "gatilho_contato_tipico": "Depoimento de outra mãe que mudou de vida, crise específica (pediu aumento e foi negado, ou filho disse algo que doeu)",
+      "linguagem": "Cansada, funcional, intercala vulnerabilidade com defesa ('mas eu sou forte'). Fala de filhos muito rápido como escudo",
+      "ja_tentou": ["Terapia", "MBA", "Coach de carreira", "Livros de autoajuda", "Meditação/mindfulness pelo app"]
+    },
+    {
+      "id": "andre_engenheiro_anestesiado",
+      "nome_sugerido": "André",
+      "idade_range": [40, 52],
+      "profissao": "Engenheiro CLT em grande empresa",
+      "historia_base": "Estabilidade, salário médio-alto, vida 'ok' no papel. Toma ansiolítico há anos. Casamento morno, filho adolescente distante. Sente que a vida passou. Tem 3 cursos online não terminados.",
+      "objecao_superficial_tipica": "Já fiz vários cursos e nenhum mudou nada, não sei se funciona comigo",
+      "objecao_real": "Obesidade Intelectual somada a medo de funcionar. Se funcionar, ele vai ter que encarar que escolheu não viver a vida que quer. É mais confortável o 'nada funciona comigo' do que 'eu escolhi essa anestesia'.",
+      "padrao_oculto": "Obesidade Intelectual + Anestesia + Plano Perfeito",
+      "gatilho_contato_tipico": "Uma noite ruim, briga em casa, ou um momento de 'não aguento mais'. Manda mensagem no impulso e no dia seguinte tenta voltar atrás",
+      "linguagem": "Racional demais, evita emoção, filtra tudo por lógica. Usa humor cínico. Quando baixa a guarda, vira dor pura",
+      "ja_tentou": ["3+ cursos online", "Terapia que largou", "Antidepressivo/ansiolítico", "Academia que parou", "Tentativa de ter hobby"]
+    },
+    {
+      "id": "tabita_empreendedora_ciclica",
+      "nome_sugerido": "Tábita",
+      "idade_range": [32, 42],
+      "profissao": "Empreendedora digital, designer freelancer, psicóloga autônoma",
+      "historia_base": "Vive em ciclos de entusiasmo e colapso. Começa um projeto, vai bem 3 meses, algo dá errado, abandona, recomeça outro. Inteligente, criativa, carismática. Parece em ascensão pro mundo, mas mal paga as contas.",
+      "objecao_superficial_tipica": "Tô num momento de reestruturação, depois eu entro",
+      "objecao_real": "Pré-Queda pura. Cada ascensão é sabotada no ponto de virar sustentação. Mãe artista frustrada que não podia ser ofuscada pela filha — a filha aprendeu que ficar grande quebra o amor.",
+      "padrao_oculto": "Pré-Queda + Ciclo do Quase",
+      "gatilho_contato_tipico": "Fim de um projeto que morreu, ou começando um novo entusiasmada. Vem nos dois estados.",
+      "linguagem": "Criativa, emocional, usa metáforas. Alterna entusiasmo alto e desânimo no mesmo áudio",
+      "ja_tentou": ["Mentoria de negócio", "Terapia longa", "Astrologia/mapa astral", "Constelação familiar", "Método Bullet Journal e similares"]
+    },
+    {
+      "id": "roberto_gerente_meio_campo",
+      "nome_sugerido": "Roberto",
+      "idade_range": [42, 55],
+      "profissao": "Gerente intermediário, advogado em escritório médio, supervisor",
+      "historia_base": "Chegou no teto da carreira sem querer. Teria capacidade pra muito mais, mas trava no momento de pedir promoção, cobrar, expor ideia em reunião grande. Viu colegas piores subirem. Está sendo comido por dentro.",
+      "objecao_superficial_tipica": "Acho que consigo sozinho, só preciso me organizar melhor",
+      "objecao_real": "Medo do Brilho + Síndrome do Impostor invertida. Ele SABE que poderia, mas isso significa ofuscar o pai que não conseguiu. É mais leal continuar médio do que brilhar e 'trair' a origem.",
+      "padrao_oculto": "Pré-Queda + Medo de Ofuscar",
+      "gatilho_contato_tipico": "Acabou de ver um subordinado ou alguém mais novo sendo promovido. Raiva seca, frustração. Ou aniversário que o obrigou a encarar o tempo passando.",
+      "linguagem": "Defensivo, orgulho profissional alto, não gosta de parecer fraco. Precisa ser tratado como par adulto, não como aluno",
+      "ja_tentou": ["Cursos de liderança da empresa", "Livros de gestão", "Um coach que não terminou", "Tentativa de MBA"]
+    },
+    {
+      "id": "ligiane_fuga_geografica",
+      "nome_sugerido": "Ligiane",
+      "idade_range": [34, 44],
+      "profissao": "Profissional que tentou expatriar ou mudou de cidade/estado buscando recomeço",
+      "historia_base": "Largou tudo, foi pra outro estado ou país acreditando que o problema era o ambiente. Descobriu que a trava foi na mala. Os mesmos padrões se reinstalaram no novo CEP. Agora está endividada, decepcionada, sem saber se volta ou fica.",
+      "objecao_superficial_tipica": "Tá meio complicado pelo câmbio / pela fase, não sei se é o momento",
+      "objecao_real": "Descrença pura. Tentou a solução mais radical possível (mudar de vida inteira) e não funcionou. Isso significa que o problema é nela, e isso é mais assustador do que qualquer mentoria.",
+      "padrao_oculto": "Fuga Geográfica + Padrão Pessoal não tratado",
+      "gatilho_contato_tipico": "Conteúdo que mencionou exatamente a dinâmica dela ('fui embora e o padrão foi junto'). Reconheceu-se e clicou no impulso",
+      "linguagem": "Mistura de português com expressões do lugar onde vive, decepção velada, pragmática",
+      "ja_tentou": ["Mudança de país/estado", "Reset de carreira", "Terapia em outro idioma", "Grupos de imigrantes"]
+    },
+    {
+      "id": "jordao_religioso_esperando_sinal",
+      "nome_sugerido": "Jordão",
+      "idade_range": [36, 50],
+      "profissao": "Autônomo, pequeno empresário, profissional liberal",
+      "historia_base": "Fé forte, igreja ativa, tudo na vida passa pelo filtro 'é a vontade de Deus'. Trabalha muito, vida estagnada há anos, justifica com 'tempo de Deus'. Família grande dependente dele. Ama a família, não se permite incomodar.",
+      "objecao_superficial_tipica": "Se Deus quiser, vai acontecer. Se for pra ser, vai ser",
+      "objecao_real": "Usa a fé como entrega do D do PDA. Não decide porque transferiu a decisão pra um agente externo. É mais confortável dizer 'Deus não quis' do que 'eu não fiz'. A religião virou anestesia sofisticada.",
+      "padrao_oculto": "Fatalismo religioso + Mula de Carga",
+      "gatilho_contato_tipico": "Mensagem de algum conteúdo que respeitou a fé mas separou fé de paralisia. Sentiu-se visto sem ser atacado na crença",
+      "linguagem": "Educada, cheia de 'com fé', 'graças a Deus', 'se Deus permitir'. Precisa sentir respeito à sua fé pra não fechar",
+      "ja_tentou": ["Reuniões de empreendedores cristãos", "Oração e jejum", "Um curso ou outro com viés espiritual", "Livros de prosperidade com fundo religioso"]
+    },
+    {
+      "id": "camila_jovem_pais_controladores",
+      "nome_sugerido": "Camila",
+      "idade_range": [30, 36],
+      "profissao": "Profissional jovem, CLT ou autônoma em início de carreira 'adulta'",
+      "historia_base": "Filha de pais controladores (um ou ambos). Cresceu precisando pedir autorização pra tudo. Agora adulta, continua pedindo — mesmo sem pedir explicitamente. Namorado escolhido pra agradar, carreira morna que 'não desagrada'. Vida pequena demais pra quem ela é.",
+      "objecao_superficial_tipica": "Vou pensar e te falo, preciso conversar com meus pais / namorado antes",
+      "objecao_real": "Banheiro Emocional + Dependência Emocional. Ela literalmente não consegue decidir sozinha porque nunca teve permissão de ter vontade própria. Terceirizar a decisão é sobrevivência aprendida.",
+      "padrao_oculto": "Dependência Emocional + Banheiro Emocional",
+      "gatilho_contato_tipico": "Um momento de explosão interna (briga com a mãe, discussão com o namorado, virada de idade). Impulso de autonomia que assusta ela",
+      "linguagem": "Mais hesitante, busca validação em frases ('né?', 'faz sentido?'). Às vezes transborda em emoção quando sente escuta real",
+      "ja_tentou": ["Terapia (encerrada pelos pais ou pelo namorado)", "Curso de autoestima", "Journaling", "Tentativa de morar sozinha que não durou"]
+    }
+  ],
+  "variaveis_para_recombinar_em_cenarios_novos": {
+    "contextos_familiares": [
+      "Mãe viúva que mora junto",
+      "Pai doente, ela/ele é o único que cuida",
+      "Irmão dependente químico que retorna em crises",
+      "Sobrinhos que 'chamam de pai/mãe'",
+      "Sogra invasiva que dita regras de casa",
+      "Filho adolescente com problemas escolares",
+      "Ex que ainda pede dinheiro / volta pedindo ajuda"
+    ],
+    "gatilhos_de_contato_variados": [
+      "Recém-passado por uma Pré-Queda (perdeu cliente grande, acidente, doença súbita)",
+      "Aniversário redondo que forçou encarar o tempo",
+      "Viu alguém de quem já desdenhou prosperar",
+      "Frase específica de um conteúdo do Ramon/Elton que doeu",
+      "Briga em casa na véspera",
+      "Desistiu de terapia recentemente",
+      "Começou um projeto novo com entusiasmo"
+    ],
+    "niveis_de_resistencia": [
+      "Baixa — já tá meio quebrado, procurando socorro (Dojô 1 fácil)",
+      "Média — curioso mas desconfiado (Dojô 1 médio / Dojô 2)",
+      "Alta — cético, cansado, combativo (Dojô 2 hard / Dojô 3)",
+      "Hostil — veio pra testar, pra criticar, ou tá machucado (Dojô 3 hard)"
+    ]
+  }
+}

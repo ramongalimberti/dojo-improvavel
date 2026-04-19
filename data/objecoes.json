@@ -1,0 +1,156 @@
+{
+  "fonte": "Levante dos Improváveis - dossiê do público real",
+  "categorias": [
+    {
+      "categoria": "dinheiro",
+      "manifestacoes_superficiais": [
+        "Não tenho dinheiro agora",
+        "Tá caro pra mim",
+        "Não tô num momento financeiro bom",
+        "Tô endividado, não posso assumir mais nada",
+        "Se fosse metade do preço eu entrava"
+      ],
+      "objecao_real": "Ele não acredita que MERECE gastar com ele mesmo. Gastar consigo = ofuscar a família que sofreu. A Culpa da Sobrevivência impede o investimento próprio. Também pode ser medo de ter resultado: se funcionar, vai ter que mudar, e mudar cobra preço.",
+      "tecnica_de_quebra": "Nomear a Culpa da Sobrevivência. Mostrar que o 'não tenho dinheiro' na verdade é 'não me dou permissão de ter'. Contra-exemplo: 'quanto você gasta por mês sustentando problemas de outros?' — quase sempre o valor é maior que o ticket da mentoria.",
+      "exemplo_fala_ramon": "Você não tem dinheiro pra VOCÊ. Mas tem pra pagar a conta do seu irmão, o médico do seu pai, o remédio da sua mãe. O problema não é dinheiro. É que você não se enxerga como destino legítimo do seu próprio dinheiro.",
+      "armadilhas_comuns": [
+        "Oferecer desconto (confirma que não vale o preço pedido)",
+        "Parcelar em mais vezes sem quebrar a objeção real (só adia o 'não')",
+        "Minimizar ('é só um cafezinho por dia')",
+        "Apelar pra ROI ('em 3 meses você recupera') — soa infocomercial"
+      ]
+    },
+    {
+      "categoria": "tempo",
+      "manifestacoes_superficiais": [
+        "Agora não é o momento",
+        "Tô muito atarefado",
+        "Ano que vem eu volto",
+        "Preciso organizar primeiro outras coisas",
+        "Tô numa fase complicada"
+      ],
+      "objecao_real": "Plano Perfeito travestido de prudência. Medo do brilho — se for AGORA, vai funcionar, e se funcionar ele vai ter que mudar. Adiar é estratégia de permanência. Também pode ser Mula de Carga pura: ele literalmente não tem tempo porque é o bombeiro de todo mundo.",
+      "tecnica_de_quebra": "Nomear Plano Perfeito. Perguntar: 'qual é o momento certo? descreve pra mim. Que sinais vão aparecer pra você saber que é A hora?' — o lead trava porque o momento certo é ilusão. Alternativamente, para Mula de Carga: mostrar que é a postura que ele tem nesse momento que define o tempo, não o tempo que define a postura.",
+      "exemplo_fala_ramon": "Você tá esperando o momento certo? Me descreve esse momento. Que sinais têm que aparecer? Porque se você não souber descrever, é Plano Perfeito. E Plano Perfeito é forma chique de dizer 'nunca'.",
+      "armadilhas_comuns": [
+        "Concordar ('claro, o timing é tudo')",
+        "Pressão artificial ('mas essa turma é a última')",
+        "Validar o Plano Perfeito ('faz sentido, se organiza e volta')"
+      ]
+    },
+    {
+      "categoria": "confianca",
+      "manifestacoes_superficiais": [
+        "Já fiz vários cursos assim, nenhum funcionou",
+        "Como é diferente do que já tentei?",
+        "Não sei se funciona pra mim",
+        "Já investi muito e não deu resultado",
+        "Tô meio descrente dessas coisas"
+      ],
+      "objecao_real": "Obesidade Intelectual. Ele confunde acumular teoria com resolver o problema. Tentou tudo na camada de capacidade, nada na camada de permissão. No fundo ele ESPERA que isso também não funcione — porque se funcionar, ele perde a desculpa.",
+      "tecnica_de_quebra": "Nomear Obesidade Intelectual. Explicar a diferença entre capacidade e permissão. Mostrar que todo curso anterior tentou adicionar, e este trabalha subtraindo (lealdades, padrões, culpas). Resultado é diferente porque a intervenção é em camada diferente.",
+      "exemplo_fala_ramon": "Você já fez muita coisa. Pergunta séria: tudo o que você fez adicionou algo (técnica, método, conhecimento) ou tirou algo (lealdade, padrão, culpa)? Provavelmente adicionou. Aqui a gente tira. Por isso seu histórico com cursos não prevê o resultado aqui — é outra camada.",
+      "armadilhas_comuns": [
+        "Defender o produto ('mas o nosso é diferente') — soa desesperado",
+        "Desmerecer os anteriores ('aquilo é bobagem') — soa arrogante",
+        "Prometer garantia de resultado",
+        "Citar cases sem conexão com o padrão dele"
+      ]
+    },
+    {
+      "categoria": "autoridade",
+      "manifestacoes_superficiais": [
+        "Preciso falar com meu marido/esposa",
+        "Vou pensar e te falo",
+        "Minha família não vai apoiar",
+        "Preciso conversar com alguém antes"
+      ],
+      "objecao_real": "Banheiro Emocional. Ele não consegue decidir sozinho porque não tem permissão de ter vontade própria sem validação externa. Terceirizar a decisão é estratégia pra não assumir a autoria. Se o parceiro disser não, ele tem desculpa perfeita.",
+      "tecnica_de_quebra": "Nomear Banheiro Emocional. Perguntar: 'se o seu parceiro disser sim agora, você decide agora?' — se a resposta for não, não é o parceiro, é ele. Mostrar que terceirizar decisão é a primeira forma de Dependência Emocional.",
+      "exemplo_fala_ramon": "Deixa eu te perguntar. Se seu marido/esposa disser sim agora, você decide agora? (espera) Então não é ele que precisa decidir. É você. Você tá usando ele como porta. Isso se chama Banheiro Emocional.",
+      "armadilhas_comuns": [
+        "'Claro, conversa com ele e me avisa' — validou a fuga",
+        "'Mostra o material pra ele' — terceiriza a venda",
+        "Ligar pro parceiro ou pedir pra marcar juntos (invasivo)",
+        "Pressionar 'mas ele não precisa decidir por você'"
+      ]
+    },
+    {
+      "categoria": "prioridade",
+      "manifestacoes_superficiais": [
+        "Tem outras coisas mais urgentes agora",
+        "Primeiro preciso resolver X",
+        "Depois que passar essa fase eu entro",
+        "Tô focado em outra coisa agora"
+      ],
+      "objecao_real": "Mula de Carga. Todas as prioridades dele são dos outros. Ele NUNCA vai ser prioridade da própria vida, porque ser prioridade é ofuscar quem ele sustenta. O 'depois' é nunca.",
+      "tecnica_de_quebra": "Mostrar que o problema que ele quer resolver PRIMEIRO é exatamente sintoma do padrão que essa mentoria quebra. Nomear Mula de Carga. Perguntar: 'quando foi a última vez que você foi a prioridade de alguma decisão sua?'",
+      "exemplo_fala_ramon": "Você tá resolvendo o problema de quem? (espera) Do seu pai, do seu irmão, do seu filho. Quando você vai resolver o SEU? Porque enquanto você não for prioridade de você, essa fila nunca acaba. Chama-se Mula de Carga.",
+      "armadilhas_comuns": [
+        "'Faz todo sentido, primeiro resolve o urgente' — validou a fuga",
+        "Propor adiar o fechamento ('quando você resolver, me chama')",
+        "Ignorar a Mula de Carga e só falar do produto"
+      ]
+    },
+    {
+      "categoria": "necessidade",
+      "manifestacoes_superficiais": [
+        "Acho que consigo sozinho",
+        "Já tenho um caminho",
+        "Tô quase lá, só falta pouca coisa",
+        "Não sei se preciso disso"
+      ],
+      "objecao_real": "Defesa contra o Medo do Brilho. Se ele reconhece que precisa de ajuda, ele admite que é possível mudar — e mudar ofusca. Fingir autossuficiência é forma de permanecer travado com dignidade. Também pode ser orgulho profissional (ele é quem ajuda, não quem recebe ajuda).",
+      "tecnica_de_quebra": "Devolver o Ciclo do Quase. 'Você tá quase lá há quanto tempo?' — quase sempre a resposta é 'anos'. Nomear Pré-Queda. Mostrar que o 'sozinho' dele é exatamente o que mantém o padrão funcionando.",
+      "exemplo_fala_ramon": "Você tá 'quase lá' há quanto tempo? (espera) Se 'quase' não virou pronto em 3, 5, 10 anos, não vai virar sozinho. 'Sozinho' é o nome do padrão. Chega de quase.",
+      "armadilhas_comuns": [
+        "Insistir 'mas você precisa, confia em mim' (arrogante)",
+        "Listar problemas dele (parece diagnóstico não pedido)",
+        "Minimizar autonomia dele"
+      ]
+    },
+    {
+      "categoria": "urgencia",
+      "manifestacoes_superficiais": [
+        "Não é urgente, posso esperar",
+        "Daqui uns meses pode ser",
+        "Se for pra ser, vai ser"
+      ],
+      "objecao_real": "Fatalismo funcional. 'Se for pra ser' é religião travestida — tira a responsabilidade da decisão. Também é Plano Perfeito em outra roupa. E pode ser Medo do Brilho: se adiar, não enfrenta o preço da mudança.",
+      "tecnica_de_quebra": "Nomear o fatalismo sem atacar a fé. 'Se for pra ser' é entrega do D do PDA para um agente externo. Mostrar que o universo devolve o que você entrega — 'a vida é justa'. Quem não decide, recebe a decisão dos outros.",
+      "exemplo_fala_ramon": "'Se for pra ser'? Quem decide isso? Se você entrega a decisão pro universo, o universo devolve o que você entregou: nada. A vida é justa. Ela devolve exatamente o movimento que você faz. Parada é parada.",
+      "armadilhas_comuns": [
+        "Debater fé ou religião diretamente",
+        "Criar urgência artificial ('mas o mundo tá mudando, você vai ficar pra trás')",
+        "Soar agressivo com quem usou muleta espiritual"
+      ]
+    }
+  ],
+  "mentiras_funcionais_recorrentes": [
+    {
+      "mentira": "É no tempo de Deus",
+      "categoria_vinculada": "urgencia",
+      "como_quebrar": "Respeitar a fé e separar. 'Deus dá as sementes, quem planta é você. Tempo de Deus não é paralisia, é confiança em movimento.'"
+    },
+    {
+      "mentira": "Eu tenho muito azar, a vida é assim mesmo",
+      "categoria_vinculada": "necessidade",
+      "como_quebrar": "Nomear Pré-Queda. 'Azar acontece uma vez. Se repete, vira padrão.'"
+    },
+    {
+      "mentira": "Meu parceiro/família não me apoia",
+      "categoria_vinculada": "autoridade",
+      "como_quebrar": "Nomear Dependência Emocional. 'Apoio vem depois da postura, não antes. Quem espera apoio pra mudar, não muda.'"
+    },
+    {
+      "mentira": "Já tentei de tudo, não funciona comigo",
+      "categoria_vinculada": "confianca",
+      "como_quebrar": "Nomear Obesidade Intelectual. 'Tentou na camada errada. Capacidade você já tem. Faltou permissão.'"
+    },
+    {
+      "mentira": "Agora não é o momento",
+      "categoria_vinculada": "tempo",
+      "como_quebrar": "Nomear Plano Perfeito. 'Descreve o momento certo. Se não consegue descrever, não existe.'"
+    }
+  ]
+}

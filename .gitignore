@@ -1,0 +1,20 @@
+# SO
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs e locais
+*.log
+.cache/
+.tmp/
+
+# Dependências (caso adicione build no futuro)
+node_modules/
+dist/
+build/

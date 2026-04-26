@@ -15,11 +15,21 @@
     passosCumpridos: [],         // lista única ordenada de passos feitos
     stepsByTurn: [],             // { turn, stepExecuted, stepIdeal }
     silences: [],                // segundos de silêncio antes de cada turno do Ramon
+    lastLeadHint: null,          // hint mais recente do lead (ground truth pro evaluator)
     sessionClosed: false,
     sessionClosedDifficult: false,
+    sessionEndReason: null,        // 'venda_pagamento' | 'lead_desistiu' | 'usuario_encerrou' | 'max_turns' | null
+    sessionAwaitingReport: false,  // fim detectado; aguardando Ramon clicar "Ver relatório"
     leadCederCamada: false,
     leadEndurecer: false,
     podeFechar: false,
+    closeAttempts: 0,              // nº de tentativas de fechamento (Assumptive/Alternative/Risco Reverso)
+    turnoUltimaCessao: -99,         // turno em que o lead cedeu camada pela última vez (throttle)
+    leadDesistiu: false,           // lead sinalizou desistência explícita
+    awaitingPaymentConfirmation: false, // lead aceitou + nomeou pagto, mas AGUARDA Ramon fechar loop (link + confirmação + acesso)
+    turnoAceiteInicial: -1,        // turno em que o lead deu o aceite inicial (pra throttle do aguardo)
+    sessionStartTime: null,        // timestamp (ms) de início da sessão
+    sessionEndTime: null,          // timestamp (ms) de fim da sessão (gravado em endSession)
     modoChamada: false,          // (legacy — substituído pelo call state)
     silenceTickTimer: null,
     call: {
@@ -30,7 +40,7 @@
     }
   };
 
-  const MAX_TURNS = 18;
+  const MAX_TURNS = 50;
   const SILENCE_AUTO_SEND_MS = 7000;   // 7s de silêncio → auto-envio
 
   function $(s) { return document.querySelector(s); }
@@ -192,19 +202,34 @@
     state.passosCumpridos = [];
     state.stepsByTurn = [];
     state.silences = [];
+    state.lastLeadHint = null;
     state.sessionClosed = false;
     state.sessionClosedDifficult = false;
+    state.sessionEndReason = null;
+    state.sessionAwaitingReport = false;
     state.leadCederCamada = false;
     state.leadEndurecer = false;
     state.podeFechar = false;
+    state.closeAttempts = 0;
+    state.turnoUltimaCessao = -99;
+    state.leadDesistiu = false;
+    state.awaitingPaymentConfirmation = false;
+    state.turnoAceiteInicial = -1;
+    state.sessionStartTime = Date.now();   // início da sessão — usado pra duração total
+    state.sessionEndTime = null;
+    hideSessionEndModal();
+    enableSessionInputs();
 
     const m = Scenarios.SUB_MODOS[submodo];
     $('#sessionModoName').textContent = `${m.icone} ${m.nome}`;
     $('#chat').innerHTML = '';
+    const oldBanner = document.getElementById('awaitingPaymentBanner');
+    if (oldBanner) oldBanner.remove();
     $('#feedbackPanel').classList.remove('active');
     $('#feedbackPanel').innerHTML = '';
     $('#userInput').value = '';
     $('#turnCounter').textContent = '1';
+    const maxEl = $('#turnMax'); if (maxEl) maxEl.textContent = String(MAX_TURNS);
 
     renderCaminhoMap([]);
 
@@ -230,7 +255,7 @@
       Evaluator.leadHint({
         scenario, leadMessage: scenario.primeira_mensagem_lead,
         conversation: state.conversation, turn: 0, data: state.data
-      }).then(h => attachLeadHint(hintSlot, h));
+      }).then(h => { state.lastLeadHint = h; attachLeadHint(hintSlot, h); });
     } catch (err) {
       console.error(err);
       $('#personaTitle').textContent = 'Erro ao gerar cenário';
@@ -244,14 +269,30 @@
     $('#personaMeta').textContent = `${sc.persona.profissao} — ${sc.persona.cidade}. ${sc.persona.situacao_atual}`;
     $('#personaTrigger').textContent = `Evento: ${sc.evento_origem} · Gatilho: ${sc.gatilho_contato}`;
     const techs = sc.tecnicas_ideais_aqui || [];
+    const nivel = sc.nivel_conhecimento_metodologia || 'exposto';
+    const nivelLabel = {
+      cru: '🟤 CRU — nunca viu conteúdo seu, fala só em linguagem de dor',
+      exposto: '🟡 EXPOSTO — viu lives/conteúdo, usa termos da metodologia',
+      estudioso: '🔵 ESTUDIOSO — consome bastante, pode até te desafiar'
+    }[nivel] || nivel;
+    const vocab = (sc.vocabulario_que_usa || []).filter(Boolean);
+    const padraoConc = expandConceito(sc.padrao_oculto_teoria_permissao);
+    const padraoDisplay = padraoConc ? padraoConc.display : esc(sc.padrao_oculto_teoria_permissao || '—');
+    const conceitosList = (sc.conceitos_ideais_aqui || []).map(c => {
+      const e = expandConceito(c);
+      return e ? e.display : esc(c);
+    }).filter(Boolean).join(' · ');
     $('#personaHint').innerHTML = `
-      <div class="tec-line"><b>Objeção superficial:</b> ${esc(sc.objecao_superficial)}</div>
+      <div class="tec-line"><b>Nível de conhecimento da metodologia:</b> ${esc(nivelLabel)}</div>
+      ${vocab.length ? `<div class="tec-line"><b>Vocabulário que o lead já usa:</b> <i>${esc(vocab.join(' · '))}</i></div>` : ''}
+      ${sc.duvida_aplicacao_tipica ? `<div class="tec-line"><b>Dúvida típica de aplicação:</b> ${esc(sc.duvida_aplicacao_tipica)}</div>` : ''}
+      <div class="tec-line" style="margin-top:0.6em"><b>Objeção superficial:</b> ${esc(sc.objecao_superficial)}</div>
       <div class="tec-line"><b>Objeção real (oculta):</b> ${esc(sc.objecao_real)}</div>
-      <div class="tec-line"><b>Padrão Teoria da Permissão:</b> ${esc(sc.padrao_oculto_teoria_permissao)}</div>
+      <div class="tec-line"><b>Padrão Teoria da Permissão:</b> ${padraoDisplay}</div>
       <div class="tec-line"><b>Dificuldade:</b> ${esc(sc.dificuldade)}</div>
       <div class="tec-line" style="margin-top:0.8em"><b>Técnicas ideais aqui:</b></div>
       <div class="tec-cards">${renderTechniqueCards(techs)}</div>
-      <div class="tec-line" style="margin-top:0.5em"><b>Conceitos em jogo:</b> ${esc((sc.conceitos_ideais_aqui || []).join(', '))}</div>
+      <div class="tec-line" style="margin-top:0.5em"><b>Conceitos em jogo:</b> ${conceitosList || '—'}</div>
     `;
   }
 
@@ -289,6 +330,34 @@
       if ((t.aliases || []).some(a => norm.includes(a) || a.includes(norm))) return t;
     }
     return null;
+  }
+
+  // ========= CONCEITOS (apelido ↔ canônico) =========
+  // Retorna { display, apelido, canonico, is_apelido } resolvendo contra data/conceitos_permissao.json v2.
+  // Se o nome recebido for um apelido_venda, emparelha canônico. Senão, retorna só o nome.
+  function expandConceito(rawName) {
+    if (!rawName) return null;
+    const conceitos = state.data?.conceitos_permissao?.conceitos || [];
+    const norm = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+    const target = norm(rawName);
+    if (!target) return null;
+    // Busca exata ou por substring no nome do conceito
+    for (const c of conceitos) {
+      const cnorm = norm(c.nome);
+      if (cnorm === target || cnorm.includes(target) || target.includes(cnorm)) {
+        if (c.apelido_venda && c.nome_canonico) {
+          return {
+            display: `${c.nome} <span class="conceito-canonico">(canônico: ${c.nome_canonico})</span>`,
+            apelido: c.nome,
+            canonico: c.nome_canonico,
+            is_apelido: true
+          };
+        }
+        return { display: c.nome, apelido: null, canonico: c.nome, is_apelido: false };
+      }
+    }
+    // Não achou no JSON — devolve como veio
+    return { display: rawName, apelido: null, canonico: rawName, is_apelido: false };
   }
 
   // ========= MAPA 18 PASSOS =========
@@ -396,13 +465,24 @@
     const techs = (hint.tecnicas_sugeridas || []).map(t => {
       const guide = findTechniqueGuide(t.nome);
       const ref = guide ? guide.nome : t.nome;
+      const exemplo = t.exemplo ? `<div class="hint-tec-example">💬 <span>${esc(t.exemplo)}</span></div>` : '';
       return `<div class="hint-tec">
         <div class="hint-tec-head"><b>▸ ${esc(ref)}</b></div>
         <div class="hint-tec-why">${esc(t.porque || '')}</div>
+        ${exemplo}
       </div>`;
     }).join('');
 
+    const nota10 = hint.resposta_nota_10 ? `
+      <details class="hint-nota10">
+        <summary class="hint-nota10-head">💎 Resposta exemplar (nota 10) <span class="hint-nota10-warn">— tente formular a sua antes</span></summary>
+        <blockquote class="hint-nota10-body">${esc(hint.resposta_nota_10)}</blockquote>
+      </details>` : '';
+
     const sugPasso = hint.passo_do_caminho_sugerido;
+    // Expande conceito: se for apelido_venda, emparelha com nome canônico
+    const conc = expandConceito(hint.conceito_permissao_em_jogo);
+    const conceitoLine = conc ? `<div class="hint-line"><b>Conceito em jogo:</b> ${conc.display}</div>` : '';
     hintSlot.innerHTML = `<details class="lead-hint-box">
       <summary>
         <span class="hint-chip">🤫 dica do turno</span>
@@ -410,9 +490,10 @@
       </summary>
       <div class="lead-hint-body">
         <div class="hint-line"><b>Provável objeção agora:</b> ${esc(hint.possivel_objecao || '—')}</div>
-        ${hint.conceito_permissao_em_jogo ? `<div class="hint-line"><b>Conceito em jogo:</b> ${esc(hint.conceito_permissao_em_jogo)}</div>` : ''}
+        ${conceitoLine}
         ${hint.o_que_observar ? `<div class="hint-line"><b>O que observar:</b> ${esc(hint.o_que_observar)}</div>` : ''}
         ${techs ? `<div class="hint-line"><b>Caminhos possíveis:</b></div>${techs}` : ''}
+        ${nota10}
       </div>
     </details>`;
   }
@@ -433,6 +514,8 @@
 
   // ========= SEND =========
   async function handleSend() {
+    // Bloqueia envios após a sessão ter sido marcada como encerrada
+    if (state.sessionAwaitingReport) return;
     const input = $('#userInput');
     const text = input.value.trim();
     if (!text || !state.currentScenario) return;
@@ -458,7 +541,8 @@
         lastRamon: text,
         turn: state.turn,
         data: state.data,
-        passosCumpridosAnteriormente: state.passosCumpridos
+        passosCumpridosAnteriormente: state.passosCumpridos,
+        lastLeadHint: state.lastLeadHint
       });
       state.turnFeedbacks.push(feedback);
 
@@ -469,6 +553,19 @@
       state.leadCederCamada = !!feedback.lead_ceder_camada;
       state.leadEndurecer = !!feedback.lead_endurecer;
       state.podeFechar = !!feedback.pode_fechar;
+
+      // Se o feedback diz que o lead vai ceder camada, registra o turno.
+      // Isso alimenta o throttle do lead (não ceder em turnos consecutivos).
+      if (feedback.lead_ceder_camada) {
+        state.turnoUltimaCessao = state.turn;
+      }
+
+      // Contador de tentativas de fechamento (Close direto OU Assumptive/Alternative)
+      // Incrementa quando detectar técnica de close aplicada neste turno.
+      const techsApplied = feedback.tecnicas_aplicadas || {};
+      if (techsApplied.assumptive_close || techsApplied.alternative_close || techsApplied.risco_reverso) {
+        state.closeAttempts = (state.closeAttempts || 0) + 1;
+      }
 
       // Bônus: silêncio ≥ 3s + técnica de silêncio
       if (silenceSec >= 3) {
@@ -514,7 +611,16 @@
           data: state.data,
           leadCederCamada: state.leadCederCamada,
           leadEndurecer: state.leadEndurecer,
-          podeFechar: state.podeFechar
+          podeFechar: state.podeFechar,
+          turn: state.turn,
+          closeAttempts: state.closeAttempts || 0,
+          turnosDesdeUltimaCessao: state.turnoUltimaCessao >= 0
+            ? (state.turn - state.turnoUltimaCessao)
+            : 99,
+          awaitingPaymentConfirmation: !!state.awaitingPaymentConfirmation,
+          turnosDesdeAceite: state.turnoAceiteInicial >= 0
+            ? (state.turn - state.turnoAceiteInicial)
+            : 0
         });
         if (leadReply && leadReply.trim()) break;
         // resposta vazia — trata como falha
@@ -533,8 +639,12 @@
       const leadMsg = pushLeadMessage(leadReply);
       Evaluator.leadHint({
         scenario: state.currentScenario, leadMessage: leadReply,
-        conversation: state.conversation, turn: state.turn, data: state.data
-      }).then(h => attachLeadHint(leadMsg.hintSlot, h));
+        conversation: state.conversation, turn: state.turn, data: state.data,
+        awaitingPaymentConfirmation: !!state.awaitingPaymentConfirmation,
+        turnosDesdeAceite: state.turnoAceiteInicial >= 0
+          ? (state.turn - state.turnoAceiteInicial)
+          : 0
+      }).then(h => { state.lastLeadHint = h; attachLeadHint(leadMsg.hintSlot, h); });
     } else {
       // Não empurra mensagem '(erro:...)' no chat — fica feio e o TTS lê.
       // Deixa o autoSubmitFromCall detectar a ausência e mostrar status.
@@ -543,17 +653,220 @@
 
     $('#btnSend').disabled = false;
 
-    // Check close
+    // ========= DETECÇÃO DE FIM DA SESSÃO =========
     const reachedMax = state.turn >= MAX_TURNS;
     const lastLead = state.conversation[state.conversation.length - 1]?.content || '';
-    const signalsClose = /como fa[çc]o|quero entrar|bora|vamos|t[oô] dentro|me manda|pode mandar|fecho|pode come[çc]ar|vamos l[aá]/i.test(lastLead);
-    if (state.podeFechar && signalsClose) {
-      state.sessionClosed = true;
-      state.sessionClosedDifficult = ['dificil', 'hostil'].includes(state.currentScenario?.dificuldade);
+
+    // 1. ACEITE INICIAL — lead manifestou intenção CLARA de fechar + nomeou pagamento.
+    //    ISSO NÃO É AINDA UMA VENDA. É um aceite verbal que precisa ser AMARRADO com:
+    //    (a) Ramon enviando o link / confirmando método
+    //    (b) Lead reportando pagamento concluído
+    //    (c) Ramon confirmando acesso à Marca Passos
+    //    Decisão de design: a venda só fecha DEPOIS desse loop — aceite sozinho
+    //    é animação retórica. Isso ensina o Ramon a fechar o Avanço Concreto (passo 17-18).
+    //    Obs: (?:\s|^) em vez de \b para lidar com "à" (acento quebra word boundary).
+    const signalsPagamento = /(?:\s|^)(pix|cart[aã]o|cr[eé]dito|d[eé]bito|boleto|parcel[oa]|parcelad[oa]|parcelar|[aà]\s+vista|transfer[eê]ncia|link\s*(de|do|pra)?\s*pagamento|pagar|pago|paguei|pagamento)(?:\s|$|[,.!?])/i.test(lastLead);
+    const signalsAceiteFinal = /\b(t[oô]\s*dentro|quero\s*entrar|quero\s*fechar|pode\s*come[çc]ar|me\s*manda\s*o\s*link|manda\s*o\s*link|bora\s*fazer|bora\s*fechar|vou\s*fechar|fechado)\b/i.test(lastLead);
+
+    // 1b. CONFIRMAÇÃO DE PAGAMENTO EFETIVADO — lead reporta que o pagamento FOI feito,
+    //     o acesso chegou, ou o fluxo concreto terminou. SÓ ISSO fecha venda_realizada.
+    //     Regex: verbos no pretérito ("paguei", "deu certo", "chegou", "entrei", "recebi")
+    //     ou confirmação direta da transação ("confirmado", "aprovou", "apareceu a confirmação").
+    const signalsPagamentoConcluido = /\b(paguei|pago|pagamento\s+(foi|deu|confirmad|aprovad|caiu)|j[áa]\s+(paguei|foi|fiz|est[aá]\s+pago)|deu\s+certo|funcionou|aprovou|aprovado|confirmad[oa]|apareceu\s+(a\s+)?(confirma[çc][ãa]o|aprova[çc][ãa]o|mensagem)|chegou\s+(o\s+)?(link|email|acesso|confirma[çc][ãa]o)|recebi\s+(o\s+)?(acesso|email|link|confirma[çc][ãa]o)|entrei\s+(na\s+plataforma|na\s+marca|no\s+marca|no\s+programa)|j[áa]\s+(est[aá]\s+)?(dentro|na\s+plataforma|no\s+acesso|liberado)|t[oô]\s+dentro\s+da\s+plataforma|consegui\s+(pagar|entrar|acessar))\b/i.test(lastLead);
+
+    // 1c. ATRITO PÓS-ACEITE — lead reporta problema no pagamento (NÃO fecha ainda).
+    //     Serve pra detectar que o loop ainda precisa continuar sem marcar desistência.
+    const signalsAtritoPagamento = /\b(n[ãa]o\s+(chegou|recebi|caiu|funcionou|deu)|cart[aã]o\s+(recusou|negou|n[ãa]o\s+passou)|deu\s+erro|deu\s+ruim|n[ãa]o\s+t[aá]\s+(indo|passando|funcionando)|t[aá]\s+dando\s+erro|tem\s+outro\s+jeito|como\s+fa[çc]o)\b/i.test(lastLead);
+
+    // 2. LEAD DESISTIU — recusa explícita e definitiva ao NEGÓCIO (não à vida)
+    //    Regex exige referência clara à compra/decisão pra evitar falso positivo
+    //    (ex: "não quero viver assim" não é desistência — é dor).
+    //
+    //    EXCLUSÃO DE CONDICIONAL NEGATIVA (fix do bug "Roberto, 63"):
+    //    Frases do tipo "não vou entrar em furada SEM SABER", "não vou fechar ANTES DE
+    //    ver", "não vou comprar SE NÃO me explicar" são PEDIDOS DE APRESENTAÇÃO, não
+    //    desistência. Só contam como desistência quando a frase é REFUSAL absoluta.
+    //    Primeiro checamos se é condicional; se for, ignoramos o match de desistência.
+    const ehCondicionalPedindoInfo = /\b(n[ãa]o\s*vou\s*(fazer|entrar|fechar|comprar|assinar)|n[ãa]o\s*quero\s*(fazer|entrar|fechar|comprar|assinar))\b[^.!?]{0,60}\b(sem\s+(saber|entender|ver|conhecer|detalhe|informa[çc][ãa]o|expl|detalh)|antes\s+de|sem\s+antes|se\s+(voc[eê]\s+)?n[ãa]o\s+(me\s+)?(explicar|mostrar|apresentar|falar|detalhar)|a\s+cegas|no\s+escuro|sem\s+ter|sem\s+eu\s+(saber|entender))/i.test(lastLead);
+
+    const signalsDesistenciaRaw = /\b(n[ãa]o\s*vou\s*(fazer|entrar|fechar|comprar|assinar)|n[ãa]o\s*quero\s*(fazer|entrar|fechar|comprar|assinar|isso|o\s*programa)|n[ãa]o\s*(é|e)\s*(pra\s*mim|o\s*momento|o\s*meu\s*momento)|n[ãa]o\s*tenho\s*interesse|desisto|desisti|vou\s*passar|pode\s*parar|t[oô]\s*fora|melhor\s*n[ãa]o|n[ãa]o\s*vai\s*dar|n[ãa]o\s*vai\s*rolar|obrigad[oa]\s*pelo\s*tempo|deixa\s*pra\s*l[aá]|deixa\s*quieto)\b/i.test(lastLead);
+
+    const signalsDesistencia = signalsDesistenciaRaw && !ehCondicionalPedindoInfo;
+
+    if (signalsDesistenciaRaw && ehCondicionalPedindoInfo) {
+      console.log('[handleSend] MATCH de desistência bloqueado por condicional-pedindo-info:', lastLead.slice(0, 120));
     }
-    if (state.sessionClosed || reachedMax) {
-      setTimeout(() => endSession(), 1500);
+
+    // 3. PRÉ-REQUISITOS MÍNIMOS DE VENDA REAL (guarda contra close-fantasia em 4 turnos)
+    //    Uma venda high-ticket exige:
+    //    (a) pelo menos 6 turnos (pra dar tempo de abertura/investigação/apresentação);
+    //    (b) Ramon ter nomeado "Marca Passos" em alguma fala (apresentação estruturada);
+    //    (c) Ramon ter declarado valor concreto (R$/parcela/investimento) em alguma fala.
+    //    No sub-modo 'caminho_completo' exigimos (a). Nos demais sub-modos, que começam
+    //    depois da abertura, só (b)+(c) bastam.
+    const ramonCompleto = state.conversation
+      .filter(m => m.role === 'user')
+      .map(m => m.content)
+      .join(' \n ');
+    const ramonNomeouMarcaPassos = /\bmarca[-\s]?passos\b/i.test(ramonCompleto);
+    const ramonAncorouPreco = /\b(R\$|\d[\d\.\,]*\s*(reais|pila|conto)|m[eê]s|parcela|parcelad[oa]|[aà]\s*vista|investimento\s+[eé]|valor\s+[eé]|custa|\d+\s*x|\d+\s*vezes)\b/i.test(ramonCompleto);
+    const submodoAtual = state.currentScenario?.submodo || 'caminho_completo';
+    const turnosMinimosOK = submodoAtual === 'caminho_completo' ? state.turn >= 6 : state.turn >= 3;
+    const preReqVendaReal = turnosMinimosOK && ramonNomeouMarcaPassos && ramonAncorouPreco;
+
+    // (Nota: checagem de execução do Avanço Concreto pelo Ramon é feita no evaluator.leadHint e em
+    //  leadResponse — aqui no app.js basta rastrear os estágios A/B.)
+
+    // ========= LÓGICA DE TRANSIÇÃO EM 2 ESTÁGIOS =========
+    //
+    // Estágio A — lead dá aceite + nomeia pagamento → awaitingPaymentConfirmation = true
+    //              (sessão CONTINUA; Ramon precisa fazer passo 17: enviar link + pedir confirmação)
+    //
+    // Estágio B — lead confirma pagamento concluído → sessionClosed = true
+    //              (venda_realizada final, com loop fechado)
+    //
+    // Se awaitingPaymentConfirmation está aberto e lead relata atrito → continua aberto (Ramon
+    // precisa resolver fricção). Se muito tempo sem resolver, vira max_turns.
+
+    if (state.awaitingPaymentConfirmation) {
+      // ---- ESTÁGIO B: já aguardando confirmação final ----
+      if (signalsPagamentoConcluido) {
+        state.sessionClosed = true;
+        state.sessionClosedDifficult = ['dificil', 'hostil'].includes(state.currentScenario?.dificuldade);
+        state.sessionEndReason = 'venda_pagamento';
+      } else if (signalsDesistencia) {
+        // lead desistiu DURANTE o pagamento — venda não realizada
+        state.leadDesistiu = true;
+        state.sessionEndReason = 'lead_desistiu';
+      } else if (reachedMax) {
+        state.sessionEndReason = 'max_turns';
+      } else if (signalsAtritoPagamento) {
+        // atrito explícito — NÃO fecha, mantém aguardando (Ramon precisa resolver)
+        console.log('[handleSend] atrito de pagamento detectado, aguardando Ramon resolver');
+      }
+      // Se nada disso, segue aguardando silenciosamente.
+    } else {
+      // ---- ESTÁGIO A: ainda não houve aceite inicial ----
+      if (state.podeFechar && signalsAceiteFinal && signalsPagamento && preReqVendaReal) {
+        // Aceite verbal detectado. NÃO fecha ainda — abre estágio B.
+        state.awaitingPaymentConfirmation = true;
+        state.turnoAceiteInicial = state.turn;
+        console.log('[handleSend] aceite inicial detectado — aguardando Ramon fechar o loop (link + confirmação + acesso)');
+      } else if (state.podeFechar && signalsAceiteFinal && signalsPagamento && !preReqVendaReal) {
+        // Lead aceitou mas faltam pré-requisitos — NÃO fecha ainda. Log pra debug.
+        console.warn('[handleSend] aceite detectado mas pré-requisitos de venda real faltam:', {
+          turno: state.turn,
+          turnosMinimosOK,
+          ramonNomeouMarcaPassos,
+          ramonAncorouPreco,
+          submodoAtual
+        });
+      } else if (signalsDesistencia || state.leadDesistiu) {
+        state.sessionClosed = false;
+        state.leadDesistiu = true;
+        state.sessionEndReason = 'lead_desistiu';
+      } else if (reachedMax) {
+        state.sessionEndReason = 'max_turns';
+      }
     }
+
+    if (state.sessionClosed || state.leadDesistiu || reachedMax) {
+      // NÃO fecha sozinha — avisa o Ramon e deixa ele clicar "Ver relatório"
+      state.sessionAwaitingReport = true;
+      disableSessionInputs();
+      showSessionEndModal(state.sessionEndReason);
+    } else if (state.awaitingPaymentConfirmation) {
+      // Feedback visual pro Ramon: sessão está na reta final do fechamento.
+      showAwaitingPaymentBanner();
+    }
+  }
+
+  // ========= BANNER DE AGUARDO DE PAGAMENTO =========
+  // Mostra um aviso sutil no topo do chat dizendo que o aceite foi dado e agora
+  // o Ramon precisa fazer o fechamento concreto (passo 17 — Avanço Concreto).
+  function showAwaitingPaymentBanner() {
+    let banner = document.getElementById('awaitingPaymentBanner');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'awaitingPaymentBanner';
+      banner.style.cssText = 'background:linear-gradient(135deg,#fef3c7,#fde68a);border-left:4px solid #d97706;padding:12px 16px;margin:12px 0;border-radius:8px;color:#78350f;font-size:13px;line-height:1.4;';
+      banner.innerHTML = `
+        <strong>🔒 Aceite verbal recebido — não solte o fio agora.</strong><br>
+        O lead nomeou o método de pagamento. Você está no <strong>passo 17 (Avanço Concreto)</strong>.
+        Execute: <em>(1)</em> envio explícito do link, <em>(2)</em> pergunta de confirmação do pagamento,
+        <em>(3)</em> confirmação do acesso à Marca Passos. A venda só conta quando o lead confirmar o pagamento efetivado.`;
+      const chat = document.getElementById('chat');
+      if (chat && chat.parentNode) chat.parentNode.insertBefore(banner, chat);
+    }
+  }
+
+  // ========= MODAL DE FIM DE SESSÃO =========
+  // Não encerra automaticamente — informa o resultado e oferece botão pro relatório.
+  const END_MODAL_META = {
+    venda_pagamento: {
+      cls: 'sale',
+      icon: '✅',
+      title: 'Venda realizada',
+      desc: 'O lead confirmou pagamento efetivado e acesso à Marca Passos. Loop fechado — fechamento concreto.'
+    },
+    lead_desistiu: {
+      cls: 'no-sale',
+      icon: '❌',
+      title: 'Lead desistiu',
+      desc: 'O lead recusou explicitamente. A sessão terminou sem venda.'
+    },
+    max_turns: {
+      cls: 'no-sale',
+      icon: '⏱️',
+      title: 'Tempo esgotado',
+      desc: `Limite de ${MAX_TURNS} turnos atingido sem venda nem desistência.`
+    },
+    usuario_encerrou: {
+      cls: 'partial',
+      icon: '⏸️',
+      title: 'Sessão encerrada',
+      desc: 'Você encerrou manualmente. Relatório parcial.'
+    }
+  };
+
+  function showSessionEndModal(reason) {
+    const meta = END_MODAL_META[reason] || END_MODAL_META.max_turns;
+    const modal = $('#sessionEndModal');
+    if (!modal) return;
+    modal.className = 'end-modal ' + meta.cls;
+    $('#endModalIcon').textContent = meta.icon;
+    $('#endModalTitle').textContent = meta.title;
+    $('#endModalDesc').textContent = meta.desc;
+    $('#endModalMeta').textContent = `${state.turn} turnos respondidos`;
+    modal.hidden = false;
+    // Foco no botão pra Enter funcionar
+    setTimeout(() => $('#btnGoToReport')?.focus(), 50);
+  }
+
+  function hideSessionEndModal() {
+    const modal = $('#sessionEndModal');
+    if (modal) modal.hidden = true;
+  }
+
+  function disableSessionInputs() {
+    $('#btnSend').disabled = true;
+    $('#btnMic').disabled = true;
+    const ta = $('#userInput');
+    if (ta) { ta.disabled = true; ta.placeholder = 'Sessão encerrada — veja o relatório'; }
+    // Se estiver em modo chamada, encerra automaticamente o loop de call
+    if (state.call?.active) endCall();
+    // Esconde "Encerrar agora" (não faz mais sentido — já encerrou)
+    const btnEnd = $('#btnEndSessionNow');
+    if (btnEnd) btnEnd.hidden = true;
+  }
+
+  function enableSessionInputs() {
+    $('#btnSend').disabled = false;
+    $('#btnMic').disabled = false;
+    const ta = $('#userInput');
+    if (ta) { ta.disabled = false; ta.placeholder = 'Sua resposta... (voz: "vírgula", "ponto", "pausa 3 segundos")'; }
+    const btnEnd = $('#btnEndSessionNow');
+    if (btnEnd) btnEnd.hidden = false;
   }
 
   function renderFeedback(f) {
@@ -585,6 +898,9 @@
     stopSilenceTick();
     Speech.stopSpeaking();
 
+    // Grava fim da sessão pra cálculo de duração (se ainda não gravou)
+    if (!state.sessionEndTime) state.sessionEndTime = Date.now();
+
     const panel = $('#feedbackPanel');
     panel.innerHTML += '<div style="margin-top:1em;color:var(--ink-muted)">Gerando relatório...</div>';
 
@@ -595,11 +911,19 @@
         conversation: state.conversation,
         turnFeedbacks: state.turnFeedbacks,
         passosCumpridos: state.passosCumpridos,
-        data: state.data
+        data: state.data,
+        sessionClosed: !!state.sessionClosed,
+        reachedMaxTurns: state.turn >= MAX_TURNS,
+        endReason: state.sessionEndReason,
+        leadDesistiu: !!state.leadDesistiu
       });
     } catch (err) {
       console.error(err);
-      report = { nota_final: 0, frase_caderno: 'Erro: ' + err.message, notas: {}, tecnicas_acumuladas: {}, passos_cumpridos: [], cobertura_pct: 0 };
+      const fallbackOutcome = state.sessionClosed ? 'venda_realizada'
+        : state.leadDesistiu ? 'venda_nao_realizada_desistencia'
+        : state.sessionEndReason === 'usuario_encerrou' ? 'encerrada_parcial'
+        : 'venda_nao_realizada';
+      report = { nota_final: 0, frase_caderno: 'Erro: ' + err.message, notas: {}, tecnicas_acumuladas: {}, passos_cumpridos: [], cobertura_pct: 0, outcome: fallbackOutcome, outcome_motivo: 'Erro ao gerar análise detalhada.', melhores_3_tecnicas: [], piores_3_pontos: [], por_momento: {} };
     }
 
     Gamification.updateStreak();
@@ -648,7 +972,11 @@
     }
     if (state.sessionTechniques.metodo_4_passos_concer) Gamification.unlockAchievement('playbook_concer');
 
+    const durationMs = (state.sessionStartTime && state.sessionEndTime)
+      ? (state.sessionEndTime - state.sessionStartTime) : 0;
+
     Gamification.saveSession({
+      id: 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
       date: new Date().toISOString(),
       submodo: state.submodo,
       persona: state.currentScenario?.persona?.nome,
@@ -662,7 +990,28 @@
       dificuldade: state.currentScenario?.dificuldade,
       xp_ganho: xpInfo.total,
       frase_caderno: report.frase_caderno,
-      turnos: state.turn
+      turnos: state.turn,
+      duration_ms: durationMs,           // duração total da sessão em ms
+      started_at: state.sessionStartTime,
+      ended_at: state.sessionEndTime,
+      // Histórico completo
+      outcome: report.outcome,
+      outcome_motivo: report.outcome_motivo,
+      outcome_evidencia_lead: report.outcome_evidencia_lead,
+      end_reason: state.sessionEndReason,
+      is_parcial: !!report.is_parcial,
+      cenario: state.currentScenario ? {
+        persona: state.currentScenario.persona,
+        objecao_superficial: state.currentScenario.objecao_superficial,
+        objecao_real: state.currentScenario.objecao_real,
+        padrao_oculto: state.currentScenario.padrao_oculto_teoria_permissao,
+        primeira_mensagem_lead: state.currentScenario.primeira_mensagem_lead,
+        dificuldade: state.currentScenario.dificuldade,
+        nivel_conhecimento: state.currentScenario.nivel_conhecimento_metodologia
+      } : null,
+      conversation: state.conversation.slice(),      // todas as trocas Ramon↔Lead
+      turn_feedbacks: state.turnFeedbacks.slice(),   // feedbacks turno-a-turno (para revisão)
+      report_full: report                            // relatório completo (melhores, piores, por_momento)
     });
 
     renderReport(report, xpInfo, leveledUp);
@@ -670,6 +1019,92 @@
   }
 
   function renderReport(report, xpInfo, leveledUp) {
+    // ===== OUTCOME BANNER =====
+    const outcomeEl = $('#reportOutcome');
+    if (outcomeEl) {
+      const outcomeMeta = {
+        venda_realizada:               { cls: 'sale',     label: '✅ VENDA REALIZADA' },
+        venda_nao_realizada_desistencia:{ cls: 'no-sale', label: '❌ VENDA NÃO REALIZADA — Lead desistiu' },
+        venda_nao_realizada_tempo:     { cls: 'no-sale', label: '⏱️ VENDA NÃO REALIZADA — Tempo esgotado' },
+        venda_nao_realizada:           { cls: 'no-sale', label: '❌ VENDA NÃO REALIZADA' },
+        encerrada_parcial:             { cls: 'partial', label: '⏸️ SESSÃO ENCERRADA — Relatório parcial' }
+      };
+      const meta = outcomeMeta[report.outcome] || outcomeMeta['venda_nao_realizada'];
+      const evidencia = report.outcome_evidencia_lead ? `<div class="outcome-evidencia">💬 <i>"${esc(report.outcome_evidencia_lead)}"</i></div>` : '';
+      const duracaoMs = (state.sessionStartTime && state.sessionEndTime)
+        ? (state.sessionEndTime - state.sessionStartTime) : 0;
+      const duracaoLabel = duracaoMs ? `<div class="outcome-meta">⏱️ Duração: <b>${formatDuration(duracaoMs)}</b> · ${state.turn} turnos</div>` : '';
+      outcomeEl.className = 'outcome-banner ' + meta.cls;
+      outcomeEl.innerHTML = `
+        <div class="outcome-label">${meta.label}</div>
+        <div class="outcome-motivo">${esc(report.outcome_motivo || '')}</div>
+        ${evidencia}
+        ${duracaoLabel}
+      `;
+    }
+
+    // ===== MELHORES 3 TÉCNICAS =====
+    const melhoresEl = $('#reportMelhores');
+    if (melhoresEl) {
+      const lista = report.melhores_3_tecnicas || [];
+      const momentoLabel = { abertura: '🌅 Abertura', conducao: '🎯 Condução', fechamento: '🔒 Fechamento' };
+      melhoresEl.innerHTML = lista.length ? lista.map(t => `
+        <div class="melhor-card">
+          <div class="melhor-head">
+            <span class="melhor-nome">✅ ${esc(t.nome || '—')}</span>
+            <span class="melhor-meta">${esc(momentoLabel[t.momento] || t.momento || '')} · turno ${t.turno || '?'}</span>
+          </div>
+          <div class="melhor-porque">${esc(t.porque || '')}</div>
+        </div>
+      `).join('') : '<div class="muted">(sem técnicas destacáveis nesta sessão)</div>';
+    }
+
+    // ===== PIORES 3 PONTOS =====
+    const pioresEl = $('#reportPiores');
+    if (pioresEl) {
+      const lista = report.piores_3_pontos || [];
+      const momentoLabel = { abertura: '🌅 Abertura', conducao: '🎯 Condução', fechamento: '🔒 Fechamento' };
+      const tipoIcon = { armadilha: '⚡', tecnica_faltante: '🕳️', tecnica_mal_aplicada: '🔧' };
+      pioresEl.innerHTML = lista.length ? lista.map(p => `
+        <div class="pior-card">
+          <div class="pior-head">
+            <span class="pior-nome">${tipoIcon[p.tipo] || '⚠️'} ${esc(p.nome || '—')}</span>
+            <span class="pior-meta">${esc(momentoLabel[p.momento] || p.momento || '')} · turno ${p.turno || '?'}</span>
+          </div>
+          <div class="pior-line"><b>O que aconteceu:</b> ${esc(p.o_que_aconteceu || '')}</div>
+          <div class="pior-line"><b>Correção:</b> ${esc(p.correcao || '')}</div>
+        </div>
+      `).join('') : '<div class="muted">(sem pontos críticos — boa sessão)</div>';
+    }
+
+    // ===== ANÁLISE POR MOMENTO =====
+    const porMomentoEl = $('#reportPorMomento');
+    if (porMomentoEl) {
+      const pm = report.por_momento || {};
+      const momentos = [
+        { key: 'abertura', label: '🌅 Abertura', passos: 'passos 1-3' },
+        { key: 'conducao', label: '🎯 Condução', passos: 'passos 4-10' },
+        { key: 'fechamento', label: '🔒 Fechamento', passos: 'passos 11-18' }
+      ];
+      porMomentoEl.innerHTML = momentos.map(m => {
+        const d = pm[m.key] || {};
+        const nota = typeof d.nota === 'number' ? d.nota.toFixed(1) : '—';
+        const notaClass = d.nota >= 8 ? 'good' : d.nota >= 5 ? 'mid' : 'low';
+        return `
+          <div class="momento-card">
+            <div class="momento-head">
+              <span class="momento-label">${m.label}</span>
+              <span class="momento-passos">${m.passos}</span>
+              <span class="momento-nota ${notaClass}">${nota}/10</span>
+            </div>
+            <div class="momento-line"><b>✅ Ponto forte:</b> ${esc(d.ponto_forte || '—')}</div>
+            <div class="momento-line"><b>⚠️ Ponto fraco:</b> ${esc(d.ponto_fraco || '—')}</div>
+            <div class="momento-line"><b>💡 Sugestão:</b> ${esc(d.sugestao || '—')}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
     $('#reportGrade').textContent = (report.nota_final || 0).toFixed(1);
     $('#reportXp').textContent = `+${xpInfo.total} XP`;
     $('#reportXpBreakdown').innerHTML = xpInfo.breakdown.map(b =>
@@ -740,6 +1175,388 @@
     }
 
     $('#reportPhrase').textContent = report.frase_caderno || '';
+  }
+
+  // ========= HISTÓRICO =========
+  const OUTCOME_META = {
+    venda_realizada:               { cls: 'sale',     label: '✅ Venda realizada',    short: 'Venda' },
+    venda_nao_realizada_desistencia:{ cls: 'no-sale', label: '❌ Lead desistiu',      short: 'Desistência' },
+    venda_nao_realizada_tempo:     { cls: 'no-sale', label: '⏱️ Tempo esgotado',     short: 'Timeout' },
+    venda_nao_realizada:           { cls: 'no-sale', label: '❌ Não realizada',       short: 'Não vendeu' },
+    encerrada_parcial:             { cls: 'partial', label: '⏸️ Parcial',             short: 'Parcial' }
+  };
+
+  function formatDate(iso) {
+    try {
+      const d = new Date(iso);
+      return d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch { return iso; }
+  }
+
+  // Formata duração em ms como "Xm YYs" ou "Hh MMm" se passar de 1h
+  function formatDuration(ms) {
+    if (!ms || ms < 0) return '—';
+    const totalSec = Math.floor(ms / 1000);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    if (h > 0) return `${h}h ${String(m).padStart(2, '0')}m`;
+    if (m > 0) return `${m}m ${String(s).padStart(2, '0')}s`;
+    return `${s}s`;
+  }
+
+  function renderHistoryList() {
+    const all = Gamification.getSessions() || [];
+    const outcomeFilter = $('#historyFilterOutcome').value;
+    const q = ($('#historySearch').value || '').toLowerCase().trim();
+
+    const filtered = all.filter(s => {
+      if (outcomeFilter !== 'all' && (s.outcome || 'venda_nao_realizada') !== outcomeFilter) return false;
+      if (!q) return true;
+      const hay = [s.persona, s.padrao, s.submodo, s.frase_caderno, s.cenario?.objecao_real, s.cenario?.objecao_superficial].filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+
+    $('#historyCount').textContent = String(filtered.length);
+    const listEl = $('#historyList');
+    const emptyEl = $('#historyEmpty');
+
+    if (!filtered.length) {
+      listEl.innerHTML = '';
+      emptyEl.hidden = false;
+      return;
+    }
+    emptyEl.hidden = true;
+
+    listEl.innerHTML = filtered.map(s => {
+      const meta = OUTCOME_META[s.outcome] || OUTCOME_META['venda_nao_realizada'];
+      const nota = typeof s.nota_final === 'number' ? s.nota_final.toFixed(1) : '—';
+      const padrao = s.padrao || '—';
+      const persona = s.persona || '—';
+      const turnos = s.turnos || (s.conversation ? Math.floor(s.conversation.length / 2) : 0);
+      return `
+        <div class="history-item" data-id="${esc(s.id || s.date)}">
+          <div class="history-item-head">
+            <span class="history-outcome ${meta.cls}">${meta.label}</span>
+            <span class="history-date">${formatDate(s.date)}</span>
+          </div>
+          <div class="history-item-body">
+            <div class="history-persona">${esc(persona)} <span class="muted">· ${esc(padrao)}</span></div>
+            <div class="history-stats">
+              <span>Nota <b>${nota}</b></span>
+              <span>${turnos} turnos</span>
+              ${s.duration_ms ? `<span>⏱️ ${formatDuration(s.duration_ms)}</span>` : ''}
+              <span>+${s.xp_ganho || 0} XP</span>
+              ${s.dificuldade ? `<span class="muted">${esc(s.dificuldade)}</span>` : ''}
+            </div>
+            ${s.frase_caderno ? `<div class="history-frase">"${esc(s.frase_caderno)}"</div>` : ''}
+          </div>
+          <div class="history-item-cta">Ver transcrição →</div>
+        </div>
+      `;
+    }).join('');
+
+    // Click handlers
+    listEl.querySelectorAll('.history-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const id = item.dataset.id;
+        showHistoryDetail(id);
+      });
+    });
+  }
+
+  function findSessionById(id) {
+    const all = Gamification.getSessions() || [];
+    return all.find(s => (s.id || s.date) === id) || null;
+  }
+
+  let currentHistorySession = null;
+
+  function showHistoryDetail(id) {
+    const s = findSessionById(id);
+    if (!s) {
+      alert('Sessão não encontrada.');
+      return;
+    }
+    currentHistorySession = s;
+    renderHistoryDetail(s);
+    showScreen('history-detail');
+  }
+
+  function renderHistoryDetail(s) {
+    const meta = OUTCOME_META[s.outcome] || OUTCOME_META['venda_nao_realizada'];
+    const conv = s.conversation || [];
+    const feedbacks = s.turn_feedbacks || [];
+    const report = s.report_full || {};
+    const momentoLabel = { abertura: '🌅 Abertura', conducao: '🎯 Condução', fechamento: '🔒 Fechamento' };
+
+    // Cenário resumo
+    const cenario = s.cenario || {};
+    const persona = cenario.persona || {};
+
+    // Mapear feedbacks pelo turno (turno = index do user message na conversa)
+    // turnFeedbacks são ordenados na sessão — 1 por turno do Ramon
+    const feedbackByTurn = {};
+    feedbacks.forEach((f, i) => { feedbackByTurn[i + 1] = f; });
+
+    let ramonTurnIndex = 0;
+    const chatHtml = conv.map((msg) => {
+      if (msg.role === 'user') {
+        ramonTurnIndex++;
+        const fb = feedbackByTurn[ramonTurnIndex];
+        const fbBlock = fb ? `
+          <div class="history-feedback">
+            <div class="history-feedback-grade">Nota ${(fb.nota_geral || 0).toFixed(1)}/10</div>
+            ${fb.ponto_forte ? `<div><b>✅ Forte:</b> ${esc(fb.ponto_forte)}</div>` : ''}
+            ${fb.ajuste ? `<div><b>⚠️ Ajuste:</b> ${esc(fb.ajuste)}</div>` : ''}
+            ${fb.reformulacao ? `<div><b>💡 Melhor:</b> <i>${esc(fb.reformulacao)}</i></div>` : ''}
+            ${fb.passo_do_caminho_executado ? `<div class="muted">Passo ${fb.passo_do_caminho_executado}/18</div>` : ''}
+          </div>
+        ` : '';
+        return `
+          <div class="history-msg ramon">
+            <div class="history-msg-label">RAMON · turno ${ramonTurnIndex}</div>
+            <div class="history-msg-body">${esc(msg.content)}</div>
+            ${fbBlock}
+          </div>
+        `;
+      }
+      return `
+        <div class="history-msg lead">
+          <div class="history-msg-label">LEAD</div>
+          <div class="history-msg-body">${esc(msg.content)}</div>
+        </div>
+      `;
+    }).join('');
+
+    const porMomentoHtml = report.por_momento ? Object.keys(report.por_momento).map(k => {
+      const d = report.por_momento[k] || {};
+      const nota = typeof d.nota === 'number' ? d.nota.toFixed(1) : '—';
+      return `
+        <div class="history-momento">
+          <div class="history-momento-head"><b>${momentoLabel[k] || k}</b> · ${nota}/10</div>
+          ${d.ponto_forte ? `<div><b>Forte:</b> ${esc(d.ponto_forte)}</div>` : ''}
+          ${d.ponto_fraco ? `<div><b>Fraco:</b> ${esc(d.ponto_fraco)}</div>` : ''}
+          ${d.sugestao ? `<div><b>Sugestão:</b> ${esc(d.sugestao)}</div>` : ''}
+        </div>
+      `;
+    }).join('') : '';
+
+    const melhoresHtml = (report.melhores_3_tecnicas || []).map(t => `
+      <div class="history-melhor">✅ <b>${esc(t.nome || '—')}</b> <span class="muted">${esc(momentoLabel[t.momento] || t.momento || '')} · turno ${t.turno || '?'}</span><br/>${esc(t.porque || '')}</div>
+    `).join('');
+
+    const pioresHtml = (report.piores_3_pontos || []).map(p => `
+      <div class="history-pior">⚠️ <b>${esc(p.nome || '—')}</b> <span class="muted">${esc(momentoLabel[p.momento] || p.momento || '')} · turno ${p.turno || '?'}</span><br/>
+      <i>${esc(p.o_que_aconteceu || '')}</i><br/>
+      <b>Correção:</b> ${esc(p.correcao || '')}</div>
+    `).join('');
+
+    $('#historyDetailBody').innerHTML = `
+      <div class="history-detail-outcome ${meta.cls}">
+        <div class="history-detail-outcome-label">${meta.label}</div>
+        <div class="history-detail-outcome-motivo">${esc(s.outcome_motivo || '')}</div>
+        ${s.outcome_evidencia_lead ? `<div class="history-detail-outcome-evidence">💬 <i>"${esc(s.outcome_evidencia_lead)}"</i></div>` : ''}
+      </div>
+
+      <div class="history-detail-meta">
+        <div><b>Data:</b> ${formatDate(s.date)}</div>
+        <div><b>Nota final:</b> ${typeof s.nota_final === 'number' ? s.nota_final.toFixed(1) : '—'}/10</div>
+        <div><b>Turnos:</b> ${s.turnos || (conv.length && Math.floor(conv.length / 2)) || 0}</div>
+        ${s.duration_ms ? `<div><b>⏱️ Duração:</b> ${formatDuration(s.duration_ms)}</div>` : ''}
+        <div><b>XP ganho:</b> +${s.xp_ganho || 0}</div>
+        <div><b>Sub-modo:</b> ${esc(s.submodo || '—')}</div>
+        <div><b>Dificuldade:</b> ${esc(s.dificuldade || '—')}</div>
+      </div>
+
+      <div class="history-detail-section">
+        <h3>Cenário</h3>
+        <div><b>Persona:</b> ${esc(persona.nome || '—')}${persona.idade ? ` (${persona.idade})` : ''}${persona.profissao ? ` · ${esc(persona.profissao)}` : ''}</div>
+        ${cenario.padrao_oculto ? `<div><b>Padrão oculto:</b> ${esc(cenario.padrao_oculto)}</div>` : ''}
+        ${cenario.objecao_superficial ? `<div><b>Objeção superficial:</b> ${esc(cenario.objecao_superficial)}</div>` : ''}
+        ${cenario.objecao_real ? `<div><b>Objeção real:</b> ${esc(cenario.objecao_real)}</div>` : ''}
+        ${cenario.nivel_conhecimento ? `<div><b>Nível de conhecimento do lead:</b> ${esc(cenario.nivel_conhecimento)}</div>` : ''}
+      </div>
+
+      ${porMomentoHtml ? `<div class="history-detail-section"><h3>Análise por momento</h3>${porMomentoHtml}</div>` : ''}
+      ${melhoresHtml ? `<div class="history-detail-section"><h3>🏆 Melhores técnicas</h3>${melhoresHtml}</div>` : ''}
+      ${pioresHtml ? `<div class="history-detail-section"><h3>🪓 Pontos a melhorar</h3>${pioresHtml}</div>` : ''}
+
+      <div class="history-detail-section">
+        <h3>Transcrição completa</h3>
+        <div class="history-chat">${chatHtml || '<div class="muted">(sem transcrição — sessão salva em modo leve por limite de armazenamento)</div>'}</div>
+      </div>
+
+      ${s.frase_caderno ? `<div class="history-detail-section frase-caderno"><h3>Frase pro caderno</h3><blockquote>${esc(s.frase_caderno)}</blockquote></div>` : ''}
+    `;
+  }
+
+  // ========= EXPORT TXT / PDF =========
+  function buildExportText(s) {
+    const meta = OUTCOME_META[s.outcome] || OUTCOME_META['venda_nao_realizada'];
+    const lines = [];
+    const sep = '═'.repeat(60);
+    const sub = '─'.repeat(60);
+
+    lines.push(sep);
+    lines.push('DOJÔ ALIANÇA DIVERGENTE — ARENA 2');
+    lines.push('Relatório de Sessão');
+    lines.push(sep);
+    lines.push('');
+    lines.push(`Resultado: ${meta.label}`);
+    lines.push(`Data: ${formatDate(s.date)}`);
+    lines.push(`Nota final: ${typeof s.nota_final === 'number' ? s.nota_final.toFixed(1) : '—'}/10`);
+    lines.push(`Turnos: ${s.turnos || 0}`);
+    if (s.duration_ms) lines.push(`Duração: ${formatDuration(s.duration_ms)}`);
+    lines.push(`XP ganho: +${s.xp_ganho || 0}`);
+    lines.push(`Sub-modo: ${s.submodo || '—'} · Dificuldade: ${s.dificuldade || '—'}`);
+    if (s.outcome_motivo) { lines.push(''); lines.push('Motivo: ' + s.outcome_motivo); }
+    if (s.outcome_evidencia_lead) lines.push('Evidência do lead: "' + s.outcome_evidencia_lead + '"');
+    lines.push('');
+
+    const cenario = s.cenario || {};
+    const persona = cenario.persona || {};
+    lines.push(sub);
+    lines.push('CENÁRIO');
+    lines.push(sub);
+    lines.push('Persona: ' + (persona.nome || '—') + (persona.idade ? ` (${persona.idade})` : '') + (persona.profissao ? ` · ${persona.profissao}` : ''));
+    if (cenario.padrao_oculto) lines.push('Padrão oculto: ' + cenario.padrao_oculto);
+    if (cenario.objecao_superficial) lines.push('Objeção superficial: ' + cenario.objecao_superficial);
+    if (cenario.objecao_real) lines.push('Objeção real: ' + cenario.objecao_real);
+    if (cenario.nivel_conhecimento) lines.push('Nível de conhecimento do lead: ' + cenario.nivel_conhecimento);
+    lines.push('');
+
+    const report = s.report_full || {};
+    if (report.por_momento) {
+      lines.push(sub);
+      lines.push('ANÁLISE POR MOMENTO');
+      lines.push(sub);
+      ['abertura', 'conducao', 'fechamento'].forEach(k => {
+        const d = report.por_momento[k] || {};
+        const lbl = { abertura: 'Abertura (1-3)', conducao: 'Condução (4-10)', fechamento: 'Fechamento (11-18)' }[k];
+        lines.push(`${lbl} — Nota ${typeof d.nota === 'number' ? d.nota.toFixed(1) : '—'}/10`);
+        if (d.ponto_forte) lines.push('  Forte: ' + d.ponto_forte);
+        if (d.ponto_fraco) lines.push('  Fraco: ' + d.ponto_fraco);
+        if (d.sugestao) lines.push('  Sugestão: ' + d.sugestao);
+        lines.push('');
+      });
+    }
+
+    if (report.melhores_3_tecnicas?.length) {
+      lines.push(sub);
+      lines.push('🏆 MELHORES TÉCNICAS APLICADAS');
+      lines.push(sub);
+      report.melhores_3_tecnicas.forEach(t => {
+        lines.push(`✅ ${t.nome || '—'} · ${t.momento || '—'} · turno ${t.turno || '?'}`);
+        if (t.porque) lines.push('   ' + t.porque);
+      });
+      lines.push('');
+    }
+
+    if (report.piores_3_pontos?.length) {
+      lines.push(sub);
+      lines.push('🪓 PONTOS A MELHORAR');
+      lines.push(sub);
+      report.piores_3_pontos.forEach(p => {
+        lines.push(`⚠️ ${p.nome || '—'} · ${p.momento || '—'} · turno ${p.turno || '?'}`);
+        if (p.o_que_aconteceu) lines.push('   O que aconteceu: ' + p.o_que_aconteceu);
+        if (p.correcao) lines.push('   Correção: ' + p.correcao);
+      });
+      lines.push('');
+    }
+
+    lines.push(sub);
+    lines.push('TRANSCRIÇÃO COMPLETA');
+    lines.push(sub);
+    const conv = s.conversation || [];
+    const feedbacks = s.turn_feedbacks || [];
+    let ramonTurn = 0;
+    conv.forEach(m => {
+      if (m.role === 'user') {
+        ramonTurn++;
+        lines.push('');
+        lines.push(`[RAMON — turno ${ramonTurn}]`);
+        lines.push(m.content);
+        const fb = feedbacks[ramonTurn - 1];
+        if (fb) {
+          lines.push(`   Nota: ${(fb.nota_geral || 0).toFixed(1)}/10`);
+          if (fb.ponto_forte) lines.push('   ✅ Forte: ' + fb.ponto_forte);
+          if (fb.ajuste) lines.push('   ⚠️ Ajuste: ' + fb.ajuste);
+          if (fb.reformulacao) lines.push('   💡 Melhor: ' + fb.reformulacao);
+        }
+      } else {
+        lines.push('');
+        lines.push('[LEAD]');
+        lines.push(m.content);
+      }
+    });
+
+    if (s.frase_caderno) {
+      lines.push('');
+      lines.push(sub);
+      lines.push('FRASE PRO CADERNO');
+      lines.push(sub);
+      lines.push('"' + s.frase_caderno + '"');
+    }
+
+    lines.push('');
+    lines.push(sep);
+    return lines.join('\n');
+  }
+
+  function downloadBlob(content, filename, mime) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  function exportTxt() {
+    if (!currentHistorySession) return;
+    const txt = buildExportText(currentHistorySession);
+    const datePart = (currentHistorySession.date || '').slice(0, 10);
+    const personaPart = (currentHistorySession.persona || 'sessao').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    downloadBlob('\uFEFF' + txt, `dojo_sessao_${datePart}_${personaPart}.txt`, 'text/plain;charset=utf-8');
+  }
+
+  function exportPdf() {
+    if (!currentHistorySession) return;
+    // Usa print do browser — o próprio usuário escolhe "Salvar como PDF" no diálogo de impressão.
+    // Uma classe 'print-mode' é adicionada pra que styles.css possa ajustar a página de impressão.
+    document.body.classList.add('print-mode');
+    // Esconde tudo que não é a sessão detalhada
+    window.print();
+    setTimeout(() => document.body.classList.remove('print-mode'), 500);
+  }
+
+  let historyReturnScreen = 'dashboard'; // lembra de onde veio pra voltar certo
+
+  function openHistory(fromScreen) {
+    historyReturnScreen = fromScreen || 'dashboard';
+    renderHistoryList();
+    showScreen('history');
+  }
+
+  function initHistory() {
+    $('#btnViewHistory').addEventListener('click', () => openHistory('report'));
+    const dashBtn = $('#btnViewHistoryDash');
+    if (dashBtn) dashBtn.addEventListener('click', () => openHistory('dashboard'));
+    $('#btnHistoryBack').addEventListener('click', () => {
+      showScreen(historyReturnScreen);
+    });
+    $('#btnHistoryDetailBack').addEventListener('click', () => {
+      renderHistoryList();
+      showScreen('history');
+    });
+    $('#historyFilterOutcome').addEventListener('change', renderHistoryList);
+    $('#historySearch').addEventListener('input', renderHistoryList);
+    $('#btnExportTxt').addEventListener('click', exportTxt);
+    $('#btnExportPdf').addEventListener('click', exportPdf);
   }
 
   // ========= CALL STATE MACHINE =========
@@ -959,11 +1776,41 @@
     });
 
     $('#btnExitSession').addEventListener('click', () => {
-      if (state.turn > 0 && !state.sessionClosed && !confirm('Sair sem concluir? O progresso será perdido.')) return;
+      // Se a sessão já acabou (aguardando relatório), avisa que vai perder o relatório
+      if (state.sessionAwaitingReport) {
+        if (!confirm('Você tem um relatório pronto pra gerar. Sair sem gerar?')) return;
+      } else if (state.turn > 0 && !state.sessionClosed && !confirm('Sair sem concluir? O progresso será perdido.')) {
+        return;
+      }
       Speech.stopSpeaking();
       stopSilenceTick();
+      hideSessionEndModal();
       renderDashboard();
       showScreen('dashboard');
+    });
+
+    $('#btnEndSessionNow').addEventListener('click', () => {
+      if (state.turn === 0) {
+        alert('Você ainda não respondeu nenhuma vez. Não há o que encerrar.');
+        return;
+      }
+      if (state.sessionClosed || state.leadDesistiu || state.sessionAwaitingReport) {
+        return; // já encerrado — modal de fim está/estará visível
+      }
+      if (!confirm(`Encerrar agora? Um relatório parcial será gerado com os ${state.turn} turnos já respondidos.`)) return;
+      Speech.stopSpeaking();
+      stopSilenceTick();
+      if (state.call.active) endCall();
+      state.sessionEndReason = 'usuario_encerrou';
+      // Mesmo fluxo unificado: modal de fim → botão "Ver relatório"
+      state.sessionAwaitingReport = true;
+      disableSessionInputs();
+      showSessionEndModal('usuario_encerrou');
+    });
+
+    $('#btnGoToReport').addEventListener('click', () => {
+      hideSessionEndModal();
+      endSession();
     });
 
     $('#btnNewSession').addEventListener('click', () => {
@@ -1046,6 +1893,7 @@
     initWelcome();
     initDashboard();
     initSession();
+    initHistory();
 
     try {
       await loadData();

@@ -13,12 +13,12 @@
         "Se fosse metade do preço eu entrava",
         "Muito caro"
       ],
-      "objecao_real_permissao": "Culpa da Sobrevivência — não se dá Permissão de gastar com ele mesmo. Gastar consigo = ofuscar família que sofreu. Também pode ser Medo do Brilho: se funcionar, vai ter que mudar, e mudar cobra preço.",
+      "objecao_real_permissao": "Salvador — o lead se vê como o herói/heroína da família, aquele que não pode deixar ninguém pra trás e carrega o peso dos outros. Não se dá Permissão de gastar com ele mesmo porque gastar consigo = ofuscar família que sofreu. Também pode ser Medo do Brilho: se funcionar, vai ter que mudar, e mudar cobra preço.",
       "fases_de_quebra": {
         "fase_1_looping": "Entendo o que você está dizendo, [Nome], mas deixa eu te fazer uma pergunta: a ideia faz sentido pra você? Você gosta da ideia?",
         "fase_2_isolamento": "Tirando a questão do investimento, faz sentido pra você? É isso que você está procurando?",
         "fase_3_cadeira_de_balanço": "[Nome], daqui a 6 meses se nada mudar, você ainda vai estar aqui sentindo o mesmo, certo? E quanto isso já te custou até aqui — não tô falando do programa, tô falando do que essa dor já cobrou em dinheiro, em tempo, em relação?",
-        "fase_4_permissao": "Você não tem dinheiro pra VOCÊ. Mas tem pra pagar a conta do seu irmão, o médico do seu pai, o remédio da sua mãe. O problema não é dinheiro. É que você não se enxerga como destino legítimo do seu próprio dinheiro. Isso tem nome: Culpa da Sobrevivência.",
+        "fase_4_permissao": "Você não tem dinheiro pra VOCÊ. Mas tem pra pagar a conta do seu irmão, o médico do seu pai, o remédio da sua mãe. O problema não é dinheiro. É que você não se enxerga como destino legítimo do seu próprio dinheiro. Você é o Salvador da sua família — o herói/a heroína que não pode deixar ninguém pra trás. E Salvador não prospera.",
         "fase_5_skin_in_the_game": "O valor ser esse é justamente o que faz funcionar. Quem entra aqui com skin in the game, entra pra valer. Quem paga pouco, não executa. É o preço que cria o comprometimento.",
         "fase_6_close": "Você prefere começar no pagamento à vista com desconto, ou parcelado em 12×?"
       },
@@ -96,7 +96,7 @@
         "fase_2_distincao_cdp": "Olha — tudo que você tentou foi na camada de Capacidade. Você tem capacidade de sobra. Você já tem disposição (trabalha muito). O que nunca foi tratado é Permissão. E Permissão não é curso — é ambiente de rompimento.",
         "fase_3_entender_nao_quebra": "Entender o padrão não rompe o padrão. Você já foi pra vida e entendeu tudo. Entender não muda nada. Padrão é rompido vivendo, não compreendendo.",
         "fase_4_software_danificado": "Tem gente que diz que tem medo, mas na verdade o 'software da vontade' está danificado. Você consegue QUERER de verdade? Ou tá só justificando não querer?",
-        "fase_5_desculpa_sofisticada": "A desculpa sofisticada justifica tudo, mas não explica nada. 'Minha mãe me rejeitou no ventre', 'tenho genética'. Diagnósticos sem cura. Qual é a UTILIDADE dessa história pra você? O que ela te oferece que você não teria sem ela?",
+        "fase_5_desculpa_sofisticada": "A desculpa sofisticada justifica tudo, mas não resolve nada. 'Minha mãe me rejeitou no ventre', 'tenho genética'. Diagnósticos sem cura. Qual é a UTILIDADE dessa história pra você? O que ela te oferece que você não teria sem ela?",
         "fase_6_risco_reverso": "Garantia de 30 dias incondicional. Se não sentir shift, devolvemos. Mas o trato é: só entra quem vai aplicar — não quem vai assistir.",
         "fase_7_close": "Seu único problema vai ser não ter entrado mais cedo. Crédito ou à vista?"
       },

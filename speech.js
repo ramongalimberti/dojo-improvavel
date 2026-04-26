@@ -28,9 +28,17 @@ const Speech = (() => {
     if (!text) return text;
     let t = ' ' + text + ' ';
 
-    t = t.replace(/\bpausa(?:\s+de)?\s+(\d+)\s*(?:segundos?|s)\b/gi, (_, n) => ` [silêncio ${n}s] `);
-    t = t.replace(/\bsil[êe]ncio(?:\s+de)?\s+(\d+)\s*(?:segundos?|s)\b/gi, (_, n) => ` [silêncio ${n}s] `);
-    t = t.replace(/\bpausa\b/gi, ' [silêncio 3s] ');
+    // Pausas: "pausa de N segundos" → "...N" (se 1-9) ou "..." (fallback)
+    t = t.replace(/\bpausa(?:\s+de)?\s+(\d+)\s*(?:segundos?|s)\b/gi, (_, n) => {
+      const num = parseInt(n, 10);
+      return (num >= 1 && num <= 9) ? ` ...${num} ` : ` ... `;
+    });
+    t = t.replace(/\bsil[êe]ncio(?:\s+de)?\s+(\d+)\s*(?:segundos?|s)\b/gi, (_, n) => {
+      const num = parseInt(n, 10);
+      return (num >= 1 && num <= 9) ? ` ...${num} ` : ` ... `;
+    });
+    t = t.replace(/\bpausa\b/gi, ' ... ');
+    t = t.replace(/\bsil[êe]ncio\b/gi, ' ... ');
 
     const rules = [
       [/\bponto\s+de\s+interroga[cç][aã]o\b/gi, '?'],
@@ -214,32 +222,89 @@ const Speech = (() => {
   }
 
   function cleanTextForTTS(text) {
-    // Remove marcações como [silêncio 3s], [pausa], etc, mas FAZ a pausa de verdade
-    return (text || '').replace(/\[sil[êe]ncio\s+(\d+)s?\]/gi, '... ')  // TTS vai pausar naturalmente
+    // Remove marcações como [silêncio 3s], [pausa], etc
+    return (text || '').replace(/\[sil[êe]ncio\s+(\d+)s?\]/gi, '... ')
                        .replace(/\[pausa[^\]]*\]/gi, '... ')
                        .replace(/\s+/g, ' ')
                        .trim();
   }
 
+  // Converte texto com marcadores de pausa em chunks [texto, texto, ...]
+  // com pausas explícitas entre eles. Marcadores suportados:
+  //   "...N" (onde N = 1..9) → pausa de N segundos (sem falar "...")
+  //   "..."                  → pausa curta natural (~700ms) — mantido no texto pra TTS respirar
+  function splitByPauseMarkers(text) {
+    if (!text) return [];
+    const clean = cleanTextForTTS(text);
+    // Primeiro extraímos ...N (pausa longa) — split com captura
+    // Regex: reticências seguidas de dígito 1-9 (sem ser parte de número maior)
+    const parts = clean.split(/(\.{3}\s*[1-9])\b/g);
+    const out = [];
+    for (let i = 0; i < parts.length; i++) {
+      const p = parts[i];
+      if (!p) continue;
+      const m = p.match(/^\.{3}\s*([1-9])$/);
+      if (m) {
+        out.push({ type: 'pause', seconds: parseInt(m[1], 10) });
+      } else {
+        const trimmed = p.trim();
+        if (trimmed) out.push({ type: 'speak', text: trimmed });
+      }
+    }
+    return out;
+  }
+
   function speak(text, { rate = 1.0, onEnd, onStart } = {}) {
     if (!('speechSynthesis' in window) || !text) return;
     try { window.speechSynthesis.cancel(); } catch (_) {}
-    const clean = cleanTextForTTS(text);
-    const u = new SpeechSynthesisUtterance(clean);
-    u.lang = 'pt-BR';
-    u.rate = rate;
+
+    const chunks = splitByPauseMarkers(text);
+    if (!chunks.length) { onEnd?.(); return; }
+
     const voice = getPreferredPtBrFemaleVoice();
-    if (voice) u.voice = voice;
-    u.onstart = () => { onStart?.(); };
-    u.onend = () => {
-      // Começar a contar silêncio agora que o lead parou de falar
-      silenceTimerStart = Date.now();
-      onEnd?.();
-    };
-    window.speechSynthesis.speak(u);
+    let started = false;
+    let cancelled = false;
+
+    // cancela tudo se stopSpeaking for chamado
+    pendingPauseTimers.forEach(t => clearTimeout(t));
+    pendingPauseTimers = [];
+
+    function playNext(i) {
+      if (cancelled) return;
+      if (i >= chunks.length) {
+        silenceTimerStart = Date.now();
+        onEnd?.();
+        return;
+      }
+      const c = chunks[i];
+      if (c.type === 'pause') {
+        const t = setTimeout(() => playNext(i + 1), c.seconds * 1000);
+        pendingPauseTimers.push(t);
+      } else {
+        const u = new SpeechSynthesisUtterance(c.text);
+        u.lang = 'pt-BR';
+        u.rate = rate;
+        if (voice) u.voice = voice;
+        u.onstart = () => { if (!started) { started = true; onStart?.(); } };
+        u.onend = () => playNext(i + 1);
+        u.onerror = () => playNext(i + 1);
+        try { window.speechSynthesis.speak(u); }
+        catch (_) { playNext(i + 1); }
+      }
+    }
+    playNext(0);
+
+    // expose cancel
+    currentSpeakCancel = () => { cancelled = true; pendingPauseTimers.forEach(t => clearTimeout(t)); pendingPauseTimers = []; };
   }
 
+  let pendingPauseTimers = [];
+  let currentSpeakCancel = null;
+
   function stopSpeaking() {
+    if (currentSpeakCancel) { try { currentSpeakCancel(); } catch (_) {} currentSpeakCancel = null; }
+    pendingPauseTimers.forEach(t => clearTimeout(t));
+    pendingPauseTimers = [];
     if ('speechSynthesis' in window) window.speechSynthesis.cancel();
   }
 

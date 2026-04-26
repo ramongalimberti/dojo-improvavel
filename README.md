@@ -102,7 +102,7 @@ Dashboard mostra em qual semana você está e o foco daquela semana.
 Abaixo de cada resposta sua aparece:
 
 1. **Tática** — palavra/frase exata que usou bem (ponto forte) e a que não (ajuste)
-2. **Estratégica** — técnica do compêndio que caberia (Mirror, Looping, Isolamento...) + conceito da Teoria da Permissão (Culpa da Sobrevivência, Mula de Carga, PDA...)
+2. **Estratégica** — técnica do compêndio que caberia (Mirror, Looping, Isolamento...) + conceito da Teoria da Permissão (Salvador, Mula de Carga, PDA...)
 3. **Estrutural** — em qual passo do Caminho você está vs. onde deveria estar
 
 ---

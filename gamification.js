@@ -96,7 +96,7 @@ const Gamification = (() => {
     { id: 'silencio_pos_preco', text: 'Hoje: silêncio de 7-10s após o preço ([silêncio 10s] explícito).', hint: 'silencio_dinamico' },
     { id: 'avanço_concreto_hoje', text: 'Hoje: NUNCA aceite "vou pensar e te falo". Sempre marque Avanço concreto.', hint: 'avanco_concreto' },
     { id: 'pre_handling_hoje', text: 'Hoje: 3 objeções pré-listadas antes de revelar o preço.', hint: 'pre_handling_3_objecoes' },
-    { id: 'tacaro_sem_desconto', text: 'Hoje: quebre "tá caro" pela tradução Permissão (Culpa da Sobrevivência) — SEM desconto.', hint: 'nomeou_conceito_permissao' },
+    { id: 'tacaro_sem_desconto', text: 'Hoje: quebre "tá caro" pela tradução Permissão (Salvador — herói da família que carrega todos) — SEM desconto.', hint: 'nomeou_conceito_permissao' },
     { id: 'padrao_antes_3', text: 'Hoje: nomeie o Padrão antes do 3º turno.', hint: 'nomeou_conceito_permissao' },
     { id: 'isolamento_toda_objecao', text: 'Hoje: Isolamento de Preço após cada objeção financeira.', hint: 'isolamento_preco' },
     { id: 'caso_real_sempre', text: 'Hoje: cite 1 caso real por sessão (Daniela, Regiane, Vanilton, Ícaro...).', hint: 'caso_real_citado' },
@@ -159,7 +159,24 @@ const Gamification = (() => {
     const all = getSessions();
     all.unshift(session);
     if (all.length > 100) all.length = 100;
-    _set(K.sessions, all);
+    // Quota-safe: sessões v2 carregam conversation + feedbacks + report (podem ter 20-80KB cada).
+    // Se o localStorage ficar cheio, vai descartando as mais antigas até caber.
+    const tryPersist = (list) => {
+      try { _set(K.sessions, list); return true; }
+      catch (e) { return false; }
+    };
+    while (all.length > 1 && !tryPersist(all)) {
+      all.pop(); // remove a mais antiga
+    }
+    if (all.length === 1 && !tryPersist(all)) {
+      // Mesmo com 1 só não cabe — tenta salvar versão leve sem conversation/feedbacks
+      const light = Object.assign({}, all[0]);
+      delete light.conversation;
+      delete light.turn_feedbacks;
+      delete light.report_full;
+      light._trimmed = true;
+      try { _set(K.sessions, [light]); } catch (e) { console.warn('saveSession: localStorage cheio, sessão não persistida.', e); }
+    }
   }
 
   // ========= XP / NÍVEIS POR TIER =========

@@ -1,175 +1,434 @@
 {
   "metodologia": "Teoria da Permissão",
   "autor_autorizado_brasil": "Ramon Galimberti (Aliança Divergente)",
-  "premissa_central": "O problema do Improvável não é falta de Capacidade nem Disposição. É falta de Permissão. Capacidade se compra em curso; Permissão só se ganha quebrando o padrão de lealdade ao sistema de origem.",
-  "fonte": "Apostila_Vendas_Arsenal_Nucleo",
+  "versao": "2.0",
+  "data_revisao": "2026-04-22",
+  "fonte_canonica": "Núcleo do Segundo Cérebro — 00_NUCLEO/Conceitos/ + Conteúdo Basal (Ramon + Elton Euler) + Áudios 400-990 + Protocolos PE/DE/MEDO + Aprofundamentos APF",
+  "premissa_central": "O problema do improvável não é falta de Capacidade nem Disposição — é falta de Permissão. Capacidade se compra em curso; Permissão só se ganha quebrando Padrões dentro das relações de origem.",
+  "nota_metodologica": "Cada conceito traz o nome canônico usado no produto (áudios, basais, protocolos). Alguns itens são marcados como 'apelido_venda: true' — são nomes comerciais criados para abertura de venda, com o campo 'nome_canonico' apontando o conceito real da Teoria. Vendedor pode usar o apelido em rapport, mas deve conhecer o nome canônico para garantir alinhamento com o que o lead vai encontrar dentro da Aliança.",
+
   "conceitos": [
     {
       "nome": "Permissão",
-      "definicao": "Autorização inconsciente pra ser, ter, fazer, ir mais longe. Nasce da quebra da lealdade inconsciente ao sistema de origem (família, crenças herdadas, padrões religiosos).",
-      "quando_usar": "Abertura e posicionamento. Quando o lead apresenta Obesidade Intelectual — já tentou tudo, fez curso, mentoria, terapia, e continua travado.",
-      "frase_ancora": "Você só recebe a Permissão que você pediu. Ninguém te oferece uma credencial que você não solicitou.",
-      "exemplo_de_uso": "Você já tem capacidade pra ter tudo o que diz que quer. Se fosse capacidade, você já teria. Não é isso que falta. O que falta é permissão pra ter sem perder quem você ama.",
-      "armadilha": "Confundir Permissão com autoestima ou autoconfiança. Permissão é relacional — tem a ver com o PREÇO que você pagaria se ficasse grande."
+      "definicao": "Autorização inconsciente que o indivíduo se dá, de acordo com as relações e acontecimentos do passado, para ter, ser, fazer e ir/estar. Não é motivação. Não é capacidade. Não é disposição. É o que vem antes de tudo isso — a licença interna, invisível.",
+      "definicao_canonica_elton": "Tecnicamente, Permissão é a autorização inconsciente que você se dá para ter, ser, fazer ou estar. Esse 'estar' vai se materializar no 'ir'.",
+      "tipos": [
+        "Permissão Nata — o start natural; quem nasce com Permissão alta ainda encontra bloqueios ao tentar avançar pro próximo nível",
+        "Permissão Adquirida — conquistada rompendo Padrões dentro das relações; é a Permissão que se trabalha na Aliança"
+      ],
+      "areas_onde_opera": "Apenas 3: Financeiro, Relacionamento, Saúde. A área 'espiritual' é relacional — entra em Relacionamento.",
+      "quando_usar": "Abertura e posicionamento. Quando o lead apresenta o sintoma clássico: já tentou tudo (curso, mentoria, terapia) e continua travado. O gap entre o que ele sabe + quer e o que entrega é o sintoma de Permissão baixa.",
+      "frase_ancora_principal": "Você não foi mais longe porque não pôde — ainda.",
+      "frase_ancora_secundaria": "Você só recebe a Permissão que você pediu. Ninguém te oferece uma credencial que você não solicitou.",
+      "exemplo_de_uso": "Você já tem Capacidade pra ter tudo que diz que quer. Se fosse Capacidade, você já teria. E Disposição também tem — senão você nem estaria aqui falando comigo. O que falta é Permissão. Permissão pra ter sem perder quem você ama, pra ganhar sem trair sua origem, pra brilhar sem ofuscar os seus.",
+      "pergunta_diagnostica": "Onde você travou? Onde as coisas pararam de progredir? — esse é o teto da sua Permissão.",
+      "armadilha": "Confundir Permissão com autoestima, autoconfiança ou mentalidade. Permissão é RELACIONAL — tem a ver com o preço que você pagaria nas relações se ficasse grande. E NUNCA é ressignificação: 'Não vamos viver de novas histórias, vamos viver de clareza' (Elton)."
     },
+
     {
-      "nome": "CDP (Capacidade, Disposição, Permissão)",
-      "definicao": "Os 3 elementos do jogo. Capacidade = saber fazer. Disposição = querer fazer. Permissão = poder fazer (autorização inconsciente). Se C+D = SIM e resultado = NÃO, a causa é Permissão.",
-      "quando_usar": "Abertura, diagnóstico, diferenciação do produto. Quando o lead se enxerga como 'capaz' mas estagnado.",
-      "frase_ancora": "O jogo não é só formado por Capacidade e Disposição. Falta Permissão.",
-      "exemplo_de_uso": "Você pode querer muito ganhar dinheiro, pode saber como ganhar, mas se não tem Permissão pra aceitar que você merece isso, sua vida não muda. Aqui a gente trabalha exatamente esse terceiro elemento.",
-      "armadilha": "Usar CDP como slogan. É diagnóstico, não motivação."
+      "nome": "CDP — Capacidade, Disposição e Permissão",
+      "definicao": "Os 3 elementos do avanço humano. Todos precisam estar presentes. Capacidade = saber fazer. Disposição = querer fazer. Permissão = poder fazer (autorização inconsciente). Se C+D = SIM e resultado = NÃO, a causa é Permissão. A maioria dos métodos trabalha só C e D — cursos, diplomas, motivação. A Teoria da Permissão atua no terceiro elemento.",
+      "quando_usar": "Abertura, diagnóstico, diferenciação do produto. Quando o lead se enxerga como 'capaz' e 'motivado' mas estagnado — o gap é o sintoma.",
+      "frase_ancora": "O jogo não é só formado por Capacidade e Disposição. Falta Permissão — o que ninguém vê, ninguém mede, e quase ninguém trabalha.",
+      "exemplo_de_uso": "Olha o seu gap. Você sabe (tem Capacidade), você quer (tem Disposição), e mesmo assim o resultado não vem. Esse gap tem nome: Permissão. É exatamente o que a gente destrava aqui — o terceiro elemento que seus outros cursos nunca tocaram.",
+      "armadilha": "Usar CDP como slogan motivacional. É diagnóstico, não grito de guerra."
     },
+
     {
-      "nome": "PDA (Perceber, Decidir, Agir)",
-      "definicao": "Os 3 momentos da mudança, em ordem obrigatória. Perceber sem decidir = se iludir. Decidir sem agir = se enganar. Agir sem perceber = se repetir.",
-      "quando_usar": "Onboarding, acompanhamento, fechamento. Mostrar em qual letra o lead está preso — quase todos no P (percebeu) mas trava no D (não decide).",
+      "nome": "PDA — Perceber, Decidir, Agir",
+      "definicao": "A unidade prática de avanço. Toda mudança real passa por 3 movimentos em ordem obrigatória. As armadilhas: Perceber sem decidir = se iludir. Decidir sem agir = se enganar. Agir sem perceber = se repetir.",
+      "sub_conceito_critico": {
+        "nome": "PDA Descontrolado vs. PDA Memorável",
+        "explicacao": "Todo mundo já executa PDA — a diferença é quem está no comando. Descontrolado: inconsciente, ativado pelo Padrão (percebe o medo, decide evitar, age fugindo — Padrão vence). Memorável: consciente, com escolha e DATA (percebe o equívoco, decide enfrentar, age com intenção — quebra o Padrão). 'Um PDA sem data é um sonho disfarçado de plano.'"
+      },
+      "quando_usar": "Onboarding, acompanhamento, fechamento. Mostrar em qual letra o lead está preso — quase todos percebem (P), mas travam no D (não decidem porque decidir tem preço relacional).",
       "frase_ancora": "Perceber sem decidir é se iludir. Um PDA sem data é um sonho disfarçado de plano.",
-      "exemplo_de_uso": "Você já percebeu tudo isso. Você não tá aqui porque precisa entender mais — você já entende. Você tá preso no D. Decidir dói porque exige pagar o preço.",
+      "exemplo_de_uso": "Você já percebeu tudo isso. Você não tá aqui porque precisa entender mais — você já entende. Você tá preso no D. Decidir dói porque exige pagar o preço. A Aliança te tira do P eterno.",
       "armadilha": "Usar como fórmula motivacional. PDA é diagnóstico + exigência, não slogan."
     },
+
     {
       "nome": "Pré-Queda",
-      "definicao": "Autossabotagem que antecede a ascensão. Quando a vida ameaça melhorar, o inconsciente fabrica uma bomba pra não ofuscar os pais / não perder o pertencimento. Os 4 gatilhos: Vontade, Dúvida, Decisão, Desistência — entre um e outro, 24h bastam.",
-      "quando_usar": "Quando o lead descreve o Ciclo do Quase — quase foi promovido, quase fechou, quase casou, tudo despenca. Criação de urgência.",
-      "frase_ancora": "A vida não te sabota, te treina. Entre a vontade, a dúvida, a decisão e a desistência, 24h bastam pra você viver uma Pré-Queda.",
-      "exemplo_de_uso": "Você já percebeu que toda vez que as coisas melhoram, uma bomba explode? Isso não é depois do sucesso. É pra IMPEDIR o sucesso. Chama-se Pré-Queda. E quem fabrica é você — sem saber.",
-      "armadilha": "Descrever como maldição / energia ruim. É padrão psíquico, não espiritual."
+      "definicao": "Período que antecede o rompimento. Surge quando o Aliado tenta algo que exige mais Permissão do que ele tem. A vida sobe, deveria continuar subindo, e para ou cai. A Pré-Queda NÃO é o problema — é o treino. 'A vida não te sabota, te treina.'",
+      "os_4_gatilhos": "Vontade → Dúvida → Decisão → Desistência. Entre um e outro, 24 horas bastam pra viver uma Pré-Queda.",
+      "os_3_Ps_canonicos_elton": {
+        "Precisa": "Você precisa daquele acontecimento (ele tem utilidade inconsciente)",
+        "Permite": "Você permite aquele acontecimento",
+        "Prefere": "Você prefere aquele acontecimento (inconscientemente, pra manter a relação estável)",
+        "frase_chave": "Se chegou pra você, é seu. Você está terminantemente proibido de chamar um acontecimento de azar, coincidência ou acaso."
+      },
+      "dois_padroes_simultaneos": "A Pré-Queda sempre revela dois Padrões juntos: o Padrão de Acontecimento (o que se repete quando a corda estica — carro quebra, dívida surge, alguém adoece) + o Padrão de Relacionamento (quem te procura e pra quem você liga quando isso acontece).",
+      "quando_usar": "Quando o lead descreve 2+ situações onde 'quase' deu certo e algo desmoronou. Criação de urgência real (não falsa).",
+      "frase_ancora": "Entre a vontade, a dúvida, a decisão e a desistência, 24 horas bastam pra você viver uma Pré-Queda. A vida não te sabota — te treina.",
+      "exemplo_de_uso": "Você já percebeu que toda vez que as coisas melhoram, uma bomba explode? Isso não é DEPOIS do sucesso — é pra IMPEDIR o sucesso. Chama Pré-Queda. E quem fabrica é você — sem saber. O que você tem que descobrir é o Padrão de Acontecimento que se repete E o CPF que aparece nessa hora.",
+      "armadilha": "Descrever como maldição, energia ruim ou espiritualidade. É padrão psíquico-relacional, não metafísico."
     },
+
     {
       "nome": "Efeito Paralelo",
-      "definicao": "Quando se muda um vetor da vida sem Permissão, outro vetor desmorona em compensação. Sobe o dinheiro, cai o casamento. Melhora a saúde, some o cliente. O sistema mantém o saldo de 'tolerância'.",
-      "quando_usar": "Quando o lead teve um sucesso acompanhado de desastre e não conecta os dois.",
+      "definicao": "Prática DELIBERADA de uma pequena ação constante, usada pra romper um Padrão maior. Baseado em: 'Tudo muda quando alguma coisa muda' e 'O jeito que você faz uma coisa é o jeito que você faz todas as outras'. É ferramenta INTENCIONAL — você escolhe a atividade paralela.",
+      "estrutura_canonica_ramon": {
+        "Impacto": "O Padrão que você quer quebrar (Qual é o Padrão que te atrapalha?)",
+        "Atividade": "O que você vai fazer pra quebrá-lo (Qual atividade exige exatamente isso de mim?)",
+        "Frequência": "Quantas vezes por semana/mês",
+        "Prazo": "Por quanto tempo"
+      },
+      "quando_usar": "Oferta / prescrição de método. Quando o lead pergunta 'mas e o que eu faço?' — é a resposta concreta: não precisa mudar tudo de uma vez, uma mudança pequena sustentada rompe o padrão.",
+      "frase_ancora": "O Efeito Paralelo não é a atividade — é o IMPACTO que a atividade gera no Padrão.",
+      "exemplo_de_uso": "Você não precisa revolucionar sua vida. Precisa escolher uma ação pequena, constante, que exija exatamente o que você não consegue fazer no problema principal. Quebra ali — quebra em cascata tudo ao redor.",
+      "armadilha": "Vender como atividade isolada ('faça meditação 10 min'). A força está na conexão atividade ↔ Padrão, não na atividade em si."
+    },
+
+    {
+      "nome": "Defeito Paralelo",
+      "definicao": "A face NEGATIVA do Efeito Paralelo. Quando se muda um vetor da vida sem Permissão — ou quando uma resistência em uma área contamina outras áreas — outro vetor desmorona em compensação. Sobe o dinheiro, cai o casamento. Melhora a saúde, some o cliente. O sistema mantém o saldo de 'tolerância'.",
+      "origem": "Conceito cunhado por Elton Euler (áudio 857 — 'Defeitos Paralelos')",
+      "diferenca_do_efeito_paralelo": "Efeito Paralelo é INTENCIONAL (você escolhe). Defeito Paralelo é INVOLUNTÁRIO (o Padrão escolhe onde contaminar).",
+      "quando_usar": "Quando o lead teve um sucesso acompanhado de desastre e não conecta os dois. Quando descreve que 'tudo desanda ao mesmo tempo'.",
       "frase_ancora": "Tudo muda quando alguma coisa muda. Do jeito que você faz uma coisa, você faz todas as outras.",
-      "exemplo_de_uso": "Você ganhou a promoção E no mesmo mês seu casamento pegou fogo? Não foi azar duplo. Foi Efeito Paralelo. Você subiu um vetor sem Permissão — o sistema compensou derrubando outro.",
-      "armadilha": "Aplicar a qualquer coincidência. Efeito Paralelo tem padrão temporal e repetição."
+      "exemplo_de_uso": "Você ganhou a promoção E no mesmo mês seu casamento pegou fogo? Não foi azar duplo. Foi Defeito Paralelo — você subiu um vetor sem Permissão, o sistema compensou derrubando outro. A intervenção é um Efeito Paralelo consciente na área de origem.",
+      "armadilha": "Aplicar a qualquer coincidência. Defeito Paralelo tem padrão temporal (timing) e repetição histórica."
     },
+
     {
-      "nome": "Mula de Carga",
-      "definicao": "Padrão de quem sustenta todo mundo nas costas. Virou represa. Todo problema da família chega e para nele. Encolhe-se pra caber na vida dos outros.",
-      "quando_usar": "Quando o lead diz 'sustento minha família', 'carrego todo mundo', 'sou o salvador da casa'. Diagnóstico.",
-      "frase_ancora": "Você virou represa. Todo problema da família chega e para em você.",
-      "exemplo_de_uso": "Isso que você tá descrevendo chama Mula de Carga. Quando foi a última vez que alguém da sua família resolveu algo sem passar por você?",
-      "armadilha": "Atacar a família. Ataca o PADRÃO, nunca a pessoa."
+      "nome": "Padrões",
+      "definicao": "Repetições que se revelam em 3 dimensões integradas, sempre juntas: Padrão de Acontecimento (o fato que se repete) + Padrão de Comportamento (sua resposta ao fato) + Padrão de Relacionamento (as pessoas envolvidas). Os 3 juntos formam o ciclo que mantém travado. 'Entender o padrão não rompe o padrão. O padrão é rompido VIVENDO, não compreendendo.'",
+      "as_3_camadas": {
+        "Mostrar": "O problema se repete pra você VER. Você reconhece, mas ainda cai.",
+        "Desenvolver": "O problema se repete pra você se FORTALECER. Você já muda, mas com esforço e dor.",
+        "Diplomar": "O problema se repete pra CONFIRMAR que você já mudou. Age com naturalidade, sem conflito interno."
+      },
+      "metafora_canonica_elton": "Padrão tem mais a ver com repolho do que com abacaxi. Abacaxi você descasca de uma vez. Repolho você vai tirando camada por camada. Você não suportaria ver tudo de uma vez — as relações entrariam em colapso.",
+      "quando_usar": "DIAGNÓSTICO CENTRAL. É a estrutura que sustenta toda a conversa. Pergunta-guia pra sondagem: 'Me conta uma situação que se repete na sua vida — o que acontece, como você reage, e quem aparece?'",
+      "frase_ancora": "Entender o padrão não rompe o padrão.",
+      "exemplo_de_uso": "Você tá me contando 3 histórias diferentes. Mas eu escuto a mesma história: o mesmo tipo de acontecimento, a mesma reação sua, e tem um CPF que se repete dentro. Isso é Padrão. E você já entendeu — só que entender não resolve. Romper só acontece vivendo diferente.",
+      "armadilha": "Confundir Padrão com hábito. Hábito é isolado. Padrão tem 3 dimensões e tem CPF."
     },
+
     {
-      "nome": "Culpa da Sobrevivência",
-      "definicao": "Sentimento inconsciente de que prosperar = trair / ofuscar / abandonar quem te amou antes. Você se sabota pra não 'subir demais' acima da família de origem.",
-      "quando_usar": "Quando o lead tem pavor de ganhar mais que o pai, de ficar mais rico que o irmão, de brilhar mais que o cônjuge.",
-      "frase_ancora": "Se você ficar rico, não terá permissão para pertencer à família.",
-      "exemplo_de_uso": "Você não tem dinheiro pra VOCÊ. Mas tem pra pagar a conta do seu irmão, o médico do seu pai, o remédio da sua mãe. O problema não é dinheiro. É Culpa da Sobrevivência — você não se enxerga como destino legítimo do seu próprio dinheiro.",
-      "armadilha": "Transformar em discurso de autoajuda ('você merece!'). É padrão relacional, não questão de autoestima."
+      "nome": "Matriz da Utilidade",
+      "definicao": "Ferramenta de diagnóstico que revela a UTILIDADE INCONSCIENTE que a pessoa atribui aos seus problemas nas relações. Todo problema persiste porque SERVE a uma função. Enquanto essa função não for identificada e desativada, o problema não tem razão de ir embora.",
+      "os_4_quadrantes": {
+        "Punir": "Causa dano ao outro como retaliação (silêncio, ausência, comportamento destrutivo)",
+        "Poupar": "Evita algo que não se quer fazer ('estou doente' como forma de não assumir)",
+        "Unir": "Aproxima alguém pelo sofrimento compartilhado (crise que gera atenção)",
+        "Afastar": "Cria distância emocional (briga constante que impede intimidade)"
+      },
+      "quando_usar": "Diagnóstico profundo. Depois que o lead descreveu um problema persistente, fazer a pergunta-chave que quebra a defesa: 'quando esse problema aconteceu, PRA QUEM VOCÊ LIGOU?'",
+      "frase_ancora": "No momento em que você acaba com a utilidade, o problema não tem mais função em estar aí.",
+      "exemplo_de_uso": "Você tá me descrevendo um problema que não vai embora há anos. A gente não trabalha em cima do problema — trabalha em cima da UTILIDADE dele. Esse problema está punindo alguém, poupando você de alguma coisa, unindo você a alguém ou afastando você de alguém. Enquanto ele serve, ele fica.",
+      "armadilha": "Acusar o lead de 'querer' o problema. Ele não quer CONSCIENTEMENTE. A utilidade é inconsciente — tirar a utilidade é libertação, não culpa."
     },
-    {
-      "nome": "Ciclo do Quase",
-      "definicao": "A vida em montanha-russa: quase é promovido, quase quita dívidas, quase fecha contrato. No momento da virada, Pré-Queda. Volta ao nível do núcleo familiar.",
-      "quando_usar": "Quando o lead descreve 2+ situações onde 'quase' deu certo e algo desmoronou.",
-      "frase_ancora": "Há quanto tempo você tá quase lá?",
-      "exemplo_de_uso": "Porque cada vez que você conta, tem a palavra 'quase' no meio. 'Quase comprei a casa. Quase fechei o contrato. Quase saí da dívida.' Isso não é azar — é Ciclo do Quase.",
-      "armadilha": "Usar sem ter ouvido pelo menos 2 acontecimentos 'quase'."
-    },
-    {
-      "nome": "Plano Perfeito",
-      "definicao": "Obsessão por condições ideais antes de agir. 'Quando os filhos estiverem maiores', 'quando a crise passar', 'quando eu tiver X'. Estratégia de permanência disfarçada de prudência.",
-      "quando_usar": "Objeção 'não é a hora', 'depois eu entro', 'quando estiver mais calmo'.",
-      "frase_ancora": "Plano Perfeito é forma chique de dizer nunca.",
-      "exemplo_de_uso": "Me descreve esse momento certo. Que sinais têm que aparecer pra você saber que é A hora? Porque se você não souber descrever, é Plano Perfeito.",
-      "armadilha": "Zombar do cuidado legítimo. Diferencie entre prudência genuína e adiamento crônico (3+ tentativas já adiadas)."
-    },
-    {
-      "nome": "Teto Financeiro",
-      "definicao": "Limite invisível de renda que a pessoa bate e não passa. Independe da profissão — é o teto que a família de origem estabeleceu como 'seu lugar'.",
-      "quando_usar": "Quando o lead ganha bem pro padrão antigo mas está estagnado. Três pós-graduações e ganha R$ 4.500-8k.",
-      "frase_ancora": "Você não encontra muita gente rica no lado de baixo. Trabalho virado pra Reconhecimento não vira Recompensa.",
-      "exemplo_de_uso": "Três pós, MBA, trabalha 14h por dia — e ganha R$ 8 mil. Isso não é falta de Capacidade. É Teto Financeiro. Sua família te autorizou até aqui.",
-      "armadilha": "Confundir com mercado ou carreira. Teto Financeiro é relacional, não técnico."
-    },
-    {
-      "nome": "Festa no Banheiro",
-      "definicao": "Todos invadem sua intimidade e opinam em decisões pessoais. Não há porta. A família é dentro, os amigos são dentro, o trabalho é dentro — tudo dentro.",
-      "quando_usar": "Quando o lead descreve família/cônjuge/pais opinando em tudo. Dificuldade de dizer não.",
-      "frase_ancora": "Tá todo mundo dentro do seu banheiro dizendo como você tem que viver, e você se encolhe pra caber na vida deles.",
-      "exemplo_de_uso": "Você mora com gente que tem cópia da chave da sua vida. Opinam no que você vai fazer, no que vai ganhar, no que vai vestir. Isso se chama Festa no Banheiro.",
-      "armadilha": "Usar sem nomear os 3 Perfis Controladores que operam lá dentro."
-    },
-    {
-      "nome": "3 Perfis Controladores",
-      "definicao": "Vítimas (esperam ser salvas), Vingadores (presos ao passado), Narcisistas/Salvadores (querem resolver tudo por medo de não serem amados).",
-      "quando_usar": "Depois de nomear Festa no Banheiro. Pra mapear quem está lá dentro.",
-      "frase_ancora": "A Vítima muta em Vingador quando você coloca limite. O Narcisista muta em Vítima ou intensifica. Prepare-se.",
-      "exemplo_de_uso": "Quando você começar a estabelecer limites, essa pessoa vai mutar. Vítima vira Vingador. Vingador vira Vítima. Narcisista vai ignorar ou intensificar.",
-      "armadilha": "Rotular pessoa da família na cara do lead. Nomear o PADRÃO, não a pessoa."
-    },
+
     {
       "nome": "Dependência Emocional",
-      "definicao": "Vínculo que exige submissão como pedágio de pertencimento. Quem entra paga com a própria vontade pra não ser abandonado. Gera 5 Danos: Medo, Culpa, Desânimo, Insegurança, Procrastinação.",
-      "quando_usar": "Quando o lead trava por medo de perder alguém. Retenção — fala dos 5 Danos.",
+      "definicao_canonica_elton": "Quando a ação ou o estado de uma pessoa passa a interferir na ação ou no estado de outra pessoa.",
+      "definicao_complementar": "O fio invisível que limita a Permissão. Vínculo que exige submissão como pedágio de pertencimento — quem entra paga com a própria vontade pra não ser abandonado.",
+      "os_5_danos": [
+        "Medo",
+        "Culpa",
+        "Desânimo",
+        "Insegurança",
+        "Procrastinação"
+      ],
+      "principio_chave": "Quanto mais baixa a Permissão, maior a Dependência Emocional. Porque a pessoa está tomando decisões com base nas relações, não na própria vontade.",
+      "distinção_importante": "Independência Emocional NÃO é frieza ou isolamento. É vínculos fortes com limites claros. Não abrir mão do afeto, mas não pagar preço caro por ele.",
+      "quando_usar": "Quando o lead trava por medo de perder alguém, quando descreve qualquer dos 5 danos, quando a narrativa dele gira em torno de 'o que os outros vão pensar/sentir/fazer'. Retenção — manutenção.",
       "frase_ancora": "Toda demora nos resultados esconde uma espera nas relações.",
-      "exemplo_de_uso": "Você chama de amor, mas amor não cobra pedágio. Você tá pagando pra não ser abandonado. Isso é Dependência Emocional. E ela exige que você continue pequeno.",
-      "armadilha": "Pregar independência. A questão não é cortar, é não pagar com a vontade."
+      "exemplo_de_uso": "Você chama de amor, mas amor não cobra pedágio. Você tá pagando pra não ser abandonado — isso é Dependência Emocional. E ela exige que você continue pequeno. Afeto e reconhecimento precisam ser CONSEQUÊNCIA da sua postura, não SINTOMA da sua dependência.",
+      "armadilha": "Pregar independência radical ou corte de laços. A questão não é cortar — é não pagar com a vontade."
     },
+
+    {
+      "nome": "3 Perfis Controladores",
+      "definicao": "Formas inconscientes de controlar o outro ou a situação dentro de uma relação. Todo Padrão nasce ou se mantém dentro de uma relação onde um desses perfis está ativo. Uma pessoa pode transitar entre perfis dependendo da relação. NÃO é rótulo fixo — é LENTE DE ANÁLISE.",
+      "os_3_perfis": {
+        "Vitima": {
+          "mecanismo": "Usa o PRESENTE — o que está acontecendo com ela agora. Cria problema sob medida: nem grande demais (não suporta), nem pequeno demais (o outro não liga). Não quer se levantar; quer que o outro venha levantá-la.",
+          "pergunta_que_neutraliza": "Você quer se levantar ou quer que eu vá te levantar?"
+        },
+        "Vingador": {
+          "mecanismo": "Usa o PASSADO — o que foi feito com ele. Existe entre pessoas que foram importantes uma pra outra. Alguém foi embora/cresceu, o que ficou se sentiu injustiçado. Não busca justiça — busca voltar a ser importante. Sempre ataca o que é importante pro outro, pra tirar o que ocupou o lugar dele.",
+          "pergunta_que_revela": "O que você quer — justiça, ou voltar a ser importante pra essa pessoa?"
+        },
+        "Narcisista": {
+          "mecanismo": "Usa QUALQUER TEMPO — o que importa é estar em cima. Precisa ser maior, mais importante e NECESSÁRIO. Quando você cresce e segue, você sai de um lugar do qual não fez falta — ele volta pra provar que você não consegue sem ele. Pode também ser o 'perfeitinho' que tenta pouco pra não decepcionar.",
+          "pergunta_que_revela": "De quem você está tentando não se decepcionar?"
+        }
+      },
+      "mutacoes_previsiveis": {
+        "Vitima": "Ao ser confrontada → migra para Vingador (fragilidade vira raiva)",
+        "Vingador": "Ao ser confrontado → migra para Vítima (raiva vira acusação e drama)",
+        "Narcisista": "Ao ser confrontado → migra para Vítima quando o controle falha, ou intensifica o controle"
+      },
+      "quando_usar": "Depois de mapear a relação-chave do lead. Prepara o lead pra reação das pessoas ao redor quando ele começar a mudar.",
+      "frase_ancora": "Quando você começar a estabelecer limites, essa pessoa vai mutar. Prepare-se.",
+      "exemplo_de_uso": "Quando você começar a se mexer, as pessoas ao seu redor não vão aplaudir. A Vítima da sua vida vai virar Vingador. O Vingador vai virar Vítima. O Narcisista vai ignorar ou intensificar. Se você não sabe disso, volta atrás — porque vai interpretar a reação como sinal de que errou.",
+      "armadilha": "Rotular pessoa da família na cara do lead. Nomear sempre o PADRÃO, nunca a pessoa.",
+      "correcao_v2": "Removido o termo 'Salvador' — não é canônico no Núcleo. O 'salvador' é manifestação do Narcisista ('sem mim nada funciona'), não perfil separado."
+    },
+
     {
       "nome": "Escada da Postura",
-      "definicao": "5 degraus. Comum: Reclamar / Justificar / Questionar 'por quê'. Divergente: Questionar 'como' / Propor / Aplicar.",
-      "quando_usar": "Rapport, quebra de objeção, posicionamento mental. Mostrar em qual degrau o lead passa mais tempo.",
-      "frase_ancora": "A sua postura determina o seu avanço, e o avanço determina o resultado, que é só uma consequência inevitável. A justificativa explica tudo, mas não resolve nada.",
-      "exemplo_de_uso": "Você já parou pra notar em qual degrau você passa mais tempo? As pessoas que só reclamam e justificam nunca mudam. As que questionam COMO e aplicam, mudam tudo.",
+      "definicao": "5 degraus de postura diante da vida. Dois primeiros (Reclamar, Justificar) = Postura Comum — alimenta Padrões. Três últimos (Questionar o COMO, Propor, Aplicar) = Postura Divergente — rompe Padrões.",
+      "os_5_degraus": [
+        "1. Reclamar — fala do problema sem responsabilidade",
+        "2. Justificar — explica por que não consegue (degrau MAIS PERIGOSO porque parece virtude)",
+        "3. Questionar — MAS atenção: 'questionar o por quê' = busca culpado → volta pra justificativa. 'Questionar o como' = busca caminho → abre pro Propor",
+        "4. Propor — cria alternativas concretas",
+        "5. Aplicar — executa a nova postura"
+      ],
+      "distincao_canonica_ramon": "Tome cuidado com o tipo de questionamento. Tem gente que questiona pra encontrar culpado, tem gente que questiona pra encontrar caminho.",
+      "quando_usar": "Rapport, quebra de objeção, posicionamento mental. Mostrar em qual degrau o lead passa mais tempo — especialmente separar questionar por quê vs. questionar como.",
+      "frase_ancora": "Sua postura determina seu avanço, e o avanço determina o resultado — que é só consequência inevitável. A justificativa explica tudo, mas não resolve nada.",
+      "exemplo_de_uso": "Em qual degrau você passa mais tempo? Se é em 'justificar', você tem justificativa boa — se não tivesse, não usaria. O problema é que justificativa explica tudo e não resolve nada. O salto real é do 'questionar como' pro 'propor'.",
       "armadilha": "Soar como palestrante motivacional. Mesa de jantar, não palco."
     },
+
     {
       "nome": "Escada da Maturidade",
-      "definicao": "5 degraus de busca. 1-Afeto, 2-Reconhecimento, 3-Recompensa, 4-Sentido, 5-Legado. Você só acessa o próximo quando domina o anterior.",
-      "quando_usar": "Diagnóstico profundo. Lead quer R$100k/mês mas opera no Reconhecimento (gasta energia achando que ninguém reconhece).",
+      "definicao": "Estrutura que revela em qual degrau de NECESSIDADE RELACIONAL a pessoa opera — e por que ela para de progredir quando a necessidade inconsciente é maior que a vontade consciente.",
+      "os_5_degraus": {
+        "1_Afeto": "Ser visto, ser amado, ter alguém por perto (fase natural: bebê/criança). Indicador: recebe crítica profissional e acha que a pessoa não gosta dela pessoalmente.",
+        "2_Reconhecimento": "Pertencer, ser especial, ser validado (fase: adolescente). Indicador: cliente elogia mas não compra — e o vendedor vai pra casa feliz com o elogio, esquecendo que não fechou.",
+        "3_Recompensa": "Resultado concreto — dinheiro, relação de valor, saúde (fase: adulto bem formado). Indicador: quando recebe elogio, agradece e volta ao foco: 'o que falta pra fechar?'",
+        "4_Sentido": "Propósito, contribuição, impacto (só pra quem preencheu os anteriores)",
+        "5_Legado": "O que deixar pro mundo (quem viveu plenamente)"
+      },
+      "principio_critico_ramon": "Reconhecimento e afeto devem ser CONSEQUÊNCIAS de uma vida extraordinária que você criou — e não SINTOMAS de uma Dependência Emocional e de uma necessidade que você ainda não preencheu.",
+      "armadilha_sentido_legado_prematuro": "Pessoas que pulam do Reconhecimento pra Sentido/Legado como fuga. Dizem 'estou fazendo uma missão' ou 'ajudando o mundo', mas na prática estão evitando: botar a cara na internet pra vender, negociar com o sócio, sentar com o chefe, enfrentar resultados concretos. É Padrão narcisista disfarçado de propósito. 'Sentido é coisa de quem tem o bolso cheio e a cabeça livre.'",
+      "quando_usar": "Diagnóstico profundo. Quando o lead quer resultado grande (R$100k/mês, liberdade) mas opera emocionalmente no Afeto ou Reconhecimento — vai gastar toda energia achando que ninguém reconhece, em vez de vender.",
       "frase_ancora": "Você quer a Recompensa operando no degrau do Reconhecimento. Não funciona.",
-      "exemplo_de_uso": "Você quer ganhar mais mas opera no degrau do Reconhecimento. Vai gastar toda energia achando que ninguém reconhece seu trabalho, em vez de botar a cara na internet pra vender.",
-      "armadilha": "Acusar o lead de imaturo. É diagnóstico, não julgamento."
+      "exemplo_de_uso": "Você me pediu pra ganhar mais. Mas pela forma que você fala, você opera no Reconhecimento. Você vai gastar sua energia achando que ninguém reconhece seu trabalho, em vez de botar a cara na internet pra vender. O problema não é o quanto você quer ganhar — é o degrau de onde você está querendo.",
+      "armadilha": "Acusar o lead de imaturo. É diagnóstico, nunca julgamento."
     },
+
     {
-      "nome": "Obesidade Intelectual",
-      "definicao": "Confundir acumular teoria com resolver problema. Tentou tudo na camada de Capacidade, nada na camada de Permissão. No fundo espera que o próximo método também não funcione — pra ter desculpa.",
-      "quando_usar": "Objeção 'já tentei de tudo', 'já fiz vários cursos', 'tô descrente'.",
-      "frase_ancora": "Entender o padrão não rompe o padrão. Você já foi pra vida e entendeu. Entender não muda nada.",
-      "exemplo_de_uso": "Você tem 3 pós, 5 cursos, 2 terapias. Entendeu tudo. E não mudou nada. Isso é Obesidade Intelectual. Padrão se rompe vivendo, não compreendendo.",
-      "armadilha": "Desvalidar o conhecimento que o lead construiu. A questão é ONDE aplicá-lo — na Permissão, não em mais Capacidade."
+      "nome": "Combinados",
+      "definicao": "Acordos — conscientes ou inconscientes, verbalizados ou não — que estabelecem o que cada pessoa pode/deve ser, ter, fazer ou evitar dentro de uma relação. A maioria nunca foi dita em voz alta. Funcionam como LEI INTERNA do relacionamento.",
+      "origem": "Conceito estruturado por Elton Euler (áudios 854, 881, 889, 890, 973)",
+      "os_3_subtipos_problematicos": {
+        "Combinado_Inconsciente_Velado": "Nunca foi explícito. A pessoa nem sabe que firmou, mas cobra como se soubesse. Sinal: 'mas eu pensei que a gente tinha combinado...' / reação desproporcional quando o outro age diferente do esperado.",
+        "Combinado_Vencido": "Fez sentido quando foi firmado. As condições mudaram, o Combinado ficou. O que era funcional virou peso. 'Bom no passado, pesado no presente, limitante no futuro.'",
+        "Combinado_Desesperado": "Firmado sob pressão, medo ou urgência emocional. É Dependência Emocional cristalizada em acordo. A pessoa aceitou não porque queria, mas porque PRECISAVA — de aprovação, de segurança, de não perder o outro. Os mais difíceis de romper."
+      },
+      "quando_usar": "Diagnóstico de relações. Quando o lead descreve obrigações ou expectativas em relações antigas (pais, cônjuge, sócios). Pergunta-guia: 'qual combinado você fez há 20 anos que até hoje cumpre?'",
+      "frase_ancora": "Todo relacionamento tem Combinados. A questão não é se existem — é se ainda servem.",
+      "exemplo_de_uso": "Você me descreveu uma relação que funciona num acordo que nunca foi dito em voz alta. Isso chama Combinado Inconsciente. Ou um acordo que FOI dito, mas lá atrás, quando você era outra pessoa — e ainda é cobrado. Esse é Combinado Vencido. Primeiro passo: nomear em voz alta.",
+      "armadilha": "Transformar em justificativa pra abandonar relações. Combinado é pra renegociar ou encerrar com clareza — não pra dramatizar."
     },
+
     {
-      "nome": "Medo do Brilho / Medo de Ficar Rico",
-      "definicao": "Trava em expor-se ou prosperar acima dos pares. 'Quem você pensa que é?'. Síndrome do impostor invertida.",
-      "quando_usar": "Lead auto-sabota negócios, tem família humilde ou irmãos em situação pior.",
-      "frase_ancora": "Se você prosperar, será a única justificativa pro fracasso dos seus irmãos.",
-      "exemplo_de_uso": "Você sabe que poderia. Mas isso significa ofuscar seu pai que não conseguiu. É mais leal continuar médio do que brilhar e 'trair' a origem. Chama-se Medo do Brilho.",
-      "armadilha": "Romantizar o brilho. É decisão difícil, tem preço relacional real."
+      "nome": "Plano Perfeito",
+      "definicao_canonica": "Estrutura que liga o Sonho Grande aos Objetivos e os Objetivos às Ações (PDAs). O Plano DEFINE os acontecimentos — se você não tem um Plano consciente, está executando um Plano inconsciente construído pelos seus Padrões.",
+      "estrutura": "Sonho Grande → Objetivos → PDAs",
+      "principio_chave": "Nenhum acontecimento é aleatório: tudo responde ao Plano que você está executando, consciente ou inconscientemente. O Plano não é lista de metas — é o mapa que revela quais Padrões precisam ser rompidos pros Objetivos se tornarem alcançáveis.",
+      "quando_usar": "Oferta e método. Quando o lead descreve vida no piloto automático, quando diz 'não sei pra onde vou', quando pede método concreto.",
+      "frase_ancora": "Se você não tem um Plano, não está sem plano — está executando o plano inconsciente dos seus Padrões.",
+      "exemplo_de_uso": "Tudo que acontece com você responde a algum Plano. Se você não tem um consciente, tem um inconsciente sendo executado — e esse plano foi construído pelos Padrões que você herdou. A Aliança desenha o Plano consciente: Sonho Grande, Objetivos, PDAs — com os Padrões identificados pra romper.",
+      "armadilha": "Apresentar como 'planejamento estratégico' genérico. Plano Perfeito é ESPECÍFICO: liga Sonho → Padrão → PDA. Não é metas SMART.",
+      "correcao_v2": "A v1 definia Plano Perfeito como 'obsessão por condições ideais antes de agir'. Isso NÃO é Plano Perfeito — é adiamento crônico (aproxima-se de Reclamar/Justificar da Escada da Postura). Definição corrigida para a canônica do Núcleo."
     },
+
+    {
+      "nome": "Teto Financeiro + CPF",
+      "definicao": "Limite invisível de renda que a pessoa bate e não passa. Independe de profissão — é o teto que a família de origem estabeleceu como 'seu lugar'. O teto carrega um CPF: a PESSOA que te aciona quando você está no topo. Marcador externo mais fácil da Pré-Queda.",
+      "conceito_complementar": {
+        "nome": "Chão Financeiro + CPF",
+        "definicao": "O mínimo que você aceita viver — carrega o CPF de quem VOCÊ aciona quando está no chão."
+      },
+      "principio_canonico_elton": "Toda relação anda na velocidade do mais lento.",
+      "quando_usar": "Diagnóstico de renda. Quando o lead tem boa formação mas está estagnado financeiramente. Três pós, MBA, e ganha R$5-8k. Também: quando o lead 'quase' atinge uma meta e sempre volta ao mesmo patamar.",
+      "frase_ancora": "Você não encontra muita gente rica no lado de baixo. Trabalho virado pra Reconhecimento não vira Recompensa.",
+      "pergunta_diagnostica_canonica": "Pra onde você iria se não tivesse pra onde ir? Quem é que sempre corre pra você quando alguém não tem pra onde ir?",
+      "exemplo_de_uso": "Três pós, MBA, 14h por dia — e R$8 mil. Isso não é falta de Capacidade. É Teto Financeiro. Sua família te autorizou ATÉ AQUI. E tem um CPF que aparece toda vez que você chega perto de furar esse teto — a gente precisa identificar quem é.",
+      "armadilha": "Confundir com mercado ou carreira. Teto Financeiro é RELACIONAL, não técnico. Resolve com Permissão, não com novo curso."
+    },
+
     {
       "nome": "Conversa Difícil",
-      "definicao": "Protocolo de confronto que quebra a Dependência Emocional. Nomear o padrão na frente de quem se beneficia dele. 3 etapas: Percepções → Combinados (retratação + reparação) → Limites.",
-      "quando_usar": "Lead descreve situações onde engole, sorri, sustenta, apaga incêndio. Pós-venda.",
+      "definicao": "Protocolo de confronto que encerra um ciclo — o momento em que o Aliado, após identificar os Padrões de uma relação, estabelece novos combinados, quita dívidas e libera o outro (e a si mesmo) pra seguir.",
+      "os_3_objetivos": [
+        "Estabelecer limites saudáveis",
+        "Acabar com a espera nas relações",
+        "Liberar o outro (e a si mesmo) da cobrança"
+      ],
+      "as_3_etapas": {
+        "1_Percepcoes": "Listar o que você percebeu — sem vocabulário técnico, sem apontar culpa. Trazer como SUA visão: 'talvez você nem tenha feito isso, mas é como eu percebi'.",
+        "2_Combinados": "Sub-passos: (a) Retratação — reconhecer os próprios erros: 'eu sinto muito por ter feito X'. Tudo pode ser retratado, nem tudo pode ser reparado. (b) Reparação — quitar as dívidas (emocionais, relacionais, materiais). Pergunta obrigatória: 'existe alguma coisa que eu fiz com você que você acha que eu deveria reparar?'",
+        "3_Limites": "Com percepções e combinados na mesa, estabelecer os limites. Frase de encerramento: 'Você não me deve mais nada. Pode seguir. Eu não vou te cobrar mais.'"
+      },
+      "os_3_erros_que_travam": [
+        "Chegar como prestação de contas (vira apontamento de culpa, alimenta Padrão narcisista/vítima)",
+        "Exigir concordância do outro (o outro pode não aceitar — a espera era sua)",
+        "Criar expectativas (querer que o outro reaja de determinado jeito é NOVA fonte de Dependência Emocional)"
+      ],
+      "quando_usar": "Lead descreve situações onde engole, sorri, sustenta, apaga incêndio. Pós-venda / retenção. Quando o lead pergunta 'mas o que eu faço com essa pessoa?'",
       "frase_ancora": "Qual é a conversa que você ainda não teve? Enquanto ela não rolar, o resto é enfeite.",
-      "exemplo_de_uso": "Com quem? O que você precisa dizer que há anos você engole? A Conversa Difícil sustenta cada degrau da Escada da Postura.",
-      "armadilha": "Entregar scripts prontos. Conversa Difícil é postura, não texto decorado."
+      "exemplo_de_uso": "Com quem? O que você precisa dizer que há anos você engole? A Conversa Difícil é a estrutura que sustenta cada degrau da Escada da Postura. Sem ela, todo trabalho interno que você fizer volta — porque a relação continua cobrando o combinado antigo.",
+      "armadilha": "Entregar scripts prontos. Conversa Difícil é POSTURA, não texto decorado. 'Vá com zero — elimine expectativas' (Ramon)."
     },
+
     {
       "nome": "Modo Fome",
-      "definicao": "Protocolo em Pré-Queda. Dois movimentos: Afastar o que tira a fome + Aproximar o que alimenta a fome. Reconfigura ambiente emergencialmente.",
-      "quando_usar": "Lead em momento de decisão importante + pessoas ao redor sabotando. Pós-venda protetivo.",
-      "frase_ancora": "Tem gente te puxando pra trás e tem gente afastando você do seu Sonho Grande. Liste e mude o ambiente AGORA.",
-      "exemplo_de_uso": "Você tá entrando em Pré-Queda. Nesse momento é ambiente ou sabotagem. Liste quem precisa afastar e quem precisa aproximar. Agora.",
-      "armadilha": "Soar como corte de laço afetivo. Modo Fome é temporário, cirúrgico, não permanente."
+      "definicao": "Estado intencional de ativação da vontade — protocolo ATIVO pra proteger e amplificar o desejo de avançar. Não é motivação passiva. É gestão deliberada do que alimenta e do que mata a fome de crescer.",
+      "os_2_movimentos": {
+        "Afastar": "Tudo que tira a fome — conteúdo que entretém sem provocar, relações que acomodam, ambientes que normalizam estagnação, comparações que anestesiam",
+        "Aproximar": "Tudo que alimenta a fome — pessoas que já estão onde você quer chegar, ambientes que expõem ao que ainda não é real, conteúdo que provoca inquietação produtiva, memórias dos momentos em que a fome produziu resultado"
+      },
+      "quando_usar": "Lead em momento de decisão importante + pessoas ao redor sabotando. Pós-venda protetivo. Quando o lead diz 'perdi a vontade'.",
+      "frase_ancora": "Fome não é algo que você espera sentir. Fome é algo que você aprende a preservar. O problema não é quando você não tem fome — é quando você tem fome e fica parado perto de tudo que tira.",
+      "exemplo_de_uso": "Você tá entrando em Pré-Queda. Nesse momento é ambiente ou sabotagem. Liste quem precisa afastar e quem precisa aproximar. Não é pra sempre — é agora, cirúrgico.",
+      "armadilha": "Soar como corte de laço afetivo definitivo. Modo Fome é temporário, cirúrgico, e é sobre GESTÃO DE ESTÍMULO, não rompimento de relações."
     },
+
     {
       "nome": "Ponto Cego",
-      "definicao": "Padrão invisível que trava o progresso. Você não vê porque é o filtro através do qual você olha o mundo. Precisa de observador externo.",
-      "quando_usar": "Abertura / autoridade. Posicionar o mentor como observador que enxerga o que o lead não enxerga de si.",
+      "definicao": "Padrão invisível que trava o progresso. Você não vê porque é o FILTRO pelo qual você olha o mundo. Precisa de observador externo — ninguém vê o próprio ponto cego sozinho.",
+      "frase_canonica_elton": "Ignorar quanto custa pra mudar é deixar um ponto cego vivo na sua vida.",
+      "quando_usar": "Abertura / autoridade / posicionamento do mentor. Justifica a necessidade de um terceiro — é o frame que vende mentoria contra 'eu resolvo sozinho'.",
       "frase_ancora": "Ter um observador externo muda a qualidade das decisões.",
-      "exemplo_de_uso": "Aqui não é sobre concordar comigo. É sobre dar carta branca pra eu ver o que você não consegue enxergar de si mesmo — e você tomar responsabilidade total sobre o que faz com isso."
+      "exemplo_de_uso": "Aqui não é sobre concordar comigo. É sobre dar carta branca pra eu ver o que você não consegue enxergar de si mesmo — e você tomar responsabilidade total sobre o que faz com isso. Isso é ponto cego: não é o que você não sabe, é o que você não consegue ver mesmo sabendo.",
+      "armadilha": "Posicionar o mentor como 'quem tem as respostas'. O mentor é quem ILUMINA — o Aliado é quem age."
+    },
+
+    {
+      "nome": "Mula de Carga",
+      "apelido_venda": true,
+      "nome_canonico": "Permissão Represada + Distúrbio de Prioridade + Dependência Emocional",
+      "definicao": "Apelido comercial pra descrever o padrão de quem sustenta todo mundo nas costas — virou represa. Todo problema da família chega e para nele. No Núcleo isso é tratado como 'Permissão Represada' (áudio 830) + 'Distúrbio de Prioridade' do Basal 02 do Elton: 'fomos educados a nos importar com os outros mais do que as pessoas se importam com elas mesmas'.",
+      "quando_usar": "Lead diz 'sustento minha família', 'carrego todo mundo', 'sou o salvador da casa', 'todo mundo me liga quando tem problema'.",
+      "frase_ancora": "Você virou represa. Todo problema da família chega e para em você.",
+      "exemplo_de_uso": "Isso que você tá descrevendo é Permissão Represada — sua Permissão de crescer tá entupida pelos problemas que você carrega dos outros. Quando foi a última vez que alguém da sua família resolveu algo SEM passar por você?",
+      "armadilha": "Atacar a família. Ataca o PADRÃO, nunca a pessoa. E: avise o vendedor que dentro da Aliança o lead vai encontrar o termo 'Permissão Represada', não 'Mula de Carga' — o apelido é só rapport inicial."
+    },
+
+    {
+      "nome": "Salvador",
+      "apelido_venda": true,
+      "apelido_alternativo": "Herói da Família",
+      "nome_canonico": "Dependência Emocional + Culpa (APF_09 — Tipos de Culpa) + Efeito Paralelo negativo da prosperidade",
+      "definicao": "Apelido comercial pra descrever a identidade inconsciente de quem se vê como O SALVADOR / A SALVADORA da família — o herói/heroína que não pode deixar ninguém pra trás, que carrega o peso dos outros nas costas e sente culpa ao prosperar (porque prosperar = trair/ofuscar/abandonar quem te amou antes). No Núcleo se trabalha via Dependência Emocional (os 5 Danos, especialmente Culpa) + os 4 Tipos de Culpa do APF_09. 'Não é busca por justiça, é busca por liberdade' (Elton).",
+      "nota_historica": "Na v1 esse apelido era chamado 'Culpa da Sobrevivência'. A v2 renomeou para 'Salvador' porque o nome ativa a IDENTIDADE que a pessoa defende (o herói) e facilita o reconhecimento — o lead se identifica rapidamente como 'o salvador da família'. A culpa vem como consequência dessa identidade, não como nome primário.",
+      "quando_usar": "Lead tem pavor de ganhar mais que o pai, ficar mais rico que o irmão, brilhar mais que o cônjuge. Lead paga a conta dos outros mas não tem pra ele. Lead se apresenta ou se reconhece como 'o que segura a família', 'o que resolve tudo', 'o herói/heroína da casa'. Sentimento recorrente: 'se eu me salvar, quem salva eles?'",
+      "frase_ancora": "Você não é a salvação da sua família. Enquanto você achar que é, você não vai chegar na sua vida.",
+      "frase_ancora_secundaria": "Se você ficar rico, não terá Permissão pra continuar pertencendo à família.",
+      "exemplo_de_uso": "Você não tem dinheiro pra VOCÊ. Mas tem pro remédio da sua mãe, pra conta do seu irmão, pro médico do seu pai. Isso tem nome na metodologia: Salvador. Você se enxerga como o herói da família — o que não pode deixar ninguém pra trás. E salvador não prospera, porque prosperar é 'trair' quem ficou pra trás. Dentro da Aliança isso é Dependência Emocional sustentada por Culpa — e tem protocolo específico.",
+      "armadilha": "Transformar em discurso de autoajuda ('você merece!'). É padrão relacional — se resolve com análise de responsabilidade (as 3 perguntas canônicas do APF_09), não com afirmação positiva. E ATENÇÃO: o 'Salvador' aqui é IDENTIDADE do lead (como ele se vê), não rótulo pra alguém da família. Não confundir com o antigo perfil 'Salvador' dos 3 Perfis Controladores (que foi removido da v2 porque era manifestação do Narcisista)."
+    },
+
+    {
+      "nome": "Ciclo do Quase",
+      "apelido_venda": true,
+      "nome_canonico": "Pré-Queda recorrente em série",
+      "definicao": "Apelido comercial pra descrever a vida em montanha-russa — quase é promovido, quase fecha contrato, quase quita dívida. No momento da virada, Pré-Queda. No Núcleo isso é simplesmente Pré-Queda em sequência, revelando o mesmo Padrão de Acontecimento + Padrão de Relacionamento.",
+      "quando_usar": "Lead descreve 2+ situações com a palavra 'quase'. É a forma mais fácil de abrir o diagnóstico de Pré-Queda.",
+      "frase_ancora": "Há quanto tempo você tá quase lá?",
+      "exemplo_de_uso": "Porque cada vez que você me conta, tem a palavra 'QUASE' no meio. 'Quase comprei a casa. Quase fechei o contrato. Quase saí da dívida.' Isso não é azar — é Pré-Queda em série. Tem um Padrão de Acontecimento se repetindo E tem um CPF que aparece na hora da virada. A gente descobre os dois.",
+      "armadilha": "Usar sem ter ouvido pelo menos 2 acontecimentos 'quase' na conversa. Sem evidência, vira suposição."
+    },
+
+    {
+      "nome": "Festa no Banheiro",
+      "apelido_venda": true,
+      "nome_canonico": "Dependência Emocional com os 3 Perfis Controladores ativos simultaneamente",
+      "definicao": "Apelido comercial pra descrever quando todos invadem a intimidade e opinam em decisões pessoais. Não há porta. No Núcleo isso é Dependência Emocional operando numa rede com múltiplos Perfis Controladores ativos.",
+      "quando_usar": "Lead descreve família/cônjuge/pais/sócios opinando em tudo. Dificuldade de dizer não. Decisões pessoais sempre passam por aprovação coletiva.",
+      "frase_ancora": "Tá todo mundo dentro do seu banheiro dizendo como você tem que viver — e você se encolhe pra caber na vida deles.",
+      "exemplo_de_uso": "Você mora com gente que tem cópia da chave da sua vida. Opinam no que vai fazer, no que vai ganhar, no que vai vestir. O primeiro passo não é expulsar ninguém — é mapear quem tá lá dentro e qual perfil cada um ocupa: Vítima, Vingador ou Narcisista. Depois a gente trabalha os Combinados com cada um.",
+      "armadilha": "Usar sem nomear depois os 3 Perfis Controladores que operam lá dentro. Sem isso, vira queixa genérica."
+    },
+
+    {
+      "nome": "Obesidade Intelectual",
+      "apelido_venda": true,
+      "nome_canonico": "Confusão entre Capacidade e Permissão + 'Entender o padrão não rompe o padrão' (Padrões)",
+      "definicao": "Apelido comercial pra descrever quem confunde acumular teoria com resolver problema. Tentou tudo na camada de Capacidade, nada na camada de Permissão. No Núcleo isso é a frase-âncora dos Padrões: 'Entender o padrão não rompe o padrão. O padrão é rompido vivendo, não compreendendo.'",
+      "quando_usar": "Objeção 'já tentei de tudo', 'já fiz vários cursos', 'tô descrente'. Lead com 3 pós, 5 mentorias, 2 terapias e mesmo resultado.",
+      "frase_ancora": "Entender o padrão não rompe o padrão. Você já foi pra vida e entendeu. Entender não muda nada.",
+      "exemplo_de_uso": "Você tem 3 pós, 5 cursos, 2 terapias. Entendeu tudo. E não mudou nada. Não é falta de informação — é que você tá trabalhando na camada errada. Curso resolve Capacidade. Você tem Capacidade. Seu travamento é Permissão — e isso só rompe vivendo de um jeito que você ainda não viveu.",
+      "armadilha": "Desvalidar o conhecimento que o lead construiu. A questão é ONDE aplicá-lo — na Permissão, não em MAIS Capacidade."
+    },
+
+    {
+      "nome": "Medo do Brilho / Medo de Ficar Rico",
+      "apelido_venda": true,
+      "nome_canonico": "Dependência Emocional + Teto Financeiro + Escada da Maturidade presa no Afeto/Reconhecimento",
+      "definicao": "Apelido comercial pra descrever a trava em expor-se ou prosperar acima dos pares. Relacionado ao áudio 410 'Quem você pensa que é' (Ramon) e 553 '50 anos em 10 minutos' (Aliados). No Núcleo isso é a combinação: Teto Financeiro (limite herdado) + Dependência Emocional (fio que mantém leal ao núcleo familiar) + operação nos degraus inferiores da Escada da Maturidade (precisa do afeto/reconhecimento dos pares).",
+      "quando_usar": "Lead auto-sabota negócios, tem família humilde ou irmãos em situação pior. Lead não se posiciona online, não cobra o que vale, não aparece pra vender.",
+      "frase_ancora": "Se você prosperar, será a única justificativa pro fracasso dos seus irmãos.",
+      "exemplo_de_uso": "Você sabe que poderia cobrar mais. Mas isso significa ofuscar seu pai, que não conseguiu. É mais LEAL continuar médio do que brilhar e 'trair' a origem. Tem nome: é lealdade inconsciente a um Teto Financeiro herdado. E enquanto você opera querendo o afeto/reconhecimento deles, você nunca vai pra Recompensa.",
+      "armadilha": "Romantizar o brilho ('você merece brilhar!'). É decisão difícil, com PREÇO relacional real. Negar o preço mina a confiança."
     }
   ],
+
+  "conceitos_para_qualificacao_de_lead": [
+    {
+      "nome": "Aliado Barulhento vs. Aliado Comprometido",
+      "origem": "Ramon Galimberti — áudio 503",
+      "definicao": {
+        "Barulhento": "Diz 'já rodei 70 protocolos mas não identifiquei nada'. Compromisso é com o BARULHO (atividade, quantidade, aparência de esforço).",
+        "Comprometido": "Não quer saber quantos protocolos fez. Compromisso é com a SOLUÇÃO."
+      },
+      "quando_usar": "Qualificação no SDR / pré-venda. Identificar se o lead vai executar ou só consumir conteúdo.",
+      "pergunta_diagnostica": "O que você fez de diferente nos últimos 30 dias E que resultado isso gerou? (se o lead responde lista de consumo sem resultado = Barulhento; se responde ação + resultado = Comprometido)",
+      "armadilha": "Rejeitar Barulhento na largada. Pode ser Comprometido travado em Padrão de acumular. Oferta ajusta."
+    },
+    {
+      "nome": "Postura Comum vs. Postura Divergente",
+      "origem": "Ramon Galimberti — Basal 21",
+      "definicao": "Postura Comum = Reclamar + Justificar (alimenta Padrões, busca culpado, explica mas não resolve). Postura Divergente = Questionar o como + Propor + Aplicar (rompe Padrões, busca caminho, age e gera resultado).",
+      "quando_usar": "Frame de identidade no fechamento. 'A Aliança é pra quem quer sair da postura comum'.",
+      "frase_ancora_canonica": "Sua postura determina seu avanço, e o avanço determina o resultado — que é só consequência inevitável."
+    },
+    {
+      "nome": "Obediência à Referência vs. Autoria Divergente",
+      "contexto": "Operação fundamental — o lead que só consome referências (Ramon, Elton, outros mentores) sem virar autor da própria vida fica no consumo eterno. A Aliança Divergente forma AUTORES, não discípulos.",
+      "quando_usar": "Quando o lead fala 'eu preciso que alguém me diga o que fazer'. Sinal de dependência relacional na camada do mentor."
+    }
+  ],
+
+  "diagnostico_inicial_lead_frio_morno_quente": {
+    "nota": "Sugestão de uso dos conceitos na jornada de diagnóstico, do primeiro contato ao fechamento.",
+    "lead_frio": {
+      "objetivo": "Gerar identificação com o PROBLEMA (ele ainda não sabe que tem nome).",
+      "conceitos_prioritarios": [
+        "CDP (mostrar o gap entre C+D e resultado)",
+        "Padrões (3 dimensões — pergunta: 'me conta uma situação que se repete')",
+        "Ciclo do Quase / Pré-Queda (se o lead tiver 2+ histórias de 'quase')",
+        "Postura Comum vs. Divergente (frame de identidade)"
+      ]
+    },
+    "lead_morno": {
+      "objetivo": "Gerar diagnóstico ESPECÍFICO da trava dele (ele já sabe que tem um problema, precisa saber qual é e por que os métodos anteriores falharam).",
+      "conceitos_prioritarios": [
+        "Obesidade Intelectual (se já tentou vários métodos)",
+        "Permissão (o gap) + Teto Financeiro + CPF (se é trava de renda)",
+        "Matriz da Utilidade (se o problema persiste há muito tempo)",
+        "Dependência Emocional + 5 Danos (se a trava é relacional)",
+        "Escada da Maturidade (se quer resultado grande mas opera em Afeto/Reconhecimento)"
+      ]
+    },
+    "lead_quente": {
+      "objetivo": "Preparar pra executar + antever objeções de implementação.",
+      "conceitos_prioritarios": [
+        "PDA Descontrolado vs. Memorável (mostrar que ele JÁ age — só de forma descontrolada)",
+        "3 Perfis Controladores + Mutações (preparar pra reação das pessoas ao redor)",
+        "Modo Fome (proteção do desejo durante a entrada)",
+        "Combinados Vencidos (o que vai precisar ser renegociado)",
+        "Conversa Difícil (o que vai precisar ser dito)",
+        "Plano Perfeito (Sonho Grande → Objetivos → PDAs = método concreto)"
+      ]
+    }
+  },
+
   "proibicoes_absolutas": {
-    "descricao": "Usar qualquer item abaixo derruba Fidelidade à Metodologia automaticamente pra ≤ 2",
+    "descricao": "Usar qualquer item abaixo derruba Fidelidade à Metodologia automaticamente pra ≤ 2. São linhas-vermelhas inegociáveis.",
     "itens": [
       "Clichê motivacional ('você é capaz', 'acredite', 'descubra seu potencial')",
       "Religiosidade indevida ('tempo de Deus', 'se Deus quiser') EXCETO quando separando fé de paralisia",
-      "Lei da atração / mentalidade abundância",
+      "Lei da atração / mentalidade de abundância",
+      "Ressignificação ('vamos contar uma nova história sobre seu passado') — Elton é explícito contra",
       "Desconto como quebra de objeção",
       "Urgência artificial (escassez falsa)",
       "Ataque à família do lead (ataca PADRÃO, não pessoa)",
@@ -177,7 +436,36 @@
       "Lista de bônus empilhada como gancho principal (virou guru, não mentor)",
       "Repetir preço 2+ vezes (insegurança)",
       "Responder objeção com defesa do produto em vez de pergunta",
-      "'Alguma dúvida?' no final como fechamento (desesperado)"
+      "'Alguma dúvida?' no final como fechamento (desesperado)",
+      "Rotular pessoa da família do lead como Vítima/Vingador/Narcisista (nomear PADRÃO, nunca pessoa)",
+      "Usar apelido comercial ('Mula de Carga', 'Festa no Banheiro') sem saber o nome canônico correspondente — se o lead entrar na Aliança e não encontrar o termo, gera dissonância"
+    ]
+  },
+
+  "changelog_v2": {
+    "correcoes_prioridade_alta": [
+      "Plano Perfeito — definição INVERTIDA na v1. Corrigida pra canônica: Sonho Grande → Objetivos → PDAs",
+      "Efeito Paralelo — v1 descrevia Defeito Paralelo (face negativa). Criado item separado 'Defeito Paralelo' + Efeito Paralelo corrigido pra ferramenta intencional (Impacto + Atividade + Frequência + Prazo)",
+      "3 Perfis Controladores — removido '/Salvador' (não é canônico como PERFIL da família do lead). Salvador é manifestação do Narcisista, não perfil separado",
+      "Apelido 'Culpa da Sobrevivência' renomeado para 'Salvador' (alt: 'Herói da Família') — o nome agora ativa a IDENTIDADE que o lead defende (o herói que carrega todos) em vez de apenas a consequência (a culpa). O canônico segue idêntico: Dependência Emocional + Culpa (APF_09) + Efeito Paralelo negativo. ATENÇÃO: esse 'Salvador' é IDENTIDADE do lead, não rótulo de perfil da família — contextualmente diferente do Salvador removido dos 3 Perfis Controladores",
+      "6 apelidos comerciais (Salvador/Herói da Família, Mula de Carga, Ciclo do Quase, Festa no Banheiro, Obesidade Intelectual, Medo do Brilho) — mantidos como 'apelido_venda: true' com campo 'nome_canonico' apontando o conceito real da Teoria. Vendedor pode usar o apelido, mas deve saber o nome canônico"
+    ],
+    "adicoes_prioridade_media": [
+      "Padrões (3 dimensões: Acontecimento + Comportamento + Relacionamento / 3 camadas: Mostrar + Desenvolver + Diplomar) — unidade diagnóstica central",
+      "Matriz da Utilidade (4 quadrantes: Punir + Poupar + Unir + Afastar)",
+      "Combinados (3 subtipos: Inconsciente + Vencido + Desesperado)",
+      "Teto Financeiro + CPF expandido com pergunta diagnóstica canônica e Chão Financeiro + CPF",
+      "Sub-conceito PDA Descontrolado vs. Memorável dentro do item PDA",
+      "3 P's da Pré-Queda (Precisa + Permite + Prefere) + dois Padrões simultâneos",
+      "Os 3 erros que travam a Conversa Difícil",
+      "Armadilha canônica 'Sentido/Legado prematuro' na Escada da Maturidade",
+      "Distinção 'Questionar por quê vs. Questionar como' na Escada da Postura",
+      "Definição canônica do Elton pra Dependência Emocional (interferência mútua)",
+      "Tipos de Permissão (Nata vs. Adquirida) + 3 áreas onde opera (Financeiro, Relacionamento, Saúde)"
+    ],
+    "adicoes_prioridade_baixa": [
+      "Nova seção 'conceitos_para_qualificacao_de_lead': Aliado Barulhento vs. Comprometido + Postura Comum vs. Divergente + Obediência à Referência vs. Autoria Divergente",
+      "Nova seção 'diagnostico_inicial_lead_frio_morno_quente' com conceitos prioritários por etapa da jornada"
     ]
   }
 }

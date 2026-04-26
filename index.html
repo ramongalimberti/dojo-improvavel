@@ -78,6 +78,7 @@
       <div class="achievements-grid" id="achievementsGrid"></div>
 
       <footer class="dashboard-footer">
+        <button id="btnViewHistoryDash" class="btn-ghost">📚 Histórico de sessões</button>
         <button id="btnChangeKey" class="btn-ghost">Trocar API key</button>
         <button id="btnResetProfile" class="btn-ghost btn-danger">Resetar progresso</button>
       </footer>
@@ -92,7 +93,8 @@
           <div class="session-persona" id="sessionPersonaName">—</div>
         </div>
         <div class="session-meta">
-          <span>Turno <span id="turnCounter">1</span></span>
+          <span>Turno <span id="turnCounter">1</span> / <span id="turnMax">50</span></span>
+          <button id="btnEndSessionNow" class="btn-end-now" title="Encerrar agora e gerar relatório parcial">⏹️ Encerrar agora</button>
         </div>
       </header>
 
@@ -170,13 +172,43 @@
       </div>
 
       <div class="feedback-panel" id="feedbackPanel"></div>
+
+      <!-- Modal: fim de sessão (não fecha sozinho — informa o Ramon) -->
+      <div id="sessionEndModal" class="end-modal" hidden>
+        <div class="end-modal-card">
+          <div class="end-modal-icon" id="endModalIcon">✅</div>
+          <div class="end-modal-title" id="endModalTitle">Sessão encerrada</div>
+          <div class="end-modal-desc" id="endModalDesc">—</div>
+          <div class="end-modal-meta" id="endModalMeta">—</div>
+          <button id="btnGoToReport" class="btn-primary end-modal-cta">📊 Ver relatório</button>
+        </div>
+      </div>
     </section>
 
     <!-- ================= RELATÓRIO FINAL ================= -->
     <section id="screen-report" class="screen">
       <div class="card report-card">
         <h1 class="title">Relatório da Sessão</h1>
+
+        <!-- Outcome explícito: venda realizada ou não -->
+        <div id="reportOutcome" class="outcome-banner"></div>
+
         <div class="report-grade" id="reportGrade">—</div>
+
+        <div class="report-section">
+          <h3>Análise por momento da chamada</h3>
+          <div id="reportPorMomento"></div>
+        </div>
+
+        <div class="report-section">
+          <h3>🏆 3 melhores técnicas aplicadas</h3>
+          <div id="reportMelhores"></div>
+        </div>
+
+        <div class="report-section">
+          <h3>🪓 3 pontos a melhorar</h3>
+          <div id="reportPiores"></div>
+        </div>
 
         <div class="report-section">
           <h3>XP ganho</h3>
@@ -212,8 +244,54 @@
 
         <div class="report-actions">
           <button id="btnNewSession" class="btn-primary">Nova sessão</button>
+          <button id="btnViewHistory" class="btn-ghost">📚 Ver histórico</button>
           <button id="btnBackDashboard" class="btn-ghost">Voltar ao dashboard</button>
         </div>
+      </div>
+    </section>
+
+    <!-- ================= HISTÓRICO — LISTA ================= -->
+    <section id="screen-history" class="screen">
+      <div class="card history-card">
+        <header class="history-header">
+          <button id="btnHistoryBack" class="btn-ghost">← Voltar</button>
+          <h1 class="title">Histórico de Sessões</h1>
+          <div class="history-count"><span id="historyCount">0</span> sessões</div>
+        </header>
+
+        <div class="history-filters">
+          <select id="historyFilterOutcome" class="history-filter">
+            <option value="all">Todos os resultados</option>
+            <option value="venda_realizada">✅ Venda realizada</option>
+            <option value="venda_nao_realizada_desistencia">❌ Lead desistiu</option>
+            <option value="venda_nao_realizada_tempo">⏱️ Tempo esgotado</option>
+            <option value="encerrada_parcial">⏸️ Parcial</option>
+          </select>
+          <input type="text" id="historySearch" placeholder="Buscar por persona, padrão..." class="history-search" />
+        </div>
+
+        <div id="historyList" class="history-list"></div>
+
+        <div id="historyEmpty" class="history-empty" hidden>
+          <div class="history-empty-icon">📭</div>
+          <div>Nenhuma sessão ainda. Treine e seu histórico aparece aqui.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= HISTÓRICO — DETALHE ================= -->
+    <section id="screen-history-detail" class="screen">
+      <div class="card history-detail-card">
+        <header class="history-header">
+          <button id="btnHistoryDetailBack" class="btn-ghost">← Histórico</button>
+          <h1 class="title">Sessão</h1>
+          <div class="history-export-actions">
+            <button id="btnExportTxt" class="btn-ghost" title="Baixar como TXT">📄 TXT</button>
+            <button id="btnExportPdf" class="btn-ghost" title="Imprimir / salvar como PDF">🖨️ PDF</button>
+          </div>
+        </header>
+
+        <div id="historyDetailBody"></div>
       </div>
     </section>
 

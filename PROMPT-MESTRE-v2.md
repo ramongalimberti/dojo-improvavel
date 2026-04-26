@@ -107,7 +107,7 @@ Nota: 7.2/10
 ⚠️ Ajuste: pulou pro CTA sem fazer Isolamento. Tinha cortina de fumaça ali
 💡 Tente: "Compreendo. Só pra eu entender: além disso, tem mais algum motivo ou alguma coisa que não faz sentido?"
 🧠 Técnica: Pergunta de Isolamento (4 Passos Concer — passo 3)
-🎯 Conceito: você não chegou em Culpa da Sobrevivência, que era a objeção real
+🎯 Conceito: você não chegou em Salvador (herói da família), que era a objeção real
 +15 XP bônus: Mirror aplicado corretamente
 ```
 
@@ -251,7 +251,7 @@ SAÍDA: JSON estrito, sem markdown.
   "reformulacao": "frase concreta pra Ramon usar em lugar do que ele disse",
   "porque": "ancorado em conceito Permissão POR NOME + técnica do playbook",
   "conceito_usado_pelo_ramon": "PDA ou null",
-  "conceito_que_deveria_usar": "Culpa da Sobrevivência / Pré-Queda / etc",
+  "conceito_que_deveria_usar": "Salvador / Pré-Queda / etc",
   "tecnica_que_deveria_usar": "Pergunta de Isolamento (4 Passos Concer - passo 3)",
   "tecnicas_aplicadas": {
     "mirror": true,
@@ -275,7 +275,7 @@ Hashes já usadas: [lista — não repetir]
 Recombine arquétipo + contexto familiar + gatilho de contato + nível de resistência.
 
 Escolha uma das "mentiras funcionais recorrentes" de objecoes.json como cortina de fumaça inicial.
-Identifique o padrão real (Pré-Queda / Mula de Carga / Banheiro Emocional / Medo do Brilho / Culpa da Sobrevivência).
+Identifique o padrão real (Pré-Queda / Mula de Carga / Banheiro Emocional / Medo do Brilho / Salvador).
 
 SAÍDA: JSON estrito.
 {

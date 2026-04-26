@@ -118,7 +118,16 @@
       "skippable": false,
       "xp_base": 25,
       "tier": 1,
-      "is_alavanca_maxima": true
+      "is_alavanca_maxima": true,
+      "sub_movimento_critico": {
+        "nome": "Reconhecimento da Utilidade do Padrão (RUP)",
+        "quando": "Entre o final da Implicação (passo 6) e a Necessidade de Solução (passo 7). O lead acabou de verbalizar a dor e está vulnerável — é aqui que se insere o RUP antes de virar a chave.",
+        "exemplo_literal": "[Nome], esse teto te protegeu. Por anos esse Padrão te manteve leal, te manteve pertencendo. Ele serviu pra você. O problema não é que ele é ruim — é que agora ele aperta. A gente não vai brigar com ele; vai reconhecer que ele serviu e depois soltar.",
+        "referencia_tecnica": "reconhecimento_utilidade_padrao",
+        "identificado_em": "chamada Luiz COM VENDA 09/04 — virada exata que viabilizou a venda",
+        "xp_bonus": 15,
+        "armadilha": "Atacar o Padrão como inimigo em vez de reconhecer a proteção que ele serviu — gera Medo do Brilho maior, lead defende a proteção."
+      }
     },
     {
       "numero": 7,

@@ -246,6 +246,23 @@
     },
 
     {
+      "nome": "Dinheiro Emocionalmente Indisponível",
+      "apelido_venda": true,
+      "nome_canonico": "Permissão Represada + Matriz da Utilidade + Teto Financeiro em camada operacional",
+      "definicao": "Apelido comercial pra descrever o Padrão de quem TEM dinheiro acessível (recebível a cobrar, item de valor parado, sócio devendo, honorário não cobrado, PIX que destravaria em 48h) mas se recusa inconscientemente a mover. Não é 'falta de dinheiro' — é 'dinheiro que o Padrão não deixa chegar no bolso'. Identificado como categoria recorrente nas 8 chamadas reais: 5 dos 8 leads tinham dinheiro parado que eles próprios não percebiam como dinheiro real.",
+      "diferenca_da_falta_real": "Falta real = pessoa sem emprego, zero reserva, zero ativo. Dinheiro Emocionalmente Indisponível = pessoa com ativo/recebível/capacidade de cobrança EXISTENTE mas travada em Padrão de não acessar. A segunda é 10× mais comum no Improvável — e só se resolve com reframing de posse, nunca com desconto.",
+      "os_3_tipos_comuns": {
+        "parado_visivel": "Moto/carro/equipamento na garagem não usado há 1+ ano. Lead sabe que existe, mas não 'conta como dinheiro'.",
+        "travado_a_cobrar": "Cliente que deve, honorário não executado, sócio em dívida, processo ganho mas não cobrado. Lead 'não quer incomodar'.",
+        "em_transito_tecnico": "PIX bloqueado por limite, cartão sem limite momentâneo, recebível dia 15 — travas operacionais de 48-72h que o Padrão transforma em 'não tenho'."
+      },
+      "quando_usar": "Lead diz 'não tenho R$ X' mas na investigação (passo 6) apareceu algo parado. Também: lead aceita tudo e para no pagamento com barreira operacional.",
+      "frase_ancora": "Você tem dinheiro — o seu Padrão é que não te deixa acessar.",
+      "frase_ancora_secundaria": "A pergunta não é 'você tem?' — é 'o que você não tá deixando chegar no seu bolso?'",
+      "exemplo_de_uso": "Você me falou que tem duas motos, que uma não sai da garagem há dois anos. Você tem 40k em honorário que não foi cobrar. Você tem. O que você NÃO TEM é Permissão pra mover. Isso tem nome: Dinheiro Emocionalmente Indisponível. É seu, mas seu Padrão trancou o acesso. E a primeira Pré-Queda produtiva é exatamente destravar isso.",
+      "armadilha": "Usar sem ter descoberto o que existe parado — vira acusação ('você tá mentindo'). Exige investigação concreta na fase 6. Outra armadilha: virar coach financeiro dando dica de vender — a quebra é de POSSE, não de educação financeira."
+    },
+    {
       "nome": "Conversa Difícil",
       "definicao": "Protocolo de confronto que encerra um ciclo — o momento em que o Aliado, após identificar os Padrões de uma relação, estabelece novos combinados, quita dívidas e libera o outro (e a si mesmo) pra seguir.",
       "os_3_objetivos": [
@@ -438,7 +455,13 @@
       "Responder objeção com defesa do produto em vez de pergunta",
       "'Alguma dúvida?' no final como fechamento (desesperado)",
       "Rotular pessoa da família do lead como Vítima/Vingador/Narcisista (nomear PADRÃO, nunca pessoa)",
-      "Usar apelido comercial ('Mula de Carga', 'Festa no Banheiro') sem saber o nome canônico correspondente — se o lead entrar na Aliança e não encontrar o termo, gera dissonância"
+      "Usar apelido comercial ('Mula de Carga', 'Festa no Banheiro') sem saber o nome canônico correspondente — se o lead entrar na Aliança e não encontrar o termo, gera dissonância",
+      "Responder 'não tenho dinheiro' com desconto / parcelamento adicional / gratuidade antes de investigar o que o lead TEM parado (proibição extraída das chamadas SEM VENDA 08/04 e 13/04 — o vendedor aceitou 'não tenho' como verdade sem investigar Dinheiro Emocionalmente Indisponível)",
+      "Aceitar 'vou assistir mais aulas suas' como avanço — é Obesidade Intelectual pura, exige quebra imediata (identificado nas 4 chamadas onde o vendedor liberou o lead pra consumir mais gratuito em vez de fechar)",
+      "Resolver barreira operacional (PIX bloqueado, cartão recusado) ANTES de fechar commitment — inverte ordem correta, vira Continuação (proibição da técnica Commitment por Boleto)",
+      "Preencher silêncio pós-preço com justificativa/amaciamento/benefício adicional — destrói âncora (0× silêncio identificado nas 8 chamadas — maior gap de performance)",
+      "Empurrar produto pra quem declara bloqueio estrutural real (desemprego de 2+ anos + nome sujo + doença severa simultaneamente) — qualificar e agendar contato futuro em vez de forçar entrada; produto é pra Permissão bloqueada, não pra Capacidade ausente",
+      "Entrar em debate religioso com lead evangélico ('mas Deus quer sua prosperidade') — quebra por pareamento de fé (separar fé de paralisia), não por contra-argumento teológico"
     ]
   },
 

@@ -83,6 +83,79 @@
         "Me escondo atrás de um cargo na igreja dizendo que estou salvando o mundo, mas não tenho o dinheiro do leite do meu filho."
       ],
       "municoes": ["Plano Perfeito", "Religiosidade como Fuga", "Escada da Postura"]
+    },
+    {
+      "nome": "Dependência Emocional — Padrões Relacionais (extraído das chamadas reais)",
+      "observacao": "Área criada na v2.1 a partir das 8 chamadas reais analisadas (Luiz, Natália, Antônia, Giovana, Julie, Márcia, Samarco, caso 09-04). Os subtipos agrupam frases LITERAIS do lead em contexto de chamada 1×1. Use essas frases como espelho ao ouvir algo parecido — o lead sente que você leu a mente dele.",
+      "subtipos": {
+        "parental": {
+          "descricao": "Lealdade inconsciente ao pai/mãe — não pode ultrapassar o teto deles. Pré-Queda aparece quando o ganho chega perto de superar a origem.",
+          "dores_literais": [
+            "Eu peguei muito do meu pai — ele não queria que eu ganhasse mais que ele.",
+            "Toda vez que eu chego perto do que meu pai ganhou, trava alguma coisa.",
+            "Minha mãe me sustenta; se eu ganhar de verdade, ela vai se sentir descartada.",
+            "Meu pai era o provedor — se eu passar ele, é como se eu estivesse traindo ele.",
+            "Eu tenho receio de ser mais que meu pai foi."
+          ],
+          "municoes": ["Teto Financeiro + CPF", "Salvador", "Medo do Brilho", "Combinados Vencidos"]
+        },
+        "conjugal": {
+          "descricao": "Relação com cônjuge como autoridade emocional acima da própria decisão. Medo de ofuscar o parceiro, perder o amor, ou precisar dar explicação.",
+          "dores_literais": [
+            "Minha esposa ganha mais que eu — eu tenho receio de virar o jogo.",
+            "Meu marido critica os meus vídeos; cada vez que eu posto, ele fala alguma coisa.",
+            "Preciso falar com meu marido antes — ele decide junto comigo.",
+            "Se eu ganhar mais que ele, vai dar problema em casa.",
+            "Eu não posso decidir isso sozinha, a gente sempre conversa tudo."
+          ],
+          "municoes": ["Dependência Emocional", "Coleiras Invisíveis", "3 Perfis Controladores", "Conversa Difícil"]
+        },
+        "filhos": {
+          "descricao": "Filho como escudo da própria trava. O problema do filho justifica adiar a prosperidade da mãe/pai.",
+          "dores_literais": [
+            "Meu filho é autista — eu não posso focar em mim agora, ele precisa de mim integral.",
+            "Toda vez que eu decido fazer algo por mim, meu filho adoece / regride / pira.",
+            "Se eu investir em mim, tô tirando do meu filho — não é justo.",
+            "Eu uso o diagnóstico do meu filho pra conseguir compaixão dos clientes.",
+            "Minha vida parou quando meu filho nasceu, e eu aceitei isso."
+          ],
+          "municoes": ["Síndrome do Vilão", "Filho como Escudo", "Escada da Maturidade", "Matriz da Utilidade"]
+        },
+        "igreja_religiosa": {
+          "descricao": "Igreja / fé como autoridade moral acima da decisão de prosperar. Medo de ser julgado pela comunidade religiosa ou de 'trair' o 'tempo de Deus'.",
+          "dores_literais": [
+            "Eu vou orar e pedir direção antes de decidir isso.",
+            "Jesus é o meu foco — eu preciso sentir que isso tá alinhado com o propósito que Ele tem pra mim.",
+            "Na minha igreja ninguém fala desse valor de dinheiro assim, isso não pega bem.",
+            "Eu tenho medo de estar correndo à frente de Deus.",
+            "Meus irmãos da igreja vão achar que eu perdi o foco espiritual."
+          ],
+          "municoes": ["Plano Perfeito", "Religiosidade como Fuga", "Escada da Postura (separar fé de paralisia)"]
+        },
+        "ex_aluno_desacredita": {
+          "descricao": "Já entrou, saiu/caducou, vive de amor-e-ódio com a metodologia. Dor extra: vergonha de ter 'tentado e falhado' — não é falta de exposição, é Pré-Queda recorrente.",
+          "dores_literais": [
+            "Eu já fui aluna sua, rodei os protocolos mas não destravou nada.",
+            "Eu entrei, saí, agora tô endividada e com cinco processos trabalhistas.",
+            "Fiz tudo que vocês ensinaram e mesmo assim o quase virou fracasso de novo.",
+            "Cada vez que eu entro em algo, dá ruim logo depois — é meu padrão.",
+            "Não é você, é comigo — comigo essas coisas nunca funcionam mesmo."
+          ],
+          "municoes": ["Pré-Queda recorrente / Ciclo do Quase", "Obesidade Intelectual", "Padrões (3 camadas — Mostrar/Desenvolver/Diplomar)"]
+        }
+      },
+      "frases_literais_bruta": [
+        "Tô travado, cara.",
+        "Tô trancado, parece que tem uma parede invisível.",
+        "Travei. Não consigo sair.",
+        "Tô em estado depressivo, pra ser sincero.",
+        "Tô horrível. Tô muito mal.",
+        "Sempre que eu tô quase chegando lá, acontece alguma coisa.",
+        "Tô desempregada há 2 anos.",
+        "Tô com o nome sujo.",
+        "Tem coisa parada aqui pra vender e eu não vendo.",
+        "Eu sei que eu tenho que me mexer, mas não consigo."
+      ]
     }
   ],
   "mapa_de_combate": {
@@ -101,7 +174,15 @@
       {"dor": "Emagreço e engordo de novo", "municao": "Padrões + Utilidade do problema + Modo Fome", "passo_caminho": [5, 6]},
       {"dor": "Espero o tempo de Deus", "municao": "Escada da Postura (separar fé de paralisia)", "passo_caminho": [6]},
       {"dor": "Casamento é um inferno", "municao": "Conversa Difícil + 3 Perfis Controladores", "passo_caminho": [6, 7]},
-      {"dor": "Trabalho feito louca mas não saio do lugar", "municao": "CDP + Teto Financeiro + Dois Carros", "passo_caminho": [5, 6, 10]}
+      {"dor": "Trabalho feito louca mas não saio do lugar", "municao": "CDP + Teto Financeiro + Dois Carros", "passo_caminho": [5, 6, 10]},
+      {"dor": "Peguei muito do meu pai / tenho receio de ganhar mais que ele", "municao": "Teto Financeiro + CPF (pai) + Medo do Brilho + Reconhecimento da Utilidade do Padrão", "passo_caminho": [6, 7, 14]},
+      {"dor": "Minha esposa ganha mais, tenho receio", "municao": "Salvador invertido + Escada da Maturidade + Combinados Vencidos", "passo_caminho": [6, 7, 12]},
+      {"dor": "Meu marido critica meus vídeos / cada vez que posto ele fala algo", "municao": "Coleiras Invisíveis + 3 Perfis Controladores (Narcisista)", "passo_caminho": [6, 12]},
+      {"dor": "Meu filho é autista, não posso focar em mim agora", "municao": "Filho como Escudo + Matriz da Utilidade (Poupar) + Reconhecimento da Utilidade do Padrão", "passo_caminho": [6, 7]},
+      {"dor": "Vou orar / pedir direção a Deus antes de decidir", "municao": "Plano Perfeito (forma chique de nunca) + Escada da Postura (separar fé de paralisia)", "passo_caminho": [12, 18]},
+      {"dor": "Já fui seu aluno, rodei protocolos, não destravou", "municao": "Obesidade Intelectual + Padrões 3 camadas (ele tá no Desenvolver, não Mostrar) + Reconhecimento da Utilidade", "passo_caminho": [5, 6, 10]},
+      {"dor": "Tô desempregada / com o nome sujo / tenho coisa parada pra vender", "municao": "Ação prática (Efeito Paralelo: venda o que está parado HOJE) + quebrar Plano Perfeito", "passo_caminho": [7, 15, 18]},
+      {"dor": "Vou assistir mais aulas gratuitas primeiro", "municao": "Skin in the Game + Cadeira de Balanço + Commitment por Boleto", "passo_caminho": [12, 14, 15, 16]}
     ]
   }
 }

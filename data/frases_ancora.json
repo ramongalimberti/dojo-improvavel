@@ -64,6 +64,46 @@
         "frase": "Plano Perfeito é forma chique de dizer nunca.",
         "conceito": "Plano Perfeito",
         "quando_usar": "Contra 'não é a hora' / 'depois eu entro'"
+      },
+      {
+        "frase": "É a Pré-Queda testando você.",
+        "conceito": "Pré-Queda",
+        "quando_usar": "Lead diz que surgiu algo de última hora (PIX bloqueado, cartão recusou, esposa questionou) — extraída das chamadas reais COM VENDA"
+      },
+      {
+        "frase": "Você tem dinheiro aí parado — é o seu Padrão que não te deixa acessar.",
+        "conceito": "Dinheiro Emocionalmente Indisponível",
+        "quando_usar": "Contra 'não tenho esse valor' quando na investigação apareceu algo parado (moto, honorário, recebível)"
+      },
+      {
+        "frase": "Faz o seu próprio compromisso pra você e sua família.",
+        "conceito": "Skin in the Game + Assumptive Close",
+        "quando_usar": "Transição pro commitment quando o lead já concordou na lógica"
+      },
+      {
+        "frase": "Quando você tira Permissão pra cobrar, você tira Permissão de tudo.",
+        "conceito": "Medo de Cobrar + Teto Financeiro",
+        "quando_usar": "Lead que trava em cobrar cliente, vender, negociar preço — extraído da chamada Luiz"
+      },
+      {
+        "frase": "Escolhe um e foca — tentar os dois vai ser ruim pros dois.",
+        "conceito": "Modo Fome + Distúrbio de Prioridade",
+        "quando_usar": "Lead se divide entre projetos / filhos / negócios paralelos como desculpa pra não focar em Permissão"
+      },
+      {
+        "frase": "Esse teto te protegeu. Agora ele aperta.",
+        "conceito": "Reconhecimento da Utilidade do Padrão",
+        "quando_usar": "Entre implicação e necessidade de solução (passo 6→7) — virada identificada na chamada Luiz"
+      },
+      {
+        "frase": "Aluno grátis não executa. Aluno pago executa. Essa é a primeira Pré-Queda.",
+        "conceito": "Skin in the Game + Obesidade Intelectual",
+        "quando_usar": "Contra 'vou assistir mais aulas gratuitas'"
+      },
+      {
+        "frase": "O boleto no seu nome é o seu primeiro Efeito Paralelo. Enquanto ele tá vencendo, você tá se mexendo.",
+        "conceito": "Commitment por Boleto + Efeito Paralelo",
+        "quando_usar": "Ao fechar via boleto quando há barreira operacional (PIX bloqueado, cartão recusado)"
       }
     ],
     "criacao_de_urgencia": [

@@ -379,6 +379,54 @@
       "exemplo": "Antes de te mandar qualquer informação, preciso aprender mais sobre você. Você pode me dedicar 20 minutos segunda?",
       "armadilha": "Entregar todo o ouro de graça — ghosting garantido.",
       "aliases": ["micro compromisso", "micro commitments", "efeito ikea"]
+    },
+    {
+      "id": "commitment_por_boleto",
+      "nome": "Isolamento de Ação + Commitment por Boleto",
+      "autor": "Ramon Galimberti (observado nas chamadas COM VENDA — Antônia/Natália/Luiz)",
+      "tier": 3,
+      "passo_caminho": [15, 16, 17],
+      "resumo": "Quando o lead trava numa barreira prática (PIX bloqueado, cartão recusado, precisa vender algo primeiro, vai receber só daqui X dias), NÃO resolva a barreira ANTES do commitment. Feche o compromisso PRIMEIRO via boleto/link, depois trate a barreira como AÇÃO do lead (Efeito Paralelo), não como fricção do vendedor. A posse do boleto é o que ativa a Pré-Queda produtiva — o lead vai se mexer por ter um prazo real.",
+      "quando_usar": "Lead diz: 'meu PIX tá bloqueado', 'cartão recusou', 'ainda não recebi esse mês', 'só consigo em duas semanas', 'preciso vender minha moto primeiro', 'tenho coisa parada aqui pra vender'. Use APÓS o lead já ter dado sim lógico.",
+      "exemplo": "Lead: 'Cara, meu PIX tá bloqueado e eu só consigo desbloquear terça.' | Ramon: 'Beleza, deixa eu te mandar o boleto com vencimento em 3 dias. Você terça já está com o PIX liberado e paga dentro do vencimento. Isso já é o seu primeiro Efeito Paralelo — o boleto já tá no teu nome, você já entrou. Agora só é executar. Fechado?' — (mandou o boleto) — '[Nome], enquanto você tá pagando esse boleto, já entra em Marca Passos e começa. Você fecha o brigadeiro depois.'",
+      "armadilha": "Tentar resolver a barreira prática antes do commitment ('tudo bem, deixa resolver o PIX primeiro e a gente conversa'). Isso inverte a ordem — vira Continuação, morre no tempo. A regra é: commitment PRIMEIRO, logística depois.",
+      "aliases": ["commitment por boleto", "isolamento de acao", "isolamento de ação", "boleto como commitment", "pré-venda por boleto"]
+    },
+    {
+      "id": "silencio_no_preco",
+      "nome": "Silêncio Estratégico Pós-Preço",
+      "autor": "Jordan Belfort / Chris Voss — GAP identificado nas 8 chamadas reais (0× usado)",
+      "tier": 3,
+      "passo_caminho": [10, 11],
+      "resumo": "Após dizer o valor (ancoragem + preço concreto), cale a boca por 7-10 segundos. Não justifique, não amacie, não emende benefício. Quem fala primeiro perde. Esta técnica é a MAIS ausente das chamadas reais do comercial — é o maior gap de performance identificado.",
+      "quando_usar": "Imediatamente depois de falar 'São 12× de R$ 249' ou equivalente. Desliga o microfone mental, respira, espera.",
+      "exemplo": "Ramon: 'São 12× de R$ 249. [silêncio 10s, 0 palavras, 0 respiração audível]' | Lead (primeiro a falar): 'Hmm... cara, deixa eu ver aqui...' — agora Ramon tem informação pra operar.",
+      "armadilha": "Emendar 'mas olha só, dá pra parcelar em mais vezes, ou você pode...' — confirma que o preço é caro, destrói a âncora. Marcador zero na Arena 2 — XP Silêncio Dinâmico deveria ativar.",
+      "aliases": ["silencio pos preco", "silêncio pós preço", "silencio no preco", "pausa pos preco"]
+    },
+    {
+      "id": "reconhecimento_utilidade_padrao",
+      "nome": "Reconhecimento da Utilidade do Padrão (RUP)",
+      "autor": "Ramon Galimberti / Elton Euler (Matriz da Utilidade aplicada ao momento-virada)",
+      "tier": 1,
+      "passo_caminho": [6, 7],
+      "resumo": "Micro-movimento crítico entre Implicação (6) e Necessidade de Solução (7). Antes de pedir o benefício, NOMEIE em voz alta o que o Padrão do lead esteve PROTEGENDO até aqui. Sem esse reconhecimento, o lead vê a Aliança como ameaça (vai tirar minha proteção). Com ele, vê como permissão (posso soltar a proteção que já não serve). Identificado na chamada Luiz 09/04 como a virada que viabilizou a venda — 'esse teto te protegeu, Luiz, mas agora ele aperta'.",
+      "quando_usar": "Logo depois do lead verbalizar dor + implicação (passo 6) e ANTES de perguntar o benefício da mudança (passo 7). Sinal: o lead suspirou, ficou em silêncio, admitiu a dor — está vulnerável. Entre a admissão e a pergunta-solução, insira o RUP.",
+      "exemplo": "Lead: 'cara, eu peguei muito do meu pai, ele não queria que eu ganhasse mais que ele' (passo 6 completo) | Ramon: '[Nome], esse teto te protegeu. Por anos ele te manteve na relação com seu pai, te manteve leal, te manteve pertencendo. Funcionou pra você enquanto você precisou dele. O problema não é que ele é ruim — é que agora ele aperta. A gente não vai brigar com ele — a gente vai reconhecer que ele serviu, e depois soltar.' — [silêncio 3s] — passo 7: 'Se ele soltar, o que destrava primeiro?'",
+      "armadilha": "Atacar o Padrão como inimigo ('esse Padrão te arruinou, precisa matar isso'). Gera Medo do Brilho maior — o lead defende a proteção. Outra armadilha: RUP sem fundação de dor (passo 5 e 6 mal feitos) — vira frase bonita solta, não vira virada.",
+      "aliases": ["reconhecimento da utilidade", "utilidade do padrao", "RUP", "reconhecimento do padrao", "utilidade inconsciente"]
+    },
+    {
+      "id": "reframing_posse",
+      "nome": "Reframing da Posse (Você Já Tem — Só Não Libertou)",
+      "autor": "Ramon Galimberti (chamada Luiz 09/04 — virada chave que viabilizou a venda)",
+      "tier": 3,
+      "passo_caminho": [10, 14, 15],
+      "resumo": "Quando o lead diz 'não tenho o valor', converta o debate de TER/NÃO TER para LIBERAR/NÃO LIBERAR. O lead tem dinheiro parado (coisa pra vender, honorário travado, PIX, recebíveis) — a trava é Permissão pra mover. Reframe: 'você tem; seu Padrão é que não te deixa acessar'.",
+      "quando_usar": "Contra 'não tenho R$ X'. Exige que na fase de investigação (passo 6) o Ramon tenha descoberto o que o lead TEM parado (não vendido, não cobrado, não executado).",
+      "exemplo": "Lead: 'Cara, 2.980 eu não tenho.' | Ramon: 'Você tem. Você me disse que tem duas motos na garagem, uma que você não anda há 2 anos. Você tem 40 mil parados em honorário que você não foi cobrar. Dinheiro pra isso você tem — o que você não tem é Permissão pra mover o que tá parado. É esse o Padrão que a gente vai quebrar. Então: qual você vende primeiro pra gerar o valor até sexta?'",
+      "armadilha": "Usar sem ter descoberto antes o que o lead TEM parado — vira acusação vazia ('você tá mentindo que não tem'). Precisa de investigação concreta no passo 6.",
+      "aliases": ["reframing posse", "voce ja tem", "você já tem", "dinheiro parado", "liberar posse"]
     }
   ]
 }

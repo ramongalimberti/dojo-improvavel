@@ -108,6 +108,34 @@
       ]
     },
     {
+      "id": "mais_aulas_gratuitas",
+      "categoria": "obesidade_intelectual",
+      "manifestacoes": [
+        "Vou assistir mais umas aulas suas primeiro",
+        "Quero ver mais conteúdo antes de decidir",
+        "Deixa eu acompanhar as próximas lives",
+        "Ainda não sei se é pra mim, preciso consumir mais",
+        "Tô acompanhando seus reels, vou continuar acompanhando",
+        "Antes de investir, quero estudar mais seu trabalho"
+      ],
+      "objecao_real_permissao": "Obesidade Intelectual em estado puro — o lead quer consumir MAIS Capacidade (conteúdo gratuito) em vez de pagar o preço de Permissão (commitment). Também pode ser Plano Perfeito (adiar pra sempre) ou Medo do Brilho (se ele pagar e funcionar, vai ter que mudar). Identificada na chamada Luiz 09/04 — virou venda quando Ramon reframe-ou a gratuidade como Padrão de consumo sem execução.",
+      "fases_de_quebra": {
+        "fase_1_looping": "Entendo, [Nome]. Mas deixa eu te fazer uma pergunta: a ideia faz sentido pra você? Você gosta do formato?",
+        "fase_2_entender_nao_quebra": "Você já viu aula minha. Já viu live, reel, podcast. Você já ENTENDEU. E o que mudou? Se entender rompesse o padrão, você já estaria lá. Entender o padrão não rompe o padrão — o padrão é rompido vivendo, não compreendendo. Mais aulas é mais do mesmo.",
+        "fase_3_obesidade_intelectual": "Isso tem nome na metodologia: Obesidade Intelectual. Você confunde acumular teoria com resolver problema. Você já tem 3 pós, já fez terapia, já assistiu meu material — tudo na camada de Capacidade. A camada travada é Permissão, e essa não se compra em curso grátis. Você só rompe Permissão pagando o preço — e o preço começa NO COMPROMETIMENTO.",
+        "fase_4_skin_in_the_game_invertido": "Enquanto é grátis, seu cérebro categoriza como entretenimento. Você até sente, até concorda — e no dia seguinte a vida te engole. O valor ser pago é o que TIRA isso do entretenimento e coloca no território do COMPROMISSO. Aluno grátis não executa. Aluno pago executa. Essa é a primeira Pré-Queda do método.",
+        "fase_5_mentoria_ao_vivo": "E tem outra coisa: se você entrar hoje, você entra pra mentoria ao vivo que acontece [frequência]. Lá você não assiste — você é atendido, a gente roda protocolo na sua situação específica. Isso NÃO existe no gratuito. Então a escolha não é 'gratuito agora vs pago depois' — é 'consumidor eterno vs Aliado com meu tempo real comigo'.",
+        "fase_6_cadeira_balanço": "Me responde: quando você assistir as próximas 10 aulas minhas, o que muda? Provavelmente nada — porque você já consome há meses. Daqui a 6 meses você ainda vai estar consumindo, e o teto continua exatamente onde está. Quanto isso já te custou?",
+        "fase_7_close": "A pergunta não é se você vai estudar mais — é se você vai ROMPER. Qual dos dois: cartão parcelado ou boleto pra começar ainda hoje?"
+      },
+      "armadilhas_proibidas": [
+        "Elogiar a postura ('que bom que você estuda tanto, continue estudando!')",
+        "Mandar mais conteúdo gratuito na esperança de aquecer — realimenta o padrão",
+        "Entrar em debate intelectual sobre O QUE o lead ainda precisa estudar — não é falta de estudo",
+        "Aceitar 'continuo te acompanhando e volto quando for a hora' sem Avanço concreto"
+      ]
+    },
+    {
       "id": "nao_e_hora",
       "categoria": "timing",
       "manifestacoes": [

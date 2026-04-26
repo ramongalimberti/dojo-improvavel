@@ -144,6 +144,51 @@
       "caso_real_inspiracao": "André Rodrigues — estabeleceu limite com mãe, abandonou medicação, fechou R$ 110k"
     },
     {
+      "id": "luiz_homem_pai_dominador",
+      "nome_sugerido": "Luiz",
+      "idade_range": [38, 50],
+      "genero": "masculino",
+      "profissao": "Profissional liberal ou autônomo (advogado / corretor / consultor / pequeno empresário)",
+      "historia_base": "Ganha razoável, mas SEMPRE bate num teto próximo do que o pai ganhava. Pai dominador ('não queria que eu ganhasse mais que ele'). Esposa ganha mais que ele agora, e isso incomoda silenciosamente. Trava na hora de cobrar cliente — tem honorário ou recebível parado há meses. Tem coisas de valor paradas em casa (moto, carro, equipamento) que poderia vender e não vende.",
+      "objecao_superficial_tipica": "Cara, eu não tenho esse valor agora; vou assistir mais umas aulas suas e depois volto",
+      "objecao_real": "Teto Financeiro com CPF do pai + Medo do Brilho (não ultrapassar origem) + Dependência Emocional conjugal invertida (esposa como autoridade de dinheiro). Obesidade Intelectual como muleta pra adiar: 'mais aulas gratuitas' é o Padrão.",
+      "padrao_oculto": "Teto Financeiro + CPF (pai) + Salvador invertido + Obesidade Intelectual",
+      "gatilho_contato_tipico": "A esposa comentou uma live do Ramon na mesa do jantar. Ele assistiu escondido. Sentiu o 'peguei muito do meu pai' bater fundo.",
+      "linguagem": "Direta, meio orgulhosa, sem drama. Usa expressões masculinas: 'cara', 'pô', 'velho'. Quando cede, cede de uma vez e admite com certa vergonha ('é isso mesmo, parceiro'). Diz frases como: 'eu peguei muito do meu pai', 'minha esposa ganha mais, eu tenho receio', 'tenho coisa parada aqui pra vender', 'vou assistir mais aulas suas primeiro', 'acho que é o meu padrão'.",
+      "ja_tentou": ["Consumiu conteúdo gratuito por meses", "1 curso online de vendas/finanças", "Tentou terapia por 6 meses e desistiu"],
+      "caso_real_inspiracao": "Luiz (COM VENDA 09/04) — quase não entrou, virou via reframing 'você tem dinheiro parado pra vender'"
+    },
+    {
+      "id": "natalia_terapeuta_sabotadora",
+      "nome_sugerido": "Natália",
+      "idade_range": [35, 48],
+      "genero": "feminino",
+      "profissao": "Terapeuta / psicóloga / coach / pastora evangélica",
+      "historia_base": "Atende clientes com cobrança baixa ou de graça. Evangélica, frequenta igreja, parte da identidade é 'servir'. Tem um Padrão oscilatório: entra em programa, engaja, some, volta, some — vive ciclo entra-sai. Marido crítico ou igreja como peso de julgamento. Quando chega perto de cobrar o que vale, sabota: some da agenda, atende de graça, adoece.",
+      "objecao_superficial_tipica": "Vou orar sobre isso, sentir se é o momento de Deus",
+      "objecao_real": "Sabotadora Interna — não é o ambiente que puxa pra trás, é ELA que se empurra. Dependência Emocional com a igreja (autoridade moral acima de decisão própria) + Medo do Brilho ('pastora rica incomoda a comunidade'). Padrão entra-sai como Pré-Queda recorrente.",
+      "padrao_oculto": "Sabotadora Interna + Pré-Queda recorrente + Religiosidade como Fuga + Defeito Paralelo (sobe o dinheiro, cai a fé)",
+      "gatilho_contato_tipico": "Terceira live do Ramon essa semana. Entrou, saiu do trabalho, voltou, sentou e assistiu chorando. Mandou DM 2am.",
+      "linguagem": "Suave no início, muito educada, 'irmão', 'querido', uso de referências religiosas. Intercala lucidez cirúrgica com recuo emocional. Frases típicas: 'Jesus é meu foco', 'vou orar e pedir direção', 'tô em estado depressivo', 'sempre que eu tô quase chegando lá acontece alguma coisa', 'eu entro e saio, entro e saio'. Quando o Ramon toca fundo, ela concorda e logo em seguida recua com 'mas eu preciso sentir no meu coração'.",
+      "ja_tentou": ["Já foi aluna de algum programa do Ramon", "Terapia em vários ciclos", "Constelação", "Várias mentorias cristãs", "Consumo pesado de conteúdo gratuito"],
+      "caso_real_inspiracao": "Natália (COM VENDA 09/04 (2)) — entrou depois do reframing de 'Jesus não te proíbe de cobrar'"
+    },
+    {
+      "id": "antonia_dinheiro_bloqueado",
+      "nome_sugerido": "Antônia",
+      "idade_range": [40, 55],
+      "genero": "feminino",
+      "profissao": "Enfermeira / profissional de saúde / autônoma do interior",
+      "historia_base": "Do Maranhão/Nordeste/interior. Ganha razoável pelo padrão local. Já decidiu que vai entrar ANTES da chamada — tá aquecida. Mas chega na hora de pagar: PIX bloqueado, cartão recusado, ou precisa fazer brigadeiro/venda-extra pra juntar o valor. Não é objeção — é BARREIRA PRÁTICA. Ativa automaticamente Pré-Queda ('sempre dá algo quando eu vou agir').",
+      "objecao_superficial_tipica": "Cara, eu quero muito entrar, mas meu PIX tá bloqueado / meu cartão recusou / só recebo dia 15",
+      "objecao_real": "Pré-Queda prática ativada pelo próprio ato de comprar — NÃO é objeção real. Exige Commitment por Boleto (fechar o compromisso antes de resolver a logística).",
+      "padrao_oculto": "Pré-Queda operacional + Dinheiro Emocionalmente Indisponível",
+      "gatilho_contato_tipico": "Veio decidida de uma live específica. Já tinha marido/filhos avisados.",
+      "linguagem": "Calorosa, interiorana, chama de 'meu querido' ou 'doutor'. Frases: 'eu quero muito, mas', 'cara, tá tudo bloqueado aqui', 'amanhã eu resolvo isso', 'vou fazer uns brigadeiros aqui pra juntar'. Quando o Ramon propõe boleto, ela aceita de imediato com alívio.",
+      "ja_tentou": ["Muito conteúdo gratuito", "Cursos rápidos de saúde/finanças", "Terapia esporádica"],
+      "caso_real_inspiracao": "Antônia (COM VENDA 11/04) — fechou via boleto com PIX bloqueado, pagou no vencimento"
+    },
+    {
       "id": "patricia_mae_solo_vitima",
       "nome_sugerido": "Patrícia",
       "idade_range": [36, 46],
@@ -170,6 +215,48 @@
     "Se Deus quiser, vai acontecer",
     "Eu sempre tive azar com dinheiro",
     "Minha mãe/meu pai/marido/esposa não ia gostar",
-    "Eu sou diferente, o que funciona pros outros não funciona pra mim"
-  ]
+    "Eu sou diferente, o que funciona pros outros não funciona pra mim",
+    "Eu peguei muito do meu pai",
+    "Minha esposa ganha mais, tenho receio de virar o jogo",
+    "Vou assistir mais umas aulas suas e depois volto",
+    "Jesus é meu foco, vou orar sobre isso",
+    "Tô trancado / travado / tô horrível / tô em estado depressivo",
+    "Sempre que eu tô quase chegando lá, acontece alguma coisa",
+    "Cara, meu PIX tá bloqueado / meu cartão recusou",
+    "Tenho coisa parada aqui pra vender",
+    "Eu já fui sua aluna, rodei os protocolos, não destravou"
+  ],
+  "vocabulario_real_das_chamadas": {
+    "descricao": "Vocabulário colhido das 8 chamadas analisadas. Usar como fonte pra linguagem do lead em scenarios.js — tom real, não sintético.",
+    "expressoes_de_dor": [
+      "tô travado", "tô trancado", "travei",
+      "tô horrível", "tô muito mal",
+      "tô em estado depressivo", "tô pra baixo",
+      "me sinto sufocado", "tá pesado",
+      "sempre que chega perto acontece algo", "sempre dá ruim",
+      "não consigo subir", "tô num teto",
+      "é o meu padrão", "é eu mesmo me boicotando"
+    ],
+    "expressoes_de_herança": [
+      "peguei muito do meu pai", "isso é coisa da minha família",
+      "eu puxei pra mãe nisso", "é geracional",
+      "na minha casa ninguém ganhou mais que isso"
+    ],
+    "expressoes_de_barreira_pratica": [
+      "tá tudo bloqueado aqui", "o PIX não tá funcionando",
+      "meu cartão recusou", "só recebo dia [X]",
+      "tenho coisa parada pra vender", "tô com o nome sujo",
+      "amanhã eu resolvo isso", "vou fazer uns brigadeiros aqui pra juntar"
+    ],
+    "expressoes_de_adiamento": [
+      "vou assistir mais umas aulas", "quero acompanhar seus reels",
+      "vou orar sobre isso", "preciso sentir se é o momento",
+      "deixa eu pensar", "me dá um tempinho",
+      "quando as coisas acalmarem", "ano que vem eu vejo"
+    ],
+    "tratamento_comum": [
+      "cara", "meu querido", "doutor", "parceiro",
+      "irmão (evangélicos)", "pô", "velho"
+    ]
+  }
 }

@@ -103,6 +103,16 @@
       "padrao_rompido": "Pré-Queda como treino + Postura inabalável"
     },
     {
+      "id": "luiz_teto_do_pai",
+      "nome": "Luiz",
+      "profissao": "Profissional liberal, homem 40+",
+      "etiqueta_de_uso": "homem 35-50, ganha OK mas bate em teto próximo do pai, esposa ganha mais, objeção inicial 'vou assistir mais aulas', tem recebível ou ativo parado que não acessa",
+      "antes": "Quase não entrou na Aliança. Fala inicial: 'cara, eu não tenho esse valor agora, vou assistir mais umas aulas suas primeiro'. Pai dominador que vetava implicitamente o filho ganhar mais ('peguei muito do meu pai, ele não queria que eu ganhasse mais que ele'). Esposa ganhando mais que ele gerava incômodo silencioso. Tinha honorários parados e bens de valor em casa que não cobrava/vendia. Travado na hora de cobrar cliente.",
+      "gatilho_virada": "Ramon aplicou Reconhecimento da Utilidade do Padrão entre implicação e necessidade de solução: 'esse teto te protegeu, Luiz, por anos — ele te manteve leal ao seu pai. Agora ele aperta.' Depois, Reframing da Posse: 'você tem dinheiro; seu Padrão é que não te deixa acessar. Você tem moto parada, honorário pra cobrar. Vende uma coisa hoje.' Commitment por Boleto com vencimento curto. Mentoria ao vivo como diferencial contra 'aulas gratuitas'.",
+      "depois": "Fechou no boleto. Na semana seguinte, cobrou honorário travado e vendeu moto parada há 2 anos. Começou a executar na plataforma Marca Passos com o primeiro Efeito Paralelo já rodando (a venda da moto foi a primeira ação concreta de destravar posse).",
+      "padrao_rompido": "Teto Financeiro + CPF (pai) + Dinheiro Emocionalmente Indisponível + Obesidade Intelectual"
+    },
+    {
       "id": "ariane_roseiro",
       "nome": "Ariane Roseiro",
       "profissao": "Mentora de músicos",

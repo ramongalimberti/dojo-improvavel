@@ -32,6 +32,8 @@
     sessionEndTime: null,          // timestamp (ms) de fim da sessão (gravado em endSession)
     modoChamada: false,          // (legacy — substituído pelo call state)
     silenceTickTimer: null,
+    hintFailCount: 0,            // turnos em que leadHint retornou null (calibração parcial do evaluator)
+    sessionUsage: { calls: 0, input: 0, output: 0, cache_write: 0, cache_read: 0, cost_usd: 0 },
     call: {
       active: false,
       paused: false,
@@ -56,6 +58,8 @@
   }
 
   // ========= DATA LOADING =========
+  // Paralelo + tolerante a falhas: se 1 JSON corromper (Ramon edita na mão), boot
+  // segue degradado com warning visível em vez de morrer inteiro.
   async function loadData() {
     const files = [
       'caminho_18_passos', 'produto_alianca', 'conceitos_permissao',
@@ -63,13 +67,24 @@
       'casos_provas', 'tecnicas_compendio', 'objecoes_scripts'
     ];
     const data = {};
-    for (const f of files) {
+    const failed = [];
+    const results = await Promise.allSettled(files.map(async f => {
       const r = await fetch(`data/${f}.json`);
-      if (!r.ok) throw new Error(`${f}.json ${r.status}`);
-      data[f] = await r.json();
-    }
+      if (!r.ok) throw new Error(`${f}.json HTTP ${r.status}`);
+      return [f, await r.json()];
+    }));
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') {
+        const [f, json] = r.value;
+        data[f] = json;
+      } else {
+        failed.push(files[i]);
+        console.warn(`[loadData] ${files[i]}.json falhou:`, r.reason);
+      }
+    });
     state.data = data;
     state.dataLoaded = true;
+    state.dataLoadFailed = failed;
     return data;
   }
 
@@ -122,6 +137,27 @@
     const badge = $('#challengeStatus');
     if (daily.completed) { badge.textContent = '✓ Cumprido'; badge.classList.add('done'); }
     else { badge.textContent = '+25 XP'; badge.classList.remove('done'); }
+
+    // TCC — Taxa de Checkout na Call (Lei do Checkout)
+    const tccEl = $('#tccGauge');
+    if (tccEl) {
+      const tcc = Gamification.getTccCurrent();
+      if (!tcc) {
+        tccEl.innerHTML = `
+          <div class="tcc-label">TCC — Taxa de Checkout na Call</div>
+          <div class="tcc-empty">Sem dados ainda. Cada sessão onde lead diz "sim" entra aqui.</div>
+          <div class="tcc-meta">Baseline observado: 72% · Meta: ≥90%</div>`;
+        tccEl.className = 'tcc-gauge empty';
+      } else {
+        const cls = tcc.pct >= 90 ? 'good' : tcc.pct >= 72 ? 'mid' : 'low';
+        tccEl.innerHTML = `
+          <div class="tcc-label">TCC — Taxa de Checkout na Call</div>
+          <div class="tcc-value">${tcc.pct}<small>%</small></div>
+          <div class="tcc-bar"><div class="tcc-fill" style="width:${tcc.pct}%"></div></div>
+          <div class="tcc-meta">${tcc.fechou}/${tcc.n} sessões com aceite verbal fecharam na call · meta ≥90%</div>`;
+        tccEl.className = 'tcc-gauge ' + cls;
+      }
+    }
 
     // Tiers
     $('#tiersGrid').innerHTML = Gamification.TIERS.map(t => {
@@ -217,6 +253,9 @@
     state.turnoAceiteInicial = -1;
     state.sessionStartTime = Date.now();   // início da sessão — usado pra duração total
     state.sessionEndTime = null;
+    state.hintFailCount = 0;
+    state.sessionUsage = { calls: 0, input: 0, output: 0, cache_write: 0, cache_read: 0, cost_usd: 0 };
+    ClaudeAPI.startAccumulating();
     hideSessionEndModal();
     enableSessionInputs();
 
@@ -255,7 +294,11 @@
       Evaluator.leadHint({
         scenario, leadMessage: scenario.primeira_mensagem_lead,
         conversation: state.conversation, turn: 0, data: state.data
-      }).then(h => { state.lastLeadHint = h; attachLeadHint(hintSlot, h); });
+      }).then(h => {
+        state.lastLeadHint = h;
+        attachLeadHint(hintSlot, h);
+        if (!h) state.hintFailCount += 1;
+      });
     } catch (err) {
       console.error(err);
       $('#personaTitle').textContent = 'Erro ao gerar cenário';
@@ -644,7 +687,11 @@
         turnosDesdeAceite: state.turnoAceiteInicial >= 0
           ? (state.turn - state.turnoAceiteInicial)
           : 0
-      }).then(h => { state.lastLeadHint = h; attachLeadHint(leadMsg.hintSlot, h); });
+      }).then(h => {
+        state.lastLeadHint = h;
+        attachLeadHint(leadMsg.hintSlot, h);
+        if (!h) state.hintFailCount += 1;
+      });
     } else {
       // Não empurra mensagem '(erro:...)' no chat — fica feio e o TTS lê.
       // Deixa o autoSubmitFromCall detectar a ausência e mostrar status.
@@ -926,6 +973,11 @@
       report = { nota_final: 0, frase_caderno: 'Erro: ' + err.message, notas: {}, tecnicas_acumuladas: {}, passos_cumpridos: [], cobertura_pct: 0, outcome: fallbackOutcome, outcome_motivo: 'Erro ao gerar análise detalhada.', melhores_3_tecnicas: [], piores_3_pontos: [], por_momento: {} };
     }
 
+    // Captura uso de API acumulado e contador de falhas de hint
+    state.sessionUsage = ClaudeAPI.endAccumulating();
+    report.usage = state.sessionUsage;
+    report.hint_fail_count = state.hintFailCount;
+
     Gamification.updateStreak();
     Gamification.updateSkillsFromScores(report.notas || {});
     Gamification.recordStepHits(state.passosCumpridos);
@@ -965,7 +1017,7 @@
     if (state.turnFeedbacks.length > 0) Gamification.unlockAchievement('primeiro_caminho');
     const semArmadilhaCritica = !state.turnFeedbacks.some(f => /clich|religi|lei da atra|desconto/i.test(f.armadilha_cometida || ''));
     if (semArmadilhaCritica) {
-      const k = 'dojo:ramon:semClicheSessions';
+      const k = Gamification.K.semCliche;
       const cur = parseInt(localStorage.getItem(k) || '0', 10) + 1;
       localStorage.setItem(k, String(cur));
       if (cur >= 10) Gamification.unlockAchievement('fiel_mesa');
@@ -974,6 +1026,14 @@
 
     const durationMs = (state.sessionStartTime && state.sessionEndTime)
       ? (state.sessionEndTime - state.sessionStartTime) : 0;
+
+    // Captura TCC ANTES de salvar (depende dos turn_feedbacks)
+    const _tccSessionPayload = {
+      id: 'sess_tcc_' + Date.now(),
+      outcome: report.outcome,
+      turn_feedbacks: state.turnFeedbacks
+    };
+    Gamification.recordTccDataPoint(_tccSessionPayload);
 
     Gamification.saveSession({
       id: 'sess_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
@@ -1034,12 +1094,24 @@
       const duracaoMs = (state.sessionStartTime && state.sessionEndTime)
         ? (state.sessionEndTime - state.sessionStartTime) : 0;
       const duracaoLabel = duracaoMs ? `<div class="outcome-meta">⏱️ Duração: <b>${formatDuration(duracaoMs)}</b> · ${state.turn} turnos</div>` : '';
+      // Telemetria de custo + falhas de hint (Fase 0)
+      const u = report.usage || state.sessionUsage || null;
+      let costLabel = '';
+      if (u && u.calls > 0) {
+        const cacheHit = u.cache_read > 0 ? ` · cache hit ${Math.round(u.cache_read / (u.cache_read + u.input + 1) * 100)}%` : '';
+        costLabel = `<div class="outcome-meta">💰 ${u.calls} chamadas · ${(u.input + u.cache_read + u.cache_write).toLocaleString('pt-BR')} tokens in / ${u.output.toLocaleString('pt-BR')} out · <b>US$ ${u.cost_usd.toFixed(4)}</b>${cacheHit}</div>`;
+      }
+      const hintFailLabel = (report.hint_fail_count > 0)
+        ? `<div class="outcome-meta" style="color:var(--warn,#c89a2e)">⚠️ Dicas falharam em ${report.hint_fail_count} turno(s) — calibração do avaliador foi parcial</div>`
+        : '';
       outcomeEl.className = 'outcome-banner ' + meta.cls;
       outcomeEl.innerHTML = `
         <div class="outcome-label">${meta.label}</div>
         <div class="outcome-motivo">${esc(report.outcome_motivo || '')}</div>
         ${evidencia}
         ${duracaoLabel}
+        ${costLabel}
+        ${hintFailLabel}
       `;
     }
 
@@ -1890,6 +1962,7 @@
 
   // ========= BOOT =========
   async function boot() {
+    Gamification.migrateLegacyKeys();
     initWelcome();
     initDashboard();
     initSession();

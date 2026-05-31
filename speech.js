@@ -2,7 +2,7 @@
 
 const Speech = (() => {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const MAX_LISTEN_MS = 60000;        // 60s max pra call mode
+  const MAX_LISTEN_MS = 90000;        // 90s max pra call mode (alinhado com app.js)
 
   let recognition = null;
   let listening = false;

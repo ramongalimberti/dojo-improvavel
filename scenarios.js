@@ -176,7 +176,7 @@ SAÍDA: JSON estrito, sem markdown.
     const prompt = buildGeneratorPrompt({ submodo, data, tierLevels });
     const { text } = await ClaudeAPI.call({
       system, messages: [{ role: 'user', content: prompt }],
-      max_tokens: 900, temperature: 0.95
+      max_tokens: 4096, temperature: 0.95
     });
     const parsed = ClaudeAPI.extractJSON(text);
     if (!parsed) throw new Error('Cenário inválido');
@@ -264,7 +264,7 @@ FATO DO PRODUTO (pra você saber o que é razoável ou não o Ramon dizer):
 - Acesso à plataforma Marca Passos é IMEDIATO depois do pagamento — tudo online.
 - Se o Ramon falar "vamos agendar uma call de onboarding", "marcar sua primeira sessão", "tem uma reunião de integração" ou algo assim, ESTRANHE ("ué, mas é online, né? Não entendi, vou ter que marcar horário?"). Isso NÃO existe no produto. Sua reação natural é confusão.`;
 
-    return `Você é ${scenario.persona.nome}, ${scenario.persona.idade} anos, ${scenario.persona.profissao}, de ${scenario.persona.cidade}.
+    const systemText = `Você é ${scenario.persona.nome}, ${scenario.persona.idade} anos, ${scenario.persona.profissao}, de ${scenario.persona.cidade}.
 
 Estrutura familiar: ${scenario.persona.estrutura_familiar}
 Situação atual: ${scenario.persona.situacao_atual}
@@ -375,6 +375,9 @@ PÓS-ACEITE — LOOP DE PAGAMENTO E ACESSO (passos 17-18 do Caminho):
 - Uma vez que o pagamento é confirmado por VOCÊ de forma inequívoca, a conversa terminou — pode agradecer brevemente ("massa, valeu, vamo que vamo") e encerrar.
 
 Responda APENAS com sua fala, como a pessoa — sem narração, sem aspas em volta, sem descrever ações entre asteriscos. É uma chamada de voz transcrita.`;
+    // System é estático por sessão (varia por persona/nível mas constante turno-a-turno).
+    // Empacotado em block array com cache_control pra Anthropic cachear entre turnos.
+    return [{ type: 'text', text: systemText, cache_control: { type: 'ephemeral' } }];
   }
 
   return { generate, buildLeadSystemPrompt, SUB_MODOS };

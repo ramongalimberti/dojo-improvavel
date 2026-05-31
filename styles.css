@@ -224,6 +224,38 @@ code {
 }
 .challenge-reward.done { background: var(--success); }
 
+/* ================= TCC GAUGE (Lei do Checkout) ================= */
+.tcc-gauge {
+  background: var(--paper); border: 1px solid var(--line);
+  border-left: 5px solid var(--ink-muted);
+  border-radius: var(--radius); padding: 1em 1.2em; margin: 1.5rem 0;
+  display: flex; flex-direction: column; gap: 0.4em;
+}
+.tcc-gauge.good { border-left-color: var(--success, #6ba368); }
+.tcc-gauge.mid  { border-left-color: var(--accent, #c89a2e); }
+.tcc-gauge.low  { border-left-color: var(--danger, #c65d2e); }
+.tcc-gauge.empty { border-left-color: var(--ink-muted); opacity: 0.85; }
+.tcc-label {
+  font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--accent); font-weight: 700;
+}
+.tcc-value {
+  font-family: 'Fraunces', serif; font-size: 2.2em; font-weight: 700; line-height: 1;
+}
+.tcc-value small { font-size: 0.45em; color: var(--ink-soft); }
+.tcc-bar {
+  height: 8px; background: rgba(0,0,0,0.07); border-radius: 4px; overflow: hidden;
+}
+.tcc-fill {
+  height: 100%; background: var(--ink-muted);
+  transition: width 0.4s ease;
+}
+.tcc-gauge.good .tcc-fill { background: var(--success, #6ba368); }
+.tcc-gauge.mid  .tcc-fill { background: var(--accent, #c89a2e); }
+.tcc-gauge.low  .tcc-fill { background: var(--danger, #c65d2e); }
+.tcc-meta { font-size: 0.78em; color: var(--ink-muted); }
+.tcc-empty { font-size: 0.9em; color: var(--ink-soft); }
+
 /* ================= SUBMODOS ================= */
 .submodos-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

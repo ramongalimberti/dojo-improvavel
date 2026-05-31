@@ -4,7 +4,12 @@
 const Evaluator = (() => {
 
   function buildEvaluatorSystem({ data }) {
-    return `Você é coach L99 de vendas consultivas high-ticket, especializado no público Improvável (Aliança Divergente — Teoria da Permissão).
+    // System prompt puramente estático → empacota em block array com cache_control
+    // pra Anthropic cachear (TTL 5 min, custo de leitura ~10% do input normal).
+    return [{
+      type: 'text',
+      cache_control: { type: 'ephemeral' },
+      text: `Você é coach L99 de vendas consultivas high-ticket, especializado no público Improvável (Aliança Divergente — Teoria da Permissão).
 
 Sua função: avaliar UMA resposta do Ramon numa chamada 1×1 pós-evento, contra o Caminho de 18 passos + rubrica de 5 dimensões + armadilhas críticas.
 
@@ -200,6 +205,8 @@ REGRAS CRÍTICAS ABSOLUTAS (derrubam Fidelidade ≤ 2):
 12. Responder objeção DIRETAMENTE sem Looping → Fechamento ≤ 4
 13. Repetir preço 2+ vezes (insegurança) → Fechamento ≤ 3
 14. Usar apelido comercial (Mula de Carga, Festa no Banheiro, etc.) sem conhecer o nome canônico — se o lead entrar na Aliança e não encontrar o termo, gera dissonância. Evite afirmar "tem um nome pra isso: X" quando X é apelido sem âncora no canônico.
+15. **LEI DO CHECKOUT NA CALL** — descoberta de 26/05/2026, confirmada pelo CRM em 5 calls (Giovana/Janson/Shirley/Gabriela/Thiago — 0/5 viraram pagamento). Se o lead deu "sim" verbal e Ramon transferiu o pagamento pra DEPOIS da call (WhatsApp / mais tarde / à noite / amanhã / em casa / "te mando o link depois") SEM comprovante recebido NA CALL → Fechamento ≤ 3, nota_geral ≤ 5, armadilha "fechamento_aparente_transferido". Regra operacional: o checkout COMPLETO (link enviado + comprovante recebido) DEVE acontecer dentro da própria call. Único caso aceitável de transferência: evento concreto de transição (Intensivão hoje 19h / mãe sai do hospital sábado / saque na lotérica segunda) com data+critério+motivo de retomada ancorados.
+16. **SINO PREMATURO** — tocar o sino, dizer "parabéns pela decisão" ou "bem-vindo à aliança" ANTES do comprovante recebido na call é celebração que SUBSTITUI a ação. Cialdini reverso: o "sim" simbólico esvazia a necessidade do "sim" real. Sino só APÓS comprovante. Se Ramon tocar antes → nota_geral ≤ 6, armadilha "sino_prematuro".
 
 RUBRICA (0-10 por dimensão):
 - Escuta Ativa (peso 0.2) — Mirror, Label, uso das palavras do lead
@@ -247,7 +254,8 @@ SAÍDA: JSON estrito, sem markdown nem fences.
   "pode_fechar": false
 }
 
-Regra especial: marque "tecnicas_aplicadas" com TRUE SÓ se tiver evidência clara no texto do Ramon. Não invente.`;
+Regra especial: marque "tecnicas_aplicadas" com TRUE SÓ se tiver evidência clara no texto do Ramon. Não invente.`
+    }];
   }
 
   function buildEvaluatorUserPrompt({ scenario, conversation, lastRamon, turn, passosCumpridosAnteriormente, lastLeadHint }) {
@@ -314,7 +322,7 @@ Avalie com rigor E com coerência contra a dica (se fornecida). Identifique qual
     const user = buildEvaluatorUserPrompt({ scenario, conversation, lastRamon, turn, passosCumpridosAnteriormente, lastLeadHint });
     const { text } = await ClaudeAPI.call({
       system, messages: [{ role: 'user', content: user }],
-      max_tokens: 1100, temperature: 0.3
+      max_tokens: 1100, temperature: 0.1
     });
     const parsed = ClaudeAPI.extractJSON(text);
     if (!parsed) throw new Error('Avaliação inválida');
@@ -346,6 +354,7 @@ Avalie com rigor E com coerência contra a dica (se fornecida). Identifique qual
     // e marca armadilha fechou_sem_apresentar (rede de segurança caso o LLM deixe passar).
     // Só se aplica ao sub-modo caminho_completo.
     const submodoCompleto = scenario.submodo === 'caminho_completo' || !scenario.submodo;
+    const submodoJaFechamento = ['fechamento', 'quebra'].includes(scenario.submodo);
     if (submodoCompleto) {
       const tecs = parsed.tecnicas_aplicadas || {};
       const tentouClose = tecs.assumptive_close || tecs.alternative_close || tecs.risco_reverso;
@@ -414,7 +423,7 @@ Avalie com rigor E com coerência contra a dica (se fornecida). Identifique qual
         capNota = 5.5;
         armadilhaForcada = parsed.armadilha_cometida || 'pista_preco_ignorada';
         ajusteForcado = `lead sinalizou peso financeiro de forma indireta ("tá pesado", "é muito", "tô apertado", etc) e Ramon foi direto pra parcelamento/desconto. Ordem correta: Isolamento ANTES — "tirando o investimento, o caminho faz sentido pra você?" — pra separar objeção financeira da objeção real. Só DEPOIS do sim, ancora total + parcela.`;
-      } else if (ancorouPreco && !isolamentoJaFeito && !preRequisitosClose?.submodo_ja_fechamento) {
+      } else if (ancorouPreco && !isolamentoJaFeito && !submodoJaFechamento) {
         // Ancorou preço sem isolar primeiro — ORDEM ERRADA
         capNota = 7;
         armadilhaForcada = parsed.armadilha_cometida || 'ancorou_sem_isolar';
@@ -455,6 +464,88 @@ Avalie com rigor E com coerência contra a dica (se fornecida). Identifique qual
       }
     }
 
+    // ============ LEI DO CHECKOUT NA CALL ============
+    // Detecta o padrão das 5 calls perdidas confirmadas pelo CRM (26/05/2026):
+    // Giovana/Janson/Shirley/Gabriela/Thiago — lead deu aceite verbal + Ramon
+    // transferiu pagamento pra fora da call (WhatsApp/depois/casa/amanhã) +
+    // nenhum comprovante recebido na call. 0/5 viraram pagamento.
+    // Vale pra TODOS os sub-modos (independente do bloco de cap de ritmo).
+    {
+      const REGEX_ACEITE_VERBAL_LEAD = [
+        /\b(pode\s+ser|t[áa]\s+bom|tô\s+dentro|estou\s+dentro|topo|aceito|vamos|fechado|fechou|fecha\s+a[íi]|quero\s+(sim|entrar|fechar|comprar|pagar)|bora|partiu)\b/i,
+        /\b(parab[ée]ns\s+pela\s+decis[ãa]o|bem-?vind[oa]\s+(à|a)\s+(alian[çc]a|aliança))\b/i
+      ];
+      const REGEX_TRANSFERENCIA_RAMON = [
+        /\b(whats(app)?|wpp|zap)\b/i,
+        /\b(depois|mais\s+tarde|[àa]\s+noite|ainda\s+hoje|amanh[ãa]|outro\s+dia|na\s+sua\s+casa)\b/i,
+        /\b(quando\s+(voc[eê]|cê|tu)\s+(chegar|puder|tiver\s+tempo|conseguir))\b/i,
+        /\b(te\s+mand(o|ei|arei)|eu\s+te\s+mando|mando\s+(o\s+)?link\s+(depois|pelo\s+wpp|pelo\s+whats|via\s+whats)|envio\s+(o\s+link\s+)?depois)\b/i,
+        /\b(s[oó]\s+(me\s+)?(avisa|me\s+manda)\s+(quando|a[ií]))\b/i,
+        /\b(faz\s+com\s+calma|com\s+calma\s+a[íi])\b/i
+      ];
+      const REGEX_COMPROVANTE_NA_CALL = [
+        /\b(comprovante|pix\s+(copiad[oa]|copia\s+e\s+cola)|paguei|pagamento\s+(aprovado|confirmado|recebido|efetuado)|cart[aã]o\s+(aprovado|passou)|deu\s+certo\s+(o\s+pix|aqui|o\s+pagamento)|chegou\s+(o\s+)?(e-?mail|email)\s+(do\s+(boleto|acesso))?|j[aá]\s+t[aá]\s+pago|apareceu\s+a\s+confirma|chegou\s+a\s+confirma|entrei\s+(na\s+)?(plataforma|marca\s+passos)|recebi\s+o\s+acesso)\b/i
+      ];
+
+      // Janela: últimos 5 turnos da conversa (lead ainda aceitando recentemente)
+      const last5Conv = (conversation || []).slice(-5);
+      const leadDeuAceiteVerbal = last5Conv.some(m =>
+        m.role === 'assistant' && REGEX_ACEITE_VERBAL_LEAD.some(rx => rx.test(m.content || ''))
+      );
+      // Transferência: olha últimas falas do Ramon + a resposta atual
+      const ramonRecente = last5Conv.filter(m => m.role === 'user')
+        .map(m => m.content)
+        .concat([lastRamon || ''])
+        .join(' \n ');
+      const ramonTransferiuPraDepois = REGEX_TRANSFERENCIA_RAMON.some(rx => rx.test(ramonRecente));
+      // Comprovante pode aparecer em QUALQUER turno (lead ou Ramon citando recebimento)
+      const todasFalas = (conversation || []).map(m => m.content || '').concat([lastRamon || '']).join(' \n ');
+      const houveComprovante = REGEX_COMPROVANTE_NA_CALL.some(rx => rx.test(todasFalas));
+
+      // ============ SINO PREMATURO ============
+      // Ramon tocou sino / disse "parabéns pela decisão" / "bem-vindo à aliança"
+      // ANTES de qualquer comprovante na conversa. Erro clássico das 5 calls perdidas.
+      const REGEX_SINO_TOCADO = [
+        /\b(posso\s+tocar\s+(o\s+)?sino|toca(r)?\s+(o\s+)?sino|tocando\s+(o\s+)?sino|sino\s+da\s+(alian[çc]a|chegada))\b/i,
+        /\b(parab[ée]ns\s+pela\s+decis[ãa]o|bem-?vind[oa]\s+(à|a)\s+(alian[çc]a|aliança)|aliad[oa]\s+oficial|seja\s+(muito\s+)?bem-?vind[oa])\b/i
+      ];
+      const ramonTocouSinoAgora = REGEX_SINO_TOCADO.some(rx => rx.test(lastRamon || ''));
+      if (ramonTocouSinoAgora && !houveComprovante) {
+        if ((parsed.nota_geral || 0) > 6) parsed.nota_geral = 6;
+        if (parsed.notas && (parsed.notas.fechamento || 0) > 5) parsed.notas.fechamento = 5;
+        if (!parsed.armadilha_cometida || parsed.armadilha_cometida === 'null') {
+          parsed.armadilha_cometida = 'sino_prematuro';
+        }
+        if (!parsed.ajuste || /^(sem|nenhum|—|-|null|nada)/.test((parsed.ajuste || '').toLowerCase())) {
+          parsed.ajuste = `SINO PREMATURO — você celebrou ("parabéns pela decisão" / "bem-vindo" / tocou sino) ANTES do comprovante de pagamento na call. Cialdini reverso: o "sim" simbólico esvazia a necessidade do "sim" real (foi o que matou as 5 calls do CRM). Sino só APÓS o comprovante. Antes do sino: garante o link → confirma pagamento → confirma acesso. AÍ celebra.`;
+        }
+        parsed._sino_prematuro_aplicado = true;
+      }
+
+      if (leadDeuAceiteVerbal && ramonTransferiuPraDepois && !houveComprovante) {
+        if ((parsed.nota_geral || 0) > 5) parsed.nota_geral = 5;
+        if (parsed.notas) {
+          if ((parsed.notas.fechamento || 0) > 3) parsed.notas.fechamento = 3;
+          if ((parsed.notas.fidelidade || 0) > 5) parsed.notas.fidelidade = 5;
+        }
+        parsed.armadilha_cometida = 'fechamento_aparente_transferido';
+        parsed.ajuste = `LEI DO CHECKOUT NA CALL violada — lead deu "sim" verbal e Ramon transferiu pagamento pra depois (WhatsApp / casa / amanhã / mais tarde) SEM comprovante recebido na call. 5 calls do CRM provam: 0/5 dessas viraram pagamento. Mantenha o lead na call: "Pega seu celular agora, vou te enviar o link. Confirma quando chegar. Tô aqui na linha enquanto você preenche."`;
+        parsed.reformulacao = parsed.reformulacao || 'Beleza! Pega seu celular aí. Tô te mandando o link agora pelo WhatsApp — abre pra mim e me confirma quando chegar. Tô na linha contigo enquanto você preenche, qualquer coisa eu te ajudo.';
+        parsed._lei_checkout_aplicada = true;
+        // Bloqueia XP de fechamento desta resposta (zera técnicas de fechamento)
+        if (parsed.tecnicas_aplicadas) {
+          ['assumptive_close','alternative_close','avanco_concreto','risco_reverso','isolamento_preco','ancoragem_preco','3_dez','looping_universal']
+            .forEach(t => { parsed.tecnicas_aplicadas[t] = false; });
+          // Recalcula xp_bonus_tecnicas pra refletir a zeragem
+          let sum = 0;
+          Gamification.TECHNIQUES.forEach(t => {
+            if (parsed.tecnicas_aplicadas[t.id]) sum += t.xp;
+          });
+          parsed.xp_bonus_tecnicas = sum;
+        }
+      }
+    }
+
     // Recalcula se tem armadilha APÓS o cap de ritmo (pode ter criado uma)
     const temArmadilhaFinal = !!parsed.armadilha_cometida &&
       String(parsed.armadilha_cometida).trim().toLowerCase() !== 'null' &&
@@ -481,7 +572,9 @@ Avalie com rigor E com coerência contra a dica (se fornecida). Identifique qual
 
   // ========= DICA INLINE PÓS-FALA DO LEAD =========
   async function leadHint({ scenario, leadMessage, conversation, turn, data, awaitingPaymentConfirmation, turnosDesdeAceite }) {
-    const system = `Você é coach L99 do Dojô Improvável (Arena 2 — chamada pós-evento).
+    // System é estático (regras + JSON schema). Variáveis turn-dependent vão no USER prompt.
+    // Empacotado em block array com cache_control pra Anthropic cachear.
+    const systemText = `Você é coach L99 do Dojô Improvável (Arena 2 — chamada pós-evento).
 
 Sua função nesta chamada: ler UMA fala recém-chegada do LEAD e produzir uma dica rápida pro Ramon — o que está em jogo, que caminhos técnicos existem, EXEMPLOS EXATOS de aplicação e uma resposta-modelo nota 10.
 
@@ -550,6 +643,7 @@ Responda JSON estrito, sem markdown nem fences:
   "o_que_observar": "1 frase do que fica claro na fala do lead",
   "resposta_nota_10": "Resposta completa do Ramon — 2 a 5 frases, combinando técnicas de forma natural, fiel à voz mesa de jantar, pronta pra ser falada agora."
 }`;
+    const system = [{ type: 'text', text: systemText, cache_control: { type: 'ephemeral' } }];
 
     const anti_loop_hint = turn >= 12 ? `
 ATENÇÃO (ANTI-LOOP): já são ${turn} turnos. Se o Ramon ainda está cavando objeção e NÃO aplicou 3 Dez / Looping / Close, a \`resposta_nota_10\` DEVE ser uma técnica de fechamento direto (Assumptive Close + Isolamento + Cadeira de Balanço combinados). Pare de dar dica de Mirror/Label agora — empurre pro fechamento. Se o Ramon apresentar 3 Dez + Looping mas o lead ainda objeta, a nota-10 combina Cadeira de Balanço + Alternative Close com método de pagamento ("cartão ou boleto?"). Chegou a hora.` : '';
@@ -897,10 +991,11 @@ Devolva o JSON.`;
 
     const leadName = scenario?.persona?.nome || '';
 
-    // 1ª tentativa normal
+    // 1ª tentativa normal — Haiku 4.5 (output curto, baixo impacto na calibração)
     let { text } = await ClaudeAPI.call({
       system: leadSystem, messages: baseMsgs,
-      max_tokens: 400, temperature: 0.95
+      max_tokens: 400, temperature: 0.95,
+      model: ClaudeAPI.MODEL_HAIKU
     });
     let out = (text || '').trim();
 
@@ -917,7 +1012,8 @@ Devolva o JSON.`;
       try {
         const retry = await ClaudeAPI.call({
           system: leadSystem, messages: correctionMsgs,
-          max_tokens: 400, temperature: 0.85
+          max_tokens: 400, temperature: 0.85,
+          model: ClaudeAPI.MODEL_HAIKU
         });
         const retryOut = (retry.text || '').trim();
         if (retryOut && !detectLeadCharacterBreak(retryOut, leadName).broken) {

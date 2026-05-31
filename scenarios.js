@@ -176,7 +176,7 @@ SAÍDA: JSON estrito, sem markdown.
     const prompt = buildGeneratorPrompt({ submodo, data, tierLevels });
     const { text } = await ClaudeAPI.call({
       system, messages: [{ role: 'user', content: prompt }],
-      max_tokens: 900, temperature: 0.95
+      max_tokens: 4096, temperature: 0.95
     });
     const parsed = ClaudeAPI.extractJSON(text);
     if (!parsed) throw new Error('Cenário inválido');

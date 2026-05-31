@@ -11,8 +11,15 @@ const Gamification = (() => {
     techniques: 'dojo:ramon:tecnicas_dominadas_v2',
     stepHits: 'dojo:ramon:step_hits',         // { "1": count, "2": count... }
     tierLevels: 'dojo:ramon:tier_levels',     // { fundacao: {level, xp}, ... }
-    semana: 'dojo:ramon:semana_treino'        // 1-8 das 8 semanas do plano
+    semana: 'dojo:ramon:semana_treino',       // 1-8 das 8 semanas do plano
+    semCliche: 'dojo:ramon:semClicheSessions',// contador pra conquista "Fiel à Mesa"
+    tcc: 'dojo:ramon:tcc_history'             // histórico TCC (Lei do Checkout na Call)
   };
+
+  // ========= TCC — Taxa de Checkout na Call (Lei do Checkout) =========
+  // Janela: últimas 30 sessões onde lead deu aceite verbal.
+  // Baseline (Fase 6 análise 47 calls): ~72%. Meta: ≥90%.
+  const TCC_WINDOW = 30;
 
   const TIERS = [
     { id: 'fundacao', nome: 'Fundação', descricao: 'Abertura + Investigação', cor: '#6BA368', passos: [1,2,3,4,5,6,7] },
@@ -68,7 +75,7 @@ const Gamification = (() => {
     { id: 'mestre_3_dez', icon: '3️⃣', name: 'Mestre dos 3 Dez', desc: '3 Dez na ordem correta 10×' },
     { id: 'looper', icon: '🔁', name: 'Looper', desc: 'Looping Universal usado 10×' },
     { id: 'dono_silencio', icon: '⏳', name: 'Dono do Silêncio', desc: 'Silêncio Dinâmico usado 10×' },
-    { id: 'avanço_concreto', icon: '📅', name: 'Avanço Concreto', desc: 'Marcou Avanço (vs Continuação) 10×' },
+    { id: 'avanco_concreto', icon: '📅', name: 'Avanço Concreto', desc: 'Marcou Avanço (vs Continuação) 10×' },
     { id: 'fiel_mesa', icon: '🧠', name: 'Fiel à Mesa de Jantar', desc: '10 sessões sem clichê/religiosidade/desconto' },
     { id: 'mestre_mirror', icon: '👂', name: 'Mestre do Mirror', desc: 'Mirror 20× com Escuta ≥ 8' },
     { id: 'rotulador', icon: '🏷️', name: 'Rotulador', desc: 'Label 20× com precisão' },
@@ -94,7 +101,7 @@ const Gamification = (() => {
     { id: '3_dez_ordem', text: 'Hoje: 3 Dez na ordem Produto → Você → Aliança em toda apresentação.', hint: '3_dez' },
     { id: 'looping_universal_hoje', text: 'Hoje: Looping Universal em toda objeção — NUNCA responda a objeção direto.', hint: 'looping_universal' },
     { id: 'silencio_pos_preco', text: 'Hoje: silêncio de 7-10s após o preço ([silêncio 10s] explícito).', hint: 'silencio_dinamico' },
-    { id: 'avanço_concreto_hoje', text: 'Hoje: NUNCA aceite "vou pensar e te falo". Sempre marque Avanço concreto.', hint: 'avanco_concreto' },
+    { id: 'avanco_concreto_hoje', text: 'Hoje: NUNCA aceite "vou pensar e te falo". Sempre marque Avanço concreto.', hint: 'avanco_concreto' },
     { id: 'pre_handling_hoje', text: 'Hoje: 3 objeções pré-listadas antes de revelar o preço.', hint: 'pre_handling_3_objecoes' },
     { id: 'tacaro_sem_desconto', text: 'Hoje: quebre "tá caro" pela tradução Permissão (Salvador — herói da família que carrega todos) — SEM desconto.', hint: 'nomeou_conceito_permissao' },
     { id: 'padrao_antes_3', text: 'Hoje: nomeie o Padrão antes do 3º turno.', hint: 'nomeou_conceito_permissao' },
@@ -270,7 +277,7 @@ const Gamification = (() => {
     if (t['3_dez'] >= 10) unlockAchievement('mestre_3_dez');
     if (t.looping_universal >= 10) unlockAchievement('looper');
     if (t.silencio_dinamico >= 10) unlockAchievement('dono_silencio');
-    if (t.avanco_concreto >= 10) unlockAchievement('avanço_concreto');
+    if (t.avanco_concreto >= 10) unlockAchievement('avanco_concreto');
     if (t.mirror >= 20) unlockAchievement('mestre_mirror');
     if (t.label >= 20) unlockAchievement('rotulador');
     if (t.nomeou_conceito_permissao >= 20) unlockAchievement('nomeador_padroes');
@@ -379,12 +386,68 @@ const Gamification = (() => {
     return leveledUp;
   }
 
+  // ========= TCC — Lei do Checkout na Call =========
+  // Conta SÓ sessões onde lead aceitou verbalmente (denominador honesto).
+  // session deve ter: outcome ('venda_realizada' = fechou na call), turn_feedbacks
+  // (procura armadilha 'fechamento_aparente_transferido' = aceite mas fugiu).
+  function recordTccDataPoint(session) {
+    if (!session) return;
+    const outcome = session.outcome || '';
+    const feedbacks = session.turn_feedbacks || [];
+    // Aceite verbal: ou fechou de verdade, ou caiu na armadilha de fechamento aparente
+    const teveArmadilhaCheckout = feedbacks.some(f => /fechamento_aparente_transferido/.test(f.armadilha_cometida || ''));
+    const fechouNaCall = outcome === 'venda_realizada';
+    const leadDeuSim = fechouNaCall || teveArmadilhaCheckout;
+    if (!leadDeuSim) return; // sessão não conta no denominador
+    const hist = _get(K.tcc, []);
+    hist.push({ ts: Date.now(), session_id: session.id, fechou: fechouNaCall });
+    while (hist.length > TCC_WINDOW) hist.shift();
+    _set(K.tcc, hist);
+  }
+  function getTccCurrent() {
+    const hist = _get(K.tcc, []);
+    if (!hist.length) return null;
+    const fechadas = hist.filter(h => h.fechou).length;
+    return { pct: Math.round((fechadas / hist.length) * 100), n: hist.length, fechou: fechadas };
+  }
+
   // ========= RESET =========
   function resetAll() {
     Object.values(K).forEach(key => localStorage.removeItem(key));
     // Limpa também as chaves do v1 se existirem
     ['dojo:ramon:sessions', 'dojo:ramon:achievements', 'dojo:ramon:tecnicas_dominadas',
      'dojo:ramon:scenario_hashes', 'dojo:ramon:personas_usadas'].forEach(k => localStorage.removeItem(k));
+    localStorage.removeItem('dojo:ramon:migrations_v2');
+  }
+
+  // ========= MIGRATIONS (idempotente, roda no boot) =========
+  // Renomeia IDs antigos com cedilha (avanço_concreto, avanço_concreto_hoje)
+  // para ASCII (avanco_concreto, avanco_concreto_hoje) sem perder progresso.
+  function migrateLegacyKeys() {
+    const flagKey = 'dojo:ramon:migrations_v2';
+    let done = [];
+    try { done = JSON.parse(localStorage.getItem(flagKey) || '[]'); } catch (_) { done = []; }
+    let mutated = false;
+
+    if (!done.includes('cedilha_ids_fix')) {
+      // 1. Achievements — renomeia chave avanço_concreto → avanco_concreto
+      const ach = _get(K.achievements, null);
+      if (ach && Object.prototype.hasOwnProperty.call(ach, 'avanço_concreto')) {
+        ach['avanco_concreto'] = ach['avanco_concreto'] || ach['avanço_concreto'];
+        delete ach['avanço_concreto'];
+        _set(K.achievements, ach);
+      }
+      // 2. Daily challenge — se o desafio do dia atual é o antigo, renomeia
+      const daily = _get(K.daily, null);
+      if (daily && daily.challenge_id === 'avanço_concreto_hoje') {
+        daily.challenge_id = 'avanco_concreto_hoje';
+        _set(K.daily, daily);
+      }
+      done.push('cedilha_ids_fix');
+      mutated = true;
+    }
+
+    if (mutated) localStorage.setItem(flagKey, JSON.stringify(done));
   }
 
   return {
@@ -399,6 +462,7 @@ const Gamification = (() => {
     xpToLevel, updateStreak,
     getDailyChallenge, checkDailyCompletion,
     computeSessionXp, applySessionXp,
-    resetAll
+    recordTccDataPoint, getTccCurrent,
+    resetAll, migrateLegacyKeys
   };
 })();

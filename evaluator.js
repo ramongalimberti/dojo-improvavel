@@ -320,10 +320,13 @@ Avalie com rigor E com coerência contra a dica (se fornecida). Identifique qual
   async function evaluateTurn({ scenario, conversation, lastRamon, turn, data, passosCumpridosAnteriormente, lastLeadHint }) {
     const system = buildEvaluatorSystem({ data });
     const user = buildEvaluatorUserPrompt({ scenario, conversation, lastRamon, turn, passosCumpridosAnteriormente, lastLeadHint });
-    const { text } = await ClaudeAPI.call({
+    const { text, raw } = await ClaudeAPI.call({
       system, messages: [{ role: 'user', content: user }],
-      max_tokens: 1100, temperature: 0.1
+      max_tokens: 2048, temperature: 0.1
     });
+    if (raw?.stop_reason === 'max_tokens') {
+      console.warn('[evaluateTurn] resposta truncada em max_tokens — JSON pode estar incompleto');
+    }
     const parsed = ClaudeAPI.extractJSON(text);
     if (!parsed) throw new Error('Avaliação inválida');
 
@@ -885,10 +888,13 @@ FALA RECÉM-CHEGADA DO LEAD (turno ${turn}):
 Devolva o JSON.`;
 
     try {
-      const { text } = await ClaudeAPI.call({
+      const { text, raw } = await ClaudeAPI.call({
         system, messages: [{ role: 'user', content: user }],
-        max_tokens: 900, temperature: 0.5
+        max_tokens: 2048, temperature: 0.5
       });
+      if (raw?.stop_reason === 'max_tokens') {
+        console.warn('[leadHint] resposta truncada em max_tokens — gabarito pode estar incompleto');
+      }
       return ClaudeAPI.extractJSON(text);
     } catch (err) {
       console.warn('leadHint falhou:', err);
@@ -1184,10 +1190,13 @@ Se não houver 3 pontos ruins, use oportunidades de evolução no lugar.`;
 
     let extra = {};
     try {
-      const { text } = await ClaudeAPI.call({
+      const { text, raw } = await ClaudeAPI.call({
         system, messages: [{ role: 'user', content: user }],
-        max_tokens: 1800, temperature: 0.5
+        max_tokens: 4096, temperature: 0.5
       });
+      if (raw?.stop_reason === 'max_tokens') {
+        console.warn('[finalReport] resposta truncada em max_tokens — relatório pode estar incompleto');
+      }
       const parsed = ClaudeAPI.extractJSON(text);
       if (parsed) extra = parsed;
     } catch (err) {
